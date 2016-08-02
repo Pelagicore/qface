@@ -1,0 +1,41 @@
+package entertainment.tuner;
+
+/*! Service Tuner */
+service Tuner {
+    /*! attribute currentStation */
+    readonly Station currentStation;
+    /*! operation nextStation */
+    void nextStation();
+    /*! operation previousStation */
+    void previousStation();
+    /*! operation updateCurrentStation */
+    void updateCurrentStation(int stationId);
+}
+
+/*! enum State */
+enum State {
+    /*! value State.Null */
+    Null=0,
+    /*! value State.Loading */
+    Loading=1,
+    /*! value State.Ready */
+    Ready=2,
+    /*! value State.Error */
+    Error=3
+}
+
+/*! enum Waveband */
+enum Waveband {
+    /*! value Waveband.FM */
+    FM=0,
+    /*! value Waveband.AM */
+    AM=1
+}
+
+/*! struct Station */
+struct Station {
+    /*! member stationId */
+    int stationId;
+    /*! member name */
+    string name;
+}

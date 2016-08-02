@@ -1,0 +1,107 @@
+package vehicle.climate;
+
+/*!
+ * The ClimateControl provides a QML interface to the climate control
+ * of the vehicle.
+ */
+service ClimateControl {
+    /*!
+     * Value is true if the air conditioning is enabled.
+     */
+    bool airConditioning;
+    /*!
+     * value holds the airflow directions
+     */
+    AirflowDirections airflowDirections;
+    /*!
+     * value holds the intensity level of the fan when the climateMode
+     * is set to AutoClimate, where the level can be between
+     * minimumValue(least intensity) to maximumValue(most intensity).
+     */
+    int automaticClimateFanIntensityLevel;
+    /*!
+     * value holds the climate mode
+     */
+    ClimateMode climateMode;
+    /*!
+     * value is true if defrost is enabled. Usually that means that the fans
+     * are on the highest level to remove ice from the windshield.
+     */
+    bool defrost;
+    /*!
+     * value holds the fan speed level, where the level can be between
+     * minimumValue(off) to maximumValue (strongest).
+     */
+    int fanSpeedLevel;
+    /*!
+     * value is true if the heater is enabled.
+     */
+    bool heater;
+    /*!
+     * value holds the outside temperature of the zone expressed in
+     * centigrades, where the temperature can be between
+     * minimumValue(coolest) to maximumValue (warmest).
+     */
+    int outsideTemperature;
+    /*!
+     * value is true if the recirculation is currently running.
+     */
+    bool recirculation;
+    /*!
+     * value holds the recirculation mode
+     */
+    RecirculationMode recirculationMode;
+    /*!
+     * value holds the sensitivity level of the recirculation
+     * system when the recirculationMode is set to AutoRecirculation,
+     * where the level can be between minimumValue(least sensitive)
+     * to maximumValue(most sensitive).
+     */
+    int recirculationSensitivityLevel;
+    /*!
+     * value holds the seat cooler level, where the level can be
+     * between minimumValue(off) to maximumValue (coolest).
+     */
+    int seatCooler;
+    /*!
+     * value holds the seat heater level, where the level can be between
+     * minimumValue(off) to maximumValue (warmest).
+     */
+    int seatHeater;
+    /*!
+     * value holds the steering wheel heater level, where the level can
+     * be between minimumValue(off) to maximumValue (warmest).
+     */
+    int steeringWheelHeater;
+    /*!
+     * value holds the target temperature of the zone expressed
+     * in centigrades, where the temperature can be between
+     * minimumValue(coolest) to maximumValue (warmest).
+     */
+    int targetTemperature;
+    /*!
+     * value is true if the zone synchronization is enabled.
+     *
+     * Which zones and properties are synchronized is controlled
+     * by the backend implementing it.
+     */
+    bool zoneSynchronization;
+}
+
+flags AirflowDirections {
+    Windshield = 0x1,
+    Dashboard = 0x2,
+    Floor = 0x4
+}
+
+enum ClimateMode {
+    ClimateOff = 0x0,
+    ClimateOn = 0x1,
+    AutoClimate = 0x2
+}
+
+enum RecirculationMode {
+    RecirculationOff = 0x0,
+    RecirculationOn = 0x1,
+    AutoRecirculation = 0x2
+}

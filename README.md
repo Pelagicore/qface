@@ -1,7 +1,11 @@
-# qface
+# QML Interface Builder
 
-## Copyright and license
+Infrastructure to build a QML/Qt CPP interface based on an interface definition language and templates
 
-Copyright (C) 2016 Pelagicore AG
+# Dependencies
 
-The source code in this repository is subject to the terms of the GPLv3 licence, please see included "LICENSE" file for details.
+- Python3
+- ANTLR4
+- Jinja Templates
+
+# Running

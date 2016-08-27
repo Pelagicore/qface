@@ -63,8 +63,10 @@ class RunScriptChangeHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if event.src_path.endswith('.cache'):
             return
+        if event.is_directory:
+            return
         print(event)
-        sh(self.script)
+        sh('python3 {0}'.format(self.script))
 
 
 @cli.command()
@@ -74,11 +76,12 @@ def generator_monitor(script):
     event_handler = RunScriptChangeHandler(script)
     observer = Observer()
     observer.schedule(event_handler, './templates', recursive=True)
+    observer.schedule(event_handler, './examples', recursive=True)
     observer.schedule(event_handler, str(Path(script).parent), recursive=False)
     observer.start()
     try:
         while True:
-            time.sleep(5)
+            time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()

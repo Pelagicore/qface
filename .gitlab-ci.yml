@@ -1,13 +1,13 @@
 image: python:3
 
 before_script:
-  pip3 install requirements.txt
+  - pip3 install requirements.txt
 
 stages:
   - test
 
 job1:
-  - stage: test
-  - script:
+  stage: test
+  script:
     - cd tests
     - python3 -m pytest -v -s -l

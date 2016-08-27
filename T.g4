@@ -1,9 +1,14 @@
 grammar T;
 
+
 documentSymbol
     : headerSymbol definitionSymbol*
     ;
 
+/**
+package name;
+import name;
+*/
 headerSymbol
     : packageSymbol importSymbol*
     ;
@@ -68,12 +73,12 @@ structMemberSymbol
     ;
 
 enumSymbol
-    : comment=DOCCOMMENT? enumType name=IDENTIFIER '{' enumMemberSymbol* '}'
+    : comment=DOCCOMMENT? enumTypeSymbol name=IDENTIFIER '{' enumMemberSymbol* '}'
     ;
 
-enumType
+enumTypeSymbol
     : isEnum = 'enum'
-    | isFlags = 'flags'
+    | isFlag = 'flag'
     ;
 
 enumMemberSymbol

@@ -1,7 +1,7 @@
 image: python:3
 
 before_script:
-  - pip3 install requirements.txt
+  - pip3 install -r requirements.txt
 
 stages:
   - test

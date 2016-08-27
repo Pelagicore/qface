@@ -19,7 +19,7 @@ def cli():
 
 @cli.command()
 def antlr():
-    sh('antlr4 -Dlanguage=Python3 -Werror -package qif.idl.parser -o qif/idl/parser -listener -visitor T.g4')
+    sh('antlr4 -Dlanguage=Python3 -Werror -package qface.idl.parser -o qface/idl/parser -listener -visitor T.g4')
 
 
 @cli.command()

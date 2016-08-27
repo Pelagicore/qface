@@ -9,7 +9,7 @@ service Tuner {
     /*! operation previousStation */
     void previousStation();
     /*! operation updateCurrentStation */
-    void updateCurrentStation(int stationId);
+    void updateCurrentStation(int stationId);   
 }
 
 /*! enum State */
@@ -32,10 +32,18 @@ enum Waveband {
     AM=1
 }
 
+flag Features {
+    Mono = 0x1,
+    Stereo = 0x2,
+}
+
 /*! struct Station */
 struct Station {
     /*! member stationId */
     int stationId;
     /*! member name */
     string name;
-}
+} 
+
+
+

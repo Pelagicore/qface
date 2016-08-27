@@ -1,0 +1,10 @@
+package com.pelagicore.test;
+
+service TestService {
+  int intValue;
+  readonly string stringValue;
+  bool boolValue;
+  real realValue;
+
+  void call();
+}

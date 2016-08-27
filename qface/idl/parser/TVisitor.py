@@ -89,8 +89,8 @@ class TVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by TParser#enumType.
-    def visitEnumType(self, ctx:TParser.EnumTypeContext):
+    # Visit a parse tree produced by TParser#enumTypeSymbol.
+    def visitEnumTypeSymbol(self, ctx:TParser.EnumTypeSymbolContext):
         return self.visitChildren(ctx)
 
 

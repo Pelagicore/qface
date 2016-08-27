@@ -58,7 +58,6 @@ class Generator(object):
         self.env.filters[name] = callback
 
 
-
 class FileSystem(object):
     @staticmethod
     def parse_document(path: str, system: System = None):
@@ -86,7 +85,7 @@ class FileSystem(object):
         if not identifier:
             identifier = 'system'
         system = System()
-        cache = shelve.open('qif.cache')
+        cache = shelve.open('qface.cache')
         if identifier in cache and clear_cache:
             del cache[identifier]
         if identifier in cache:
@@ -94,7 +93,7 @@ class FileSystem(object):
             system = cache[identifier]
         else:
             # if domain model not cached generate it
-            documents = path.rglob('*.qif')
+            documents = path.rglob('*.qface')
             for document in documents:
                 listener = DomainListener(system)
                 FileSystem._parse_document(document, listener)
@@ -102,7 +101,7 @@ class FileSystem(object):
         return system
 
     @staticmethod
-    def find_files(path, glob='*.qif'):
+    def find_files(path, glob='*.qface'):
         path = Path(path)
         logging.debug('find_files path={0} glob={1}'.format(path, glob))
         return path.rglob(glob)

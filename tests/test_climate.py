@@ -1,5 +1,5 @@
-from qif.idl.domain import System
-from qif.generator import FileSystem, Generator
+from qface.idl.domain import System
+from qface.generator import FileSystem, Generator
 import logging
 import logging.config
 from pathlib import Path
@@ -14,7 +14,7 @@ log.debug('examples folder: {0}'.format(examples.absolute()))
 
 
 def load_system():
-    path = examples / 'climate.qif'
+    path = examples / 'vehicle.climate.ClimateControl.qface'
     return FileSystem.parse_document(path)
 
 

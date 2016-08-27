@@ -152,12 +152,12 @@ class TListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by TParser#enumType.
-    def enterEnumType(self, ctx:TParser.EnumTypeContext):
+    # Enter a parse tree produced by TParser#enumTypeSymbol.
+    def enterEnumTypeSymbol(self, ctx:TParser.EnumTypeSymbolContext):
         pass
 
-    # Exit a parse tree produced by TParser#enumType.
-    def exitEnumType(self, ctx:TParser.EnumTypeContext):
+    # Exit a parse tree produced by TParser#enumTypeSymbol.
+    def exitEnumTypeSymbol(self, ctx:TParser.EnumTypeSymbolContext):
         pass
 
 

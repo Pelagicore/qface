@@ -107,7 +107,7 @@ class Symbol(object):
     def __init__(self, name: str, package: Package):
         self.name = name
         self.package = package
-        self.comment = None
+        self.comment = ''
 
     @property
     def system(self):
@@ -246,12 +246,14 @@ class Enum(Symbol):
     def __init__(self, name: str, package: Package):
         super().__init__(name, package)
         log.debug('Enum()')
+        self.is_enum = True
+        self.is_flag = False
         self.package.enumMap[name] = self
         self.memberMap = OrderedDict()  # type: Dict[EnumMember]
 
     @property
     def members(self):
-        return self.memberMap
+        return self.memberMap.values()
 
 
 class EnumMember(Symbol):
@@ -260,7 +262,7 @@ class EnumMember(Symbol):
         log.debug('EnumMember()')
         self.enum = enum
         self.enum.memberMap[name] = self
-        self.value = None
+        self.value = 0
 
 
 class Parameter(TypedSymbol):

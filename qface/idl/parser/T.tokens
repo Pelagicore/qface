@@ -43,5 +43,5 @@ MULTICOMM=27
 'string'=16
 'struct'=17
 'enum'=18
-'flags'=19
+'flag'=19
 '='=20

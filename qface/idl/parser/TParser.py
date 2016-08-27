@@ -96,7 +96,7 @@ class TParser ( Parser ):
     literalNames = [ "<INVALID>", "'import'", "';'", "'package'", "'service'", 
                      "'{'", "'}'", "'event'", "'void'", "'('", "')'", "'readonly'", 
                      "','", "'bool'", "'int'", "'real'", "'string'", "'struct'", 
-                     "'enum'", "'flags'", "'='" ]
+                     "'enum'", "'flag'", "'='" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
@@ -122,7 +122,7 @@ class TParser ( Parser ):
     RULE_structSymbol = 13
     RULE_structMemberSymbol = 14
     RULE_enumSymbol = 15
-    RULE_enumType = 16
+    RULE_enumTypeSymbol = 16
     RULE_enumMemberSymbol = 17
     RULE_intSymbol = 18
 
@@ -130,7 +130,7 @@ class TParser ( Parser ):
                    "definitionSymbol", "serviceSymbol", "memberSymbol", 
                    "operationSymbol", "attributeSymbol", "parameterSymbol", 
                    "typeSymbol", "complexTypeSymbol", "primitiveTypeSymbol", 
-                   "structSymbol", "structMemberSymbol", "enumSymbol", "enumType", 
+                   "structSymbol", "structMemberSymbol", "enumSymbol", "enumTypeSymbol", 
                    "enumMemberSymbol", "intSymbol" ]
 
     EOF = Token.EOF
@@ -1201,8 +1201,8 @@ class TParser ( Parser ):
             self.comment = None # Token
             self.name = None # Token
 
-        def enumType(self):
-            return self.getTypedRuleContext(TParser.EnumTypeContext,0)
+        def enumTypeSymbol(self):
+            return self.getTypedRuleContext(TParser.EnumTypeSymbolContext,0)
 
 
         def IDENTIFIER(self):
@@ -1253,7 +1253,7 @@ class TParser ( Parser ):
 
 
             self.state = 159
-            self.enumType()
+            self.enumTypeSymbol()
             self.state = 160
             localctx.name = self.match(TParser.IDENTIFIER)
             self.state = 161
@@ -1278,39 +1278,39 @@ class TParser ( Parser ):
             self.exitRule()
         return localctx
 
-    class EnumTypeContext(ParserRuleContext):
+    class EnumTypeSymbolContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
             self.isEnum = None # Token
-            self.isFlags = None # Token
+            self.isFlag = None # Token
 
 
         def getRuleIndex(self):
-            return TParser.RULE_enumType
+            return TParser.RULE_enumTypeSymbol
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterEnumType" ):
-                listener.enterEnumType(self)
+            if hasattr( listener, "enterEnumTypeSymbol" ):
+                listener.enterEnumTypeSymbol(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitEnumType" ):
-                listener.exitEnumType(self)
+            if hasattr( listener, "exitEnumTypeSymbol" ):
+                listener.exitEnumTypeSymbol(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitEnumType" ):
-                return visitor.visitEnumType(self)
+            if hasattr( visitor, "visitEnumTypeSymbol" ):
+                return visitor.visitEnumTypeSymbol(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def enumType(self):
+    def enumTypeSymbol(self):
 
-        localctx = TParser.EnumTypeContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 32, self.RULE_enumType)
+        localctx = TParser.EnumTypeSymbolContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 32, self.RULE_enumTypeSymbol)
         try:
             self.state = 172
             token = self._input.LA(1)
@@ -1322,7 +1322,7 @@ class TParser ( Parser ):
             elif token in [TParser.T__18]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 171
-                localctx.isFlags = self.match(TParser.T__18)
+                localctx.isFlag = self.match(TParser.T__18)
 
             else:
                 raise NoViableAltException(self)

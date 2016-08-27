@@ -76,11 +76,21 @@ class DomainListener(TListener):
     def enterEnumSymbol(self, ctx: TParser.EnumSymbolContext):
         assert self.package
         name = ctx.name.text
+        # import ipdb; ipdb.set_trace()
         self.enum = Enum(name, self.package)
         self.parse_comment(ctx, self.enum)
 
     def exitEnumSymbol(self, ctx: TParser.EnumSymbolContext):
         self.enum = None
+
+    def enterEnumTypeSymbol(self, ctx: TParser.EnumTypeSymbolContext):
+        assert self.enum
+        if ctx.isFlag:
+            self.enum.is_enum = False
+            self.enum.is_flag = True
+
+    def exitEnumTypeSymbol(self, ctx: TParser.EnumTypeSymbolContext):
+        pass
 
     def enterOperationSymbol(self, ctx: TParser.OperationSymbolContext):
         assert self.service
@@ -125,6 +135,7 @@ class DomainListener(TListener):
         name = ctx.name.text
         self.member = EnumMember(name, self.enum)
         self.member.value = int(ctx.intSymbol().value.text, 0)
+        # import ipdb; ipdb.set_trace()
 
     def exitEnumMemberSymbol(self, ctx: TParser.EnumMemberSymbolContext):
         self.member = None

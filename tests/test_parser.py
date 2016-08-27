@@ -1,5 +1,5 @@
-from qif.idl.domain import System
-from qif.generator import FileSystem
+from qface.idl.domain import System
+from qface.generator import FileSystem
 import logging
 import logging.config
 from pathlib import Path
@@ -13,9 +13,14 @@ examples = Path('./examples')
 log.debug('examples folder: {0}'.format(examples.absolute()))
 
 
+def loadTuner():
+    path = examples / 'entertainment.tuner.Tuner.qface'
+    return FileSystem.parse_document(path)
+
+
 def test_parse():
     log.debug('test parse')
-    names = FileSystem.find_files(examples, '*.qif')
+    names = FileSystem.find_files(examples, '*.qface')
     # import pdb; pdb.set_trace()
     system = System()
     for name in names:
@@ -24,28 +29,25 @@ def test_parse():
 
 
 def test_package():
-    path = examples / 'tuner.qif'
-    system = FileSystem.parse_document(path)
+    system = loadTuner()
     assert len(system.packages) == 1
     package = system.lookup_package('entertainment.tuner')
-    assert package in system.packages.values()
+    assert package in system.packages
 
 
 def test_service():
-    path = examples / 'tuner.qif'
-    system = FileSystem.parse_document(path)
+    system = loadTuner()
     package = system.lookup_package('entertainment.tuner')
     service = system.lookup_service('entertainment.tuner.Tuner')
-    assert service in package.services.values()
+    assert service in package.services
     assert service.comment == '/*! Service Tuner */'
 
 
 def test_attribute():
-    path = examples / 'tuner.qif'
-    system = FileSystem.parse_document(path)
+    system = loadTuner()
     service = system.lookup_service('entertainment.tuner.Tuner')
     package = system.lookup_package('entertainment.tuner')
-    attr = service.attributes['currentStation']
+    attr = service.attributeMap['currentStation']
     assert attr.type.name == 'Station'
     assert attr.package == package
     assert attr.type.qualifiedName == 'entertainment.tuner.Station'
@@ -53,10 +55,8 @@ def test_attribute():
     assert attr.comment == '/*! attribute currentStation */'
 
 
-
 def test_struct():
-    path = examples / 'tuner.qif'
-    system = FileSystem.parse_document(path)
+    system = loadTuner()
     package = system.lookup_package('entertainment.tuner')
     symbol = system.lookup_struct('entertainment.tuner.Station')
     assert symbol.name == 'Station'
@@ -66,8 +66,7 @@ def test_struct():
 
 
 def test_enum():
-    path = examples / 'tuner.qif'
-    system = FileSystem.parse_document(path)
+    system = loadTuner()
     definition = system.lookup_definition('entertainment.tuner.Waveband')
     package = system.lookup_package('entertainment.tuner')
     symbol = system.lookup_enum('entertainment.tuner.Waveband')
@@ -76,6 +75,11 @@ def test_enum():
     assert symbol.package == package
     assert symbol.qualifiedName == 'entertainment.tuner.Waveband'
     assert symbol.comment == '/*! enum Waveband */'
+    assert symbol.is_enum
 
+def test_flag():
+    system = loadTuner()
+    symbol = system.lookup_enum('entertainment.tuner.Features')
+    assert symbol.is_flag
 
 

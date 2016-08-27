@@ -6,8 +6,6 @@
     {%- endif -%}
 {%- endmacro -%}
 
-# pragma once
-
 #include <{{service|lower}}.h>
 
 {{service.comment}}
@@ -21,7 +19,7 @@ void {{service}}::set{{attribute|upperfirst}}({{ attribute|parameterType }})
 {
     if(m_{{attribute}} == {{attribute}}) {
         return;
-    }    
+    }
     m_{{attribute}} = {{attribute}};
     emit {{attribute}}Changed({{attribute}});
 }
@@ -35,10 +33,8 @@ void {{service}}::set{{attribute|upperfirst}}({{ attribute|parameterType }})
 
 {% for operation in service.operations %}
 {{operation.comment}}
-virtual {{operation.type}} {{service}}::{{operation}}()
+{{operation.type}} {{service}}::{{operation}}()
 {
 }
 
 {% endfor %}
-
-

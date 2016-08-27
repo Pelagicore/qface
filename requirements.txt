@@ -1,0 +1,7 @@
+pytest
+jinja2
+ipdb
+click
+antlr4-python3-runtime
+path.py
+watchdog

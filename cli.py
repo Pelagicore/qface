@@ -27,6 +27,10 @@ def test():
     sh('python3 -m pytest -v -s -l --pdb')
 
 
+@cli.command()
+def test_ci():
+    sh('python3 -m pytest -v -s -l')
+
 class RunTestChangeHandler(FileSystemEventHandler):
     def __init__(self, clickContext):
         super(RunTestChangeHandler).__init__()

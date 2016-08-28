@@ -41,12 +41,27 @@ generator.register_filter('parameterType', paramterType)
 
 for package in system.packages:
     ctx = {'package': package}
-    generator.write('out/{{package|lower}}/plugin.cpp', 'plugin.cpp', ctx)
-    generator.write('out/{{package|lower}}/plugin.h', 'plugin.h', ctx)
-    generator.write('out/{{package|lower}}/{{package|lower}}.pri', 'project.pri', ctx)
-    generator.write('out/{{package|lower}}/{{package|lower}}.pro', 'project.pro', ctx)
+    out = generator.apply('out/{{package|lower}}', ctx)
+    ctx['out'] = out
+    generator.write('{{out}}/qmldir', 'qmldir', ctx)
+    generator.write('{{out}}/plugin.cpp', 'plugin.cpp', ctx)
+    generator.write('{{out}}/plugin.h', 'plugin.h', ctx)
+    generator.write('{{out}}/{{package|lower}}.pri', 'project.pri', ctx)
+    generator.write('{{out}}/{{package|lower}}.pro', 'project.pro', ctx)
     for service in package.services:
-        ctx = {'service': service, 'package': package}
-        generator.write('out/{{package|lower}}/{{service|lower}}.h', 'service.tpl.h', ctx)
-        generator.write('out/{{package|lower}}/{{service|lower}}.cpp', 'service.tpl.cpp', ctx)
+        ctx = {'service': service, 'package': package, 'out': out}
+        generator.write('{{out}}/{{service|lower}}.h', 'service.h', ctx)
+        generator.write('{{out}}/{{service|lower}}.cpp', 'service.cpp', ctx)
+    for enum in package.enums:
+        ctx = {'enum': enum, 'package': package, 'out': out}
+        generator.write('{{out}}/{{enum|lower}}.h', 'enum.h', ctx)
+        generator.write('{{out}}/{{enum|lower}}.cpp', 'enum.cpp', ctx)
+
+    for struct in package.structs:
+        ctx = {'struct': struct, 'package': package, 'out': out}
+        generator.write('{{out}}/{{struct|lower}}.h', 'struct.h', ctx)
+        generator.write('{{out}}/{{struct|lower}}.cpp', 'struct.cpp', ctx)
+        generator.write('{{out}}/{{struct|lower}}factory.h', 'structfactory.h', ctx)
+        generator.write('{{out}}/{{struct|lower}}factory.cpp', 'structfactory.cpp', ctx)
+
     ctx = {'package': package}

@@ -40,7 +40,7 @@ class RunTestChangeHandler(FileSystemEventHandler):
         if event.is_directory:
             return
         if Path(event.src_path).suffix == '.py':
-            sh('python3 -m pytest -v -s -l --pdb')
+            sh('python3 -m pytest -v -s -l')
 
 
 @cli.command()

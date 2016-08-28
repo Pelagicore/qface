@@ -5,6 +5,10 @@
         const {{ symbol.type }} &{{symbol}}
     {%- endif -%}
 {%- endmacro -%}
+/****************************************************************************
+** This is an auto-generated file.
+** Do not edit! All changes made to it will be lost.
+****************************************************************************/
 
 #include <{{service|lower}}.h>
 

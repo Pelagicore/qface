@@ -5,13 +5,16 @@
 
 #pragma once
 
-#include <QtQml>
+#include <QtCore>
 
-class Plugin : public QQmlExtensionPlugin
+#include "{{struct|lower}}.h"
+
+class {{struct}}Factory : public QObject
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
-
 public:
-    void registerTypes(const char *uri);
+    {{struct}}Factory(QObject *parent=0);
+    Q_INVOKABLE {{struct}} create();
 };
+
+

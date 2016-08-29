@@ -1,12 +1,17 @@
 package com.pelagicore.test;
 
 service TestService {
+  State state;
   int intValue;
   readonly string stringValue;
   bool boolValue;
   real realValue;
+  Contact currentContact;
 
   void call();
+
+  list<Contact> contactList;
+  model<Contact> contactModel;
 }
 
 enum State {
@@ -16,7 +21,7 @@ enum State {
     Failure = 0x03
 }
 
-/**
+/*!
  * The contact information
  */
 struct Contact {

@@ -10,6 +10,11 @@ service Tuner {
     void previousStation();
     /*! operation updateCurrentStation */
     void updateCurrentStation(int stationId);   
+
+    list<int> primitiveList;
+    list<Station> complexList;
+    model<int> primitiveModel;
+    model<Station> complexModel;
 }
 
 /*! enum State */

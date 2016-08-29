@@ -1,0 +1,3 @@
+generator: csv
+input: input
+output: output

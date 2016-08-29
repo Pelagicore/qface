@@ -5,6 +5,11 @@ from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 from pathlib import Path
 import time
+import os
+import yaml
+
+
+os.environ['PYTHONPATH'] = os.getcwd()
 
 
 def sh(cmd, all=False):
@@ -31,6 +36,7 @@ def test():
 def test_ci():
     sh('python3 -m pytest -v -s -l')
 
+
 class RunTestChangeHandler(FileSystemEventHandler):
     def __init__(self, clickContext):
         super(RunTestChangeHandler).__init__()
@@ -46,10 +52,13 @@ class RunTestChangeHandler(FileSystemEventHandler):
 @cli.command()
 @click.pass_context
 def test_monitor(ctx):
+    sh('python3 -m pytest -v -s -l')
     while True:
         event_handler = RunTestChangeHandler(ctx)
         observer = Observer()
-        observer.schedule(event_handler, '.', recursive=True)
+        observer.schedule(event_handler, './tests', recursive=False)
+        observer.schedule(event_handler, './examples', recursive=False)
+        observer.schedule(event_handler, './qface/idl', recursive=False)
         observer.start()
         try:
             while True:
@@ -89,6 +98,22 @@ def generator_monitor(script):
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
+
+
+@cli.command()
+@click.option('--runner', type=click.File('r'))
+@click.option('--generator', type=click.Path(exists=True))
+@click.option('--input', type=click.Path(exists=True))
+@click.option('--output', type=click.Path(exists=True))
+def generate(runner, generator, input, output):
+    if runner:
+        config = yaml.load(runner)
+        generator = config['generator']
+        input = config['input']
+        output = config['output']
+    input = Path(input).absolute()
+    output = Path(output).absolute()
+    sh('python3 ./generator/{0}/{0}.py --input {1} --output {2}'.format(generator, input, output))
 
 if __name__ == '__main__':
     cli()

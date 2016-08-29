@@ -12,9 +12,9 @@ import yaml
 os.environ['PYTHONPATH'] = os.getcwd()
 
 
-def sh(cmd, all=False):
+def sh(cmd, all=False, **kwargs):
     click.echo('$ {0}'.format(cmd))
-    return call(cmd, shell=True)
+    return call(cmd, shell=True, **kwargs)
 
 
 @click.group()
@@ -24,7 +24,8 @@ def cli():
 
 @cli.command()
 def antlr():
-    sh('antlr4 -Dlanguage=Python3 -Werror -package qface.idl.parser -o qface/idl/parser -listener -visitor T.g4')
+    cwd = str(Path('qface/idl/parser').absolute())
+    sh('antlr4 -Dlanguage=Python3 -Werror -package qface.idl.parser -o . -listener -visitor T.g4', cwd=cwd)        
 
 
 @cli.command()

@@ -51,6 +51,8 @@ parameterSymbol
 typeSymbol
     : primitiveTypeSymbol
     | complexTypeSymbol
+    | listTypeSymbol
+    | modelTypeSymbol
     ;
 
 complexTypeSymbol
@@ -62,6 +64,14 @@ primitiveTypeSymbol
     | name='int'
     | name='real'
     | name='string'
+    ;
+
+listTypeSymbol
+    : 'list' '<' valueType=typeSymbol '>'
+    ;
+
+modelTypeSymbol
+    : 'model' '<' valueType=typeSymbol '>'
     ;
 
 structSymbol

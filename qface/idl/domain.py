@@ -88,6 +88,10 @@ class Package(object):
     def imports(self):
         return self.importMap.values()
 
+    @property
+    def nameParts(self):
+        return self.name.split('.')
+
     def lookup_definition(self, name: str):
         if name in self.definitionMap:
             return self.definitionMap[name]
@@ -101,6 +105,7 @@ class Package(object):
 
     def __repr__(self):
         return self.name
+
 
 
 class Symbol(object):
@@ -138,6 +143,8 @@ class TypeSymbol(Symbol):
         self.is_void = False  # type:bool
         self.is_primitive = False  # type:bool
         self.is_complex = False  # type:bool
+        self.is_list = False  # type:bool
+        self.is_model = False  # type:bool
 
     @property
     def is_bool(self):

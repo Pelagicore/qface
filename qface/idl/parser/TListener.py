@@ -125,6 +125,24 @@ class TListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by TParser#listTypeSymbol.
+    def enterListTypeSymbol(self, ctx:TParser.ListTypeSymbolContext):
+        pass
+
+    # Exit a parse tree produced by TParser#listTypeSymbol.
+    def exitListTypeSymbol(self, ctx:TParser.ListTypeSymbolContext):
+        pass
+
+
+    # Enter a parse tree produced by TParser#modelTypeSymbol.
+    def enterModelTypeSymbol(self, ctx:TParser.ModelTypeSymbolContext):
+        pass
+
+    # Exit a parse tree produced by TParser#modelTypeSymbol.
+    def exitModelTypeSymbol(self, ctx:TParser.ModelTypeSymbolContext):
+        pass
+
+
     # Enter a parse tree produced by TParser#structSymbol.
     def enterStructSymbol(self, ctx:TParser.StructSymbolContext):
         pass

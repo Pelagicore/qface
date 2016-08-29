@@ -20,20 +20,32 @@ class DomainListener(TListener):
         self.attribute = None  # type:Attribute
         self.member = None  # type:Member
 
-    def parse_type(self, ctx, symbol: TypedSymbol):
+    def parse_type(self, ctx, type: TypeSymbol):
         if not ctx.typeSymbol():
             # import pdb; pdb.set_trace()
-            symbol.type.is_void = True
-            symbol.type.name = 'void'
+            type.is_void = True
+            type.name = 'void'
         else:
             if ctx.typeSymbol().primitiveTypeSymbol():
                 ctxSymbol = ctx.typeSymbol().primitiveTypeSymbol()  # type:TParser.PrimitiveTypeSymbolContext
-                symbol.type.is_primitive = True
-                symbol.type.name = ctxSymbol.name.text
-            if ctx.typeSymbol().complexTypeSymbol():
+                type.is_primitive = True
+                type.name = ctxSymbol.name.text
+            elif ctx.typeSymbol().complexTypeSymbol():
                 ctxSymbol = ctx.typeSymbol().complexTypeSymbol()  # type:TParser.ComplexTypeSymbolContext
-                symbol.type.is_complex = True
-                symbol.type.name = ctxSymbol.name.text
+                type.is_complex = True
+                type.name = ctxSymbol.name.text
+            elif ctx.typeSymbol().listTypeSymbol():
+                ctxSymbol = ctx.typeSymbol().listTypeSymbol()  # type:TParser.ListTypeSymbolContext
+                type.is_list = True
+                type.name = 'list'
+                type.nested = TypeSymbol("", type)
+                self.parse_type(ctxSymbol, type.nested)
+            elif ctx.typeSymbol().modelTypeSymbol():
+                ctxSymbol = ctx.typeSymbol().modelTypeSymbol()  # type:TParser.ModelTypeSymbolContext
+                type.is_model = True
+                type.name = 'model'
+                type.nested = TypeSymbol("", type)
+                self.parse_type(ctxSymbol, type.nested)
 
     def parse_comment(self, ctx, symbol):
         if ctx.comment:
@@ -98,7 +110,7 @@ class DomainListener(TListener):
         is_event = bool(ctx.isEvent)
         self.operation = Operation(name, self.service, is_event)
         self.parse_comment(ctx, self.operation)
-        self.parse_type(ctx, self.operation)
+        self.parse_type(ctx, self.operation.type)
 
     def exitOperationSymbol(self, ctx: TParser.OperationSymbolContext):
         self.operation = None
@@ -108,7 +120,7 @@ class DomainListener(TListener):
         self.parameter = Parameter(name, self.operation)
 
     def exitParameterSymbol(self, ctx: TParser.ParameterSymbolContext):
-        self.parse_type(ctx, self.parameter)
+        self.parse_type(ctx, self.parameter.type)
 
     def enterAttributeSymbol(self, ctx: TParser.AttributeSymbolContext):
         assert self.service
@@ -116,7 +128,7 @@ class DomainListener(TListener):
         self.attribute = Attribute(name, self.service)
         self.attribute.is_readonly = bool(ctx.isReadOnly)
         self.parse_comment(ctx, self.attribute)
-        self.parse_type(ctx, self.attribute)
+        self.parse_type(ctx, self.attribute.type)
 
     def exitAttributeSymbol(self, ctx: TParser.AttributeSymbolContext):
         self.attribute = None
@@ -127,7 +139,7 @@ class DomainListener(TListener):
         self.member = Member(name, self.struct)
 
     def exitStructMemberSymbol(self, ctx: TParser.StructMemberSymbolContext):
-        self.parse_type(ctx, self.member)
+        self.parse_type(ctx, self.member.type)
         self.member = None
 
     def enterEnumMemberSymbol(self, ctx: TParser.EnumMemberSymbolContext):

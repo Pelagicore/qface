@@ -74,6 +74,16 @@ class TVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by TParser#listTypeSymbol.
+    def visitListTypeSymbol(self, ctx:TParser.ListTypeSymbolContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by TParser#modelTypeSymbol.
+    def visitModelTypeSymbol(self, ctx:TParser.ModelTypeSymbolContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by TParser#structSymbol.
     def visitStructSymbol(self, ctx:TParser.StructSymbolContext):
         return self.visitChildren(ctx)

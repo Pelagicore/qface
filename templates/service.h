@@ -1,3 +1,6 @@
+{% from 'helper.tpl' import module %}
+{% set module = module(package) %}
+{% set class = 'Qml{0}'.format(service) %}
 /****************************************************************************
 ** This is an auto-generated file.
 ** Do not edit! All changes made to it will be lost.
@@ -7,7 +10,9 @@
 
 #include <QtCore>
 
-class {{service}} : public QObject
+#include "{{module|lower}}.h"
+
+class {{class}} : public QObject
 {
     Q_OBJECT
 {% for attribute in service.attributes %}
@@ -15,7 +20,9 @@ class {{service}} : public QObject
 {% endfor %}
 
 public:
-    {{service}}(QObject *parent=0);
+    {{class}}(QObject *parent=0);
+
+    static void registerQmlTypes(const QString& uri, int majorVersion=1, int minorVersion=0);
 
 public Q_SLOTS:
 {% for operation in service.operations %}

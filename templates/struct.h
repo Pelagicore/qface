@@ -11,22 +11,15 @@ class {{struct}}
 {
     Q_GADGET
 {% for member in struct.members %}
-    Q_PROPERTY({{member|returnType}} {{member}} READ {{member}} WRITE set{{member|upperfirst}})
+    Q_PROPERTY({{member|returnType}} {{member}} MEMBER m_{{member}})
 {% endfor %}
 
 public:
-    {{struct}}();
-    ~{{struct}}();
-public:
-{% for member in struct.members %}
-    void set{{member|upperfirst}}({{ member|parameterType }});
-    {{member|returnType}} {{member}}() const;
-{% endfor %}
-
-private:
 {% for member in struct.members %}
     {{member|returnType}} m_{{member}};
 {% endfor %}
+
+    bool operator==(const {{struct}} &other) const;
 };
 
 Q_DECLARE_METATYPE({{struct}})

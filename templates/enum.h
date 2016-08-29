@@ -6,6 +6,7 @@
 #pragma once
 
 #include <QtCore>
+
 {% set comma = joiner(",") %}
 
 class {{enum}} : public QObject

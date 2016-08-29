@@ -25,8 +25,7 @@ def cli():
 @cli.command()
 def antlr():
     cwd = str(Path('qface/idl/parser').absolute())
-    sh('antlr4 -Dlanguage=Python3 -Werror -package qface.idl.parser -o . -listener -visitor T.g4', cwd=cwd)        
-
+    sh('antlr4 -Dlanguage=Python3 -Werror -package qface.idl.parser -o . -listener -visitor T.g4', cwd=cwd)
 
 @cli.command()
 def test():

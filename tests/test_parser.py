@@ -77,9 +77,44 @@ def test_enum():
     assert symbol.comment == '/*! enum Waveband */'
     assert symbol.is_enum
 
+
 def test_flag():
     system = loadTuner()
     symbol = system.lookup_enum('entertainment.tuner.Features')
     assert symbol.is_flag
+
+
+def test_list():
+    system = loadTuner()
+    service = system.lookup_service('entertainment.tuner.Tuner')
+    attr = service.attributeMap['primitiveList']
+    assert attr.type.name == 'list'
+    assert attr.type.is_list is True
+    assert attr.type.nested.is_primitive
+    assert attr.type.nested.name == 'int'
+
+    attr = service.attributeMap['complexList']
+    assert attr.type.name == 'list'
+    assert attr.type.is_list is True
+    assert attr.type.nested.is_complex
+    assert attr.type.nested.name == 'Station'
+
+
+def test_model():
+    system = loadTuner()
+    service = system.lookup_service('entertainment.tuner.Tuner')
+    attr = service.attributeMap['primitiveModel']
+    assert attr.type.name == 'model'
+    assert attr.type.is_model is True
+    assert attr.type.nested.is_primitive
+    assert attr.type.nested.name == 'int'
+
+    attr = service.attributeMap['complexModel']
+    assert attr.type.name == 'model'
+    assert attr.type.is_model is True
+    assert attr.type.nested.is_complex
+    assert attr.type.nested.name == 'Station'
+
+
 
 

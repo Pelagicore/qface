@@ -1,3 +1,4 @@
+{# Copyright (c) Pelagicore AG 2016 #}
 {% set ampersand = joiner(" &&") %}
 /****************************************************************************
 ** This is an auto-generated file.

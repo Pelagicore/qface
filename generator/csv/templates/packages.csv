@@ -1,3 +1,4 @@
+{# Copyright (c) Pelagicore AG 2016 #}
 {% for package in system.packages %}
     {%- for service in package.services -%}
     SERVICE, {{package}}.{{service}}

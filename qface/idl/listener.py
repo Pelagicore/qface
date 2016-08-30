@@ -1,3 +1,4 @@
+# Copyright (c) Pelagicore AG 2016
 import logging
 from .parser.TListener import TListener
 from .parser.TParser import TParser

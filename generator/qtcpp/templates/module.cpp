@@ -1,3 +1,4 @@
+{# Copyright (c) Pelagicore AG 2016 #}
 {% from 'helper.tpl' import module %}
 /****************************************************************************
 ** This is an auto-generated file.

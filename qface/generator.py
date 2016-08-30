@@ -1,3 +1,4 @@
+# Copyright (c) Pelagicore AG 2016
 from jinja2 import Environment, FileSystemLoader, Template
 from pathlib import Path
 import shelve

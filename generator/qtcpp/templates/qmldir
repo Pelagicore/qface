@@ -1,2 +1,3 @@
+{# Copyright (c) Pelagicore AG 2016 #}
 module {{package}}
 plugin {{package}}

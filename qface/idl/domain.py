@@ -1,3 +1,4 @@
+# Copyright (c) Pelagicore AG 2016
 from collections import OrderedDict, ChainMap
 import logging
 

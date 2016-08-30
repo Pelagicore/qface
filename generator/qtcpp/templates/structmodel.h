@@ -18,9 +18,9 @@ public:
     {{struct}}Model(QObject *parent=0);
     Q_INVOKABLE {{struct}} get(int index);
     int count() const;
-    void insert{{struct}}(int row, const {{struct}} &{{struct|lower}});
-    void update{{struct}}(int row, const {{struct}} &{{struct|lower}});
-    void remove{{struct}}(int row);
+    Q_INVOKABLE void insert{{struct}}(int row, const {{struct}} &{{struct|lower}});
+    Q_INVOKABLE void update{{struct}}(int row, const {{struct}} &{{struct|lower}});
+    Q_INVOKABLE void remove{{struct}}(int row);
 public: // from QAbstractListModel    
     virtual int rowCount(const QModelIndex &parent) const;
     virtual QVariant data(const QModelIndex &index, int role) const;

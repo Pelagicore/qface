@@ -19,6 +19,11 @@ QObject* {{service|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 {{class}}::{{class}}(QObject *parent)
     : QObject(parent)
 {
+{% for attribute in service.attributes %}
+{% if attribute.type.is_model %}
+    m_{{attribute}} = new {{attribute.type.nested}}Model(this);
+{% endif %}
+{% endfor %}
 }
 
 void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minorVersion)

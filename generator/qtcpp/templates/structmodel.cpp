@@ -54,9 +54,15 @@ QHash<int, QByteArray> {{class}}::roleNames() const
 
 void {{class}}::insert{{struct}}(int row, const {{struct}} &{{struct|lower}})
 {
+    if (row < 0)
+        row = 0;
+    if (row >= m_data.count())
+        row = m_data.count();
+    
     beginInsertRows(QModelIndex(), row, row);
     m_data.insert(row, {{struct|lower}});
     endInsertRows();
+    emit countChanged(count());
 }
 
 void {{class}}::update{{struct}}(int row, const {{struct}} &{{struct|lower}})

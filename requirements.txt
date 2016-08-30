@@ -3,5 +3,6 @@ jinja2
 click
 path.py
 watchdog
+pyyaml
 pytest
 ipdb

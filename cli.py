@@ -69,9 +69,10 @@ def test_monitor(ctx):
 
 
 class RunScriptChangeHandler(FileSystemEventHandler):
-    def __init__(self, script):
+    def __init__(self, script, cwd=None):
         super(RunTestChangeHandler).__init__()
         self.script = script
+        self.cwd = cwd
 
     def on_modified(self, event):
         if event.src_path.endswith('.cache'):
@@ -79,18 +80,28 @@ class RunScriptChangeHandler(FileSystemEventHandler):
         if event.is_directory:
             return
         print(event)
-        sh('python3 {0}'.format(self.script))
+        sh('python3 {0}'.format(self.script), cwd=self.cwd)
 
 
 @cli.command()
-@click.option('--script')
-def generator_monitor(script):
-    print('run script: ' + script)
-    event_handler = RunScriptChangeHandler(script)
+@click.option('--runner', type=click.File('r'))
+@click.option('--generator', type=click.Path(exists=True))
+@click.option('--input', type=click.Path(exists=True))
+@click.option('--output', type=click.Path(exists=True))
+def generator_monitor(runner, generator, input, output):
+    if runner:
+        config = yaml.load(runner)
+        generator = config['generator']
+        input = config['input']
+        output = config['output']
+    generator = Path(generator).absolute()
+    input = Path(input).absolute()
+    output = Path(output).absolute()
+    script = generator / '{0}.py --input {1} --output {2}'.format(generator.name, input, output)
+    event_handler = RunScriptChangeHandler(script, cwd=generator.as_posix())
     observer = Observer()
-    observer.schedule(event_handler, './templates', recursive=True)
-    observer.schedule(event_handler, './examples', recursive=True)
-    observer.schedule(event_handler, str(Path(script).parent), recursive=False)
+    observer.schedule(event_handler, generator.as_posix(), recursive=True)
+    observer.schedule(event_handler, input.as_posix(), recursive=True)
     observer.start()
     try:
         while True:
@@ -111,9 +122,13 @@ def generate(runner, generator, input, output):
         generator = config['generator']
         input = config['input']
         output = config['output']
+    generator = Path(generator).absolute()
+    script = '{0}.py'.format(generator.name)
     input = Path(input).absolute()
     output = Path(output).absolute()
-    sh('python3 ./generator/{0}/{0}.py --input {1} --output {2}'.format(generator, input, output))
+    sh('python3 {0} --input {1} --output {2}'
+        .format(script, input, output),
+        cwd=generator.as_posix())
 
 if __name__ == '__main__':
     cli()

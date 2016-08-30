@@ -5,7 +5,7 @@ from qface.generator import FileSystem, Generator
 
 def generate(input, output):
     system = FileSystem.parse_dir(input)
-    generator = Generator(searchpath='./templates')
+    generator = Generator(searchpath='templates')
     ctx = {'output': output, 'system': system}
     generator.write('{{output}}/packages.csv', 'packages.csv', ctx)
 

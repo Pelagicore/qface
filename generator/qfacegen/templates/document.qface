@@ -1,0 +1,39 @@
+package {{package}}{{counter}};
+
+{%for service in package.services %}
+service {{service}} {
+    {% for attribute in service.attributes %}
+    {%+ if attribute.is_readonly %}readonly {% endif %}
+    {%if attribute.type.is_list or attribute.type.is_model -%}
+    {{attribute.type}}<{{attribute.type.nested}}> {{attribute}};
+    {% else %}{{attribute.type}} {{attribute}};
+    {% endif %}
+    {% endfor %}
+    {% for operation in service.operations %}
+    {{operation.type}} {{operation}}();
+    {% endfor %}
+}
+
+
+{% for enum in package.enums%}
+{% set comma = joiner(",") %}
+enum {{enum}} { 
+    {%- for member in enum.members -%}
+    {{ comma() }}
+    {{member.name}} = {{member.value}}
+    {%- endfor %}
+}
+{%- endfor %}
+
+
+{% for struct in package.structs %}
+struct {{struct}} {
+    {% for member in struct.members %}
+    {{member.type}} {{member}};
+    {% endfor %}
+}
+{% endfor %}
+
+
+{%endfor%}
+

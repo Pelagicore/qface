@@ -1,9 +1,18 @@
 #!/usr/bin/env python3
 import click
+import logging
+import logging.config
+import yaml
 from qface.generator import FileSystem, Generator
 
-system = FileSystem.parse_dir('./in')
+def setupLogging():
+    fp = open('log.yaml', 'r')
+    data = yaml.load(fp)
+    logging.config.dictConfig(data)
 
+setupLogging()
+
+logger = logging.getLogger(__name__)
 
 def paramterType(symbol):
     moduleName = symbol.package.nameParts[-1].capitalize()
@@ -48,6 +57,7 @@ def generate(input, output):
     generator.register_filter('parameterType', paramterType)
     ctx = {'output': output}
     for package in system.packages:
+        logger.debug('process %s' % package)
         moduleName = package.nameParts[-1].capitalize()
         ctx.update({'package': package, 'module': moduleName})
         packageOutput = generator.apply('{{output}}/{{package|lower}}', ctx)

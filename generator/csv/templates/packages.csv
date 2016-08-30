@@ -1,11 +1,11 @@
 {% for package in system.packages %}
     {%- for service in package.services -%}
-    {{package}}.{{service}}, SERVICE
+    SERVICE, {{package}}.{{service}}
     {% endfor -%}
     {%- for struct in package.structs -%}
-    {{package}}.{{struct}}, STRUCT
+    STRUCT , {{package}}.{{struct}}
     {% endfor -%}
     {%- for enum in package.enums -%}
-    {{package}}.{{enum}}, ENUM
+    ENUM   , {{package}}.{{enum}}
     {% endfor -%}
 {% endfor %}

@@ -1,6 +1,6 @@
 package com.pelagicore.test;
 
-service TestService {
+service ContactService {
   State state;
   int intValue;
   readonly string stringValue;
@@ -8,7 +8,9 @@ service TestService {
   real realValue;
   Contact currentContact;
 
-  void call();
+  void addContact(Contact contact);
+  void removeContact(Contact contact);
+  void updateContact(Contact contact);
 
   list<Contact> contactList;
   model<Contact> contactModel;

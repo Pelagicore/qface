@@ -71,11 +71,6 @@ def generate(input, output):
             ctx.update({'service': service})
             generator.write('{{path}}/{{service|lower}}.h', 'service.h', ctx)
             generator.write('{{path}}/{{service|lower}}.cpp', 'service.cpp', ctx)
-        for enum in package.enums:
-            ctx.update({'enum': enum})
-            generator.write('{{path}}/{{enum|lower}}.h', 'enum.h', ctx)
-            generator.write('{{path}}/{{enum|lower}}.cpp', 'enum.cpp', ctx)
-
         for struct in package.structs:
             ctx.update({'struct': struct})
             generator.write('{{path}}/{{struct|lower}}.h', 'struct.h', ctx)

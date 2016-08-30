@@ -8,16 +8,6 @@ QT += qml quick
 CONFIG += c++11
 
 
-SOURCES += \
-    {{module(package)|lower}}.cpp \
-{% for service in package.services %}
-    {{service|lower}}.cpp \
-{% endfor %}
-{% for struct in package.structs %}
-    {{struct|lower}}.cpp \
-{% endfor %}
-    plugin.cpp
-
 HEADERS += \
     {{module(package)|lower}}.h \
 {% for service in package.services %}
@@ -25,5 +15,17 @@ HEADERS += \
 {% endfor %}
 {% for struct in package.structs %}
     {{struct|lower}}.h \
+    {{struct|lower}}model.h \
 {% endfor %}
     plugin.h
+
+SOURCES += \
+    {{module(package)|lower}}.cpp \
+{% for service in package.services %}
+    {{service|lower}}.cpp \
+{% endfor %}
+{% for struct in package.structs %}
+    {{struct|lower}}.cpp \
+    {{struct|lower}}model.cpp \
+{% endfor %}
+    plugin.cpp

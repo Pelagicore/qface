@@ -26,6 +26,7 @@ QObject* {{module|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 {
     return {{struct}}();
 }
+{% endfor %}
 
 void {{class}}::registerTypes()
 {
@@ -36,8 +37,8 @@ void {{class}}::registerTypes()
 
 void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minorVersion)
 {
+    {% for struct in package.structs %}
+    qmlRegisterUncreatableType<{{struct}}Model>(uri.toLatin1(), majorVersion, minorVersion, "{{struct}}Model", "Model can not be instantiated from QML");
+    {% endfor %}
     qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{module}}", {{module|lower}}_singletontype_provider);
 }
-
-{% endfor %}
-

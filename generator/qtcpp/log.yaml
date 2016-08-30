@@ -10,7 +10,7 @@ handlers:
     stream: ext://sys.stdout
 loggers:
   qface.generator:
-    level: DEBUG
+    level: WARN
     handlers: [console]
     propagate: no
 root:

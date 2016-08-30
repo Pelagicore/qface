@@ -5,14 +5,10 @@ import logging.config
 import yaml
 from qface.generator import FileSystem, Generator
 
-def setupLogging():
-    fp = open('log.yaml', 'r')
-    data = yaml.load(fp)
-    logging.config.dictConfig(data)
 
-setupLogging()
-
+logging.config.dictConfig(yaml.load(open('log.yaml')))
 logger = logging.getLogger(__name__)
+
 
 def paramterType(symbol):
     moduleName = symbol.package.nameParts[-1].capitalize()
@@ -82,6 +78,8 @@ def generate(input, output):
             ctx.update({'struct': struct})
             generator.write('{{path}}/{{struct|lower}}.h', 'struct.h', ctx)
             generator.write('{{path}}/{{struct|lower}}.cpp', 'struct.cpp', ctx)
+            generator.write('{{path}}/{{struct|lower}}model.h', 'structmodel.h', ctx)
+            generator.write('{{path}}/{{struct|lower}}model.cpp', 'structmodel.cpp', ctx)
 
 
 @click.command()

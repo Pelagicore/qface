@@ -10,6 +10,7 @@
 
 {% for struct in package.structs %}
 #include "{{struct|lower}}.h"
+#include "{{struct|lower}}model.h"
 {% endfor %}
 
 class {{class}} : public QObject {

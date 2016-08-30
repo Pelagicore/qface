@@ -4,7 +4,7 @@
 ** Do not edit! All changes made to it will be lost.
 ****************************************************************************/
 
-#include <{{enum|lower}}.h>
+#include "{{enum|lower}}.h"
 
 {{enum.comment}}
 {{enum}}::{{enum}}(QObject *parent)

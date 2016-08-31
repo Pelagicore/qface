@@ -1,5 +1,4 @@
-from qface.idl.domain import System
-from qface.generator import FileSystem, Generator
+from qface.generator import FileSystem
 import logging
 import logging.config
 from pathlib import Path
@@ -9,12 +8,12 @@ logging.basicConfig()
 
 log = logging.getLogger(__name__)
 
-examples = Path('./examples')
-log.debug('examples folder: {0}'.format(examples.absolute()))
+inputPath = Path('tests/in')
+log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def load_system():
-    path = examples / 'vehicle.climate.ClimateControl.qface'
+    path = inputPath / 'climate.qface'
     return FileSystem.parse_document(path)
 
 

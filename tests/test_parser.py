@@ -9,18 +9,18 @@ logging.basicConfig()
 
 log = logging.getLogger(__name__)
 
-examples = Path('./examples')
-log.debug('examples folder: {0}'.format(examples.absolute()))
+inputPath = Path('tests/in')
+log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def loadTuner():
-    path = examples / 'entertainment.tuner.Tuner.qface'
+    path = inputPath / 'tuner.qface'
     return FileSystem.parse_document(path)
 
 
 def test_parse():
     log.debug('test parse')
-    names = FileSystem.find_files(examples, '*.qface')
+    names = FileSystem.find_files(inputPath, '*.qface')
     # import pdb; pdb.set_trace()
     system = System()
     for name in names:

@@ -1,0 +1,33 @@
+package com.pelagicore.test;
+
+service ContactService {
+  State state;
+  int intValue;
+  readonly string stringValue;
+  bool boolValue;
+  real realValue;
+  Contact currentContact;
+
+  void addContact(Contact contact);
+  void removeContact(Contact contact);
+  void updateContact(Contact contact);
+
+  list<Contact> contactList;
+  model<Contact> contactModel;
+}
+
+enum State {
+    Null = 0x00,
+    Loading = 0x01,
+    Ready = 0x02,
+    Failure = 0x03
+}
+
+/*!
+ * The contact information
+ */
+struct Contact {
+    string name;
+    int age;
+    bool isMarried;
+}

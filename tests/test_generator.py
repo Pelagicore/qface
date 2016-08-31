@@ -1,4 +1,3 @@
-from qface.idl.domain import System
 from qface.generator import FileSystem, Generator
 import logging
 import logging.config
@@ -9,18 +8,18 @@ logging.basicConfig()
 
 log = logging.getLogger(__name__)
 
-examples = Path('./examples')
-log.debug('examples folder: {0}'.format(examples.absolute()))
+inputPath = Path('tests/in')
+log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def loadSystem():
-    path = examples / 'entertainment.tuner.Tuner.qface'
+    path = inputPath / 'tuner.qface'
     return FileSystem.parse_document(path)
 
 
 def test_gen_package():
     system = loadSystem()
-    gen = Generator()
+    gen = Generator(searchpath='tests/templates')
     template = "{{package}}"
     package = system.lookup_package('entertainment.tuner')
     text = gen.apply(template, {"package": package})
@@ -29,7 +28,7 @@ def test_gen_package():
 
 def test_gen_service():
     system = loadSystem()
-    gen = Generator()
+    gen = Generator(searchpath='tests/templates')
     template = """
         {%- for service in package.services -%}
             {{service}}

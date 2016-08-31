@@ -23,9 +23,10 @@ def upper_first_filter(s):
 
 
 class Generator(object):
-    def __init__(self, searchpath: str ='templates'):
-        searchpath = Path(searchpath).resolve().as_posix()
-        self.env = Environment(loader=FileSystemLoader(searchpath), trim_blocks=True, lstrip_blocks=True)
+    def __init__(self, searchpath: str): 
+        if searchpath:       
+            searchpath = Path(searchpath).resolve().as_posix()
+            self.env = Environment(loader=FileSystemLoader(searchpath), trim_blocks=True, lstrip_blocks=True)
         self.register_filters()
 
     def get_template(self, name: str):

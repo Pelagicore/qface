@@ -32,7 +32,7 @@ def antlr():
 
 @cli.command()
 def test():
-    sh('python3 -m pytest -v -s -l --pdb')
+    sh('python3 -m pytest -v -s -l')
 
 
 @cli.command()

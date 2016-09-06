@@ -31,7 +31,7 @@ The IDL grammar is described in the grammar file (see qface/parser/idl/T.g4)
 
     [import <identifier> <version>];
 
-    service <identifier> {
+    interface <identifier> {
         (readonly) <type> <attribute>;
         <type> <operation>([type name]);
         event <type> <operation>([type name]);
@@ -82,8 +82,8 @@ The code generation is driven by a small script which iterates over the domain m
 This script reads the input directory returns a system object form the domain model. This is used as the root object for the code generation inside the template language.
 
     {% for package in system.packages %}
-        {%- for service in package.services -%}
-        SERVICE, {{package}}.{{service}}
+        {%- for interface in package.interfaces -%}
+        SERVICE, {{package}}.{{interface}}
         {% endfor -%}
         {%- for struct in package.structs -%}
         STRUCT , {{package}}.{{struct}}

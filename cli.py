@@ -26,17 +26,21 @@ def cli():
 
 @cli.command()
 def antlr():
+    """generate a new parser based on the grammar using antlr"""
     cwd = str(Path('qface/idl/parser').absolute())
     sh('antlr4 -Dlanguage=Python3 -Werror -package qface.idl.parser -o . -listener -visitor T.g4', cwd=cwd)
 
 
 @cli.command()
-def test():
-    sh('python3 -m pytest -v -s -l')
+@click.option('--debug/--nodebug')
+def test(debug):
+    """run the tests"""
+    sh('python3 -m pytest -v -s -l {0}'.format('-pdb' if debug else ''))
 
 
 @cli.command()
 def test_ci():
+    """run the tests for CI integration"""
     sh('python3 -m pytest -v -s -l')
 
 
@@ -55,13 +59,13 @@ class RunTestChangeHandler(FileSystemEventHandler):
 @cli.command()
 @click.pass_context
 def test_monitor(ctx):
+    """run the tests and re-run on changes"""
     sh('python3 -m pytest -v -s -l')
     while True:
         event_handler = RunTestChangeHandler(ctx)
         observer = Observer()
-        observer.schedule(event_handler, './tests', recursive=False)
-        observer.schedule(event_handler, './examples', recursive=False)
-        observer.schedule(event_handler, './qface/idl', recursive=False)
+        observer.schedule(event_handler, './tests', recursive=True)
+        observer.schedule(event_handler, './qface', recursive=True)
         observer.start()
         try:
             while True:
@@ -91,7 +95,8 @@ class RunScriptChangeHandler(FileSystemEventHandler):
 @click.option('--generator', type=click.Path(exists=True))
 @click.option('--input', type=click.Path(exists=True))
 @click.option('--output', type=click.Path(exists=True))
-def generator_monitor(runner, generator, input, output):
+def generate_monitor(runner, generator, input, output):
+    """run the named generator and monitor the input and generator folder"""
     if runner:
         config = yaml.load(runner)
         generator = config['generator']
@@ -116,22 +121,50 @@ def generator_monitor(runner, generator, input, output):
 
 @cli.command()
 @click.option('--runner', type=click.File('r'))
+@click.option('--reload/--no-reload', default=False)
 @click.option('--generator', type=click.Path(exists=True))
 @click.option('--input', type=click.Path(exists=True))
 @click.option('--output', type=click.Path(exists=True))
-def generate(runner, generator, input, output):
+def generate(runner, generator, input, output, reload):
+    """run the named generator"""
     if runner:
         config = yaml.load(runner)
         generator = config['generator']
         input = config['input']
         output = config['output']
     generator = Path(generator).absolute()
+    input = Path(input).absolute()
+    output = Path(output).absolute()
+    if not reload:
+        _generate_once(generator, input, output)
+    else:
+        _generate_reload(generator, input, output)
+
+
+def _generate_once(generator, input, output):
     script = '{0}.py'.format(generator.name)
     input = Path(input).absolute()
     output = Path(output).absolute()
     sh('python3 {0} --input {1} --output {2}'
         .format(script, input, output),
         cwd=generator.as_posix())
+
+
+def _generate_reload(generator, input, output):
+    """run the named generator and monitor the input and generator folder"""
+    script = generator / '{0}.py --input {1} --output {2}'.format(generator.name, input, output)
+    event_handler = RunScriptChangeHandler(script, cwd=generator.as_posix())
+    observer = Observer()
+    observer.schedule(event_handler, generator.as_posix(), recursive=True)
+    observer.schedule(event_handler, input.as_posix(), recursive=True)
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
+
 
 if __name__ == '__main__':
     cli()

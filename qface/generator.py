@@ -23,23 +23,30 @@ def upper_first_filter(s):
 
 
 class Generator(object):
-    def __init__(self, searchpath: str): 
-        if searchpath:       
+    """Manages the templates and applies your context data"""
+    def __init__(self, searchpath: str):
+        if searchpath:
             searchpath = Path(searchpath).resolve().as_posix()
             self.env = Environment(loader=FileSystemLoader(searchpath), trim_blocks=True, lstrip_blocks=True)
-        self.register_filters()
+        self.env.filters['upperfirst'] = upper_first_filter
 
     def get_template(self, name: str):
+        """Retrievs a single template file from the template loader"""
         return self.env.get_template(name)
 
     def render(self, name: str, context: dict):
+        """Returns the rendered text from a single template file from the
+        template loader using the given context data"""
         template = self.get_template(name)
         return template.render(context)
 
     def apply(self, template: Template, context: dict):
+        """Return the rendered text of a template instance"""
         return Template(template).render(context)
 
     def write(self, fileTemplate: str, template: str, context: dict):
+        """Using a templated file name it renders a template
+           into a file given a context"""
         path = Path(self.apply(fileTemplate, context))
         self.mkdir(path.parent)
         logger.info('write {0}'.format(path))
@@ -47,22 +54,28 @@ class Generator(object):
         path.open('w').write(data)
 
     def mkdir(self, path: str):
+        """Makes a directory including all its parents"""
         path = Path(path)
         try:
             path.mkdir(parents=True)
         except OSError:
             pass
 
-    def register_filters(self):
-        self.env.filters['upperfirst'] = upper_first_filter
-
     def register_filter(self, name, callback):
+        """Register your custom template filter"""
         self.env.filters[name] = callback
 
 
 class FileSystem(object):
+    """QFace helper function to work with the file system"""
+
     @staticmethod
     def parse_document(path: str, system: System = None):
+        """Parses a document and returns the resulting domain system
+
+        :param path: document path to parse
+        :param system: system to be used (optional)
+        """
         system = system or System()
         listener = DomainListener(system)
         FileSystem._parse_document(path, listener)
@@ -82,6 +95,13 @@ class FileSystem(object):
 
     @staticmethod
     def parse_dir(path, identifier: str = None, clear_cache=True):
+        """Recursively parses a directory and returns the resulting system.
+        Stores the result of the run in the domain cache named after the identifier.
+
+        :param path: directory to parse
+        :param identifier: identifies the parse run. Used to name the cache
+        :param clear_cache: clears the domain cache (defaults to true)
+        """
         path = Path(path)
         logging.debug('parse_tree path={0}'.format(path))
         if not identifier:
@@ -104,6 +124,8 @@ class FileSystem(object):
 
     @staticmethod
     def find_files(path, glob='*.qface'):
+        """Find recursively all files given by glob parameter
+           in a give directory path"""
         path = Path(path)
         logging.debug('find_files path={0} glob={1}'.format(path, glob))
         return path.rglob(glob)

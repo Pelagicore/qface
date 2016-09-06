@@ -4,7 +4,7 @@ package vehicle.climate;
  * The ClimateControl provides a QML interface to the climate control
  * of the vehicle.
  */
-service ClimateControl {
+interface ClimateControl {
     /*!
      * Value is true if the air conditioning is enabled.
      */
@@ -106,6 +106,6 @@ enum ClimateMode {
     AutoClimate = 0x2
 }
 
-service Extra {
+interface Extra {
 
 }

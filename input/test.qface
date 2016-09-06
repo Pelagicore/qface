@@ -1,6 +1,6 @@
 package com.pelagicore.test;
 
-service ContactService {
+interface ContactService {
   State state;
   int intValue;
   readonly string stringValue;

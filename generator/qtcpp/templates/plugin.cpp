@@ -12,16 +12,16 @@
 
 #include "{{module|lower}}.h"
 
-{% for service in package.services %}
-#include "{{service|lower}}.h"
+{% for interface in package.interfaces %}
+#include "{{interface|lower}}.h"
 {% endfor %}
 
 void Plugin::registerTypes(const char *uri)
 {
     Qml{{module}}::registerTypes();    
     // @uri {{package|lower}}
-    {% for service in package.services %}
+    {% for interface in package.interfaces %}
     Qml{{module}}::registerQmlTypes(uri, 1, 0);    
-    Qml{{service}}::registerQmlTypes(uri, 1, 0);
+    Qml{{interface}}::registerQmlTypes(uri, 1, 0);
     {% endfor %}
 }

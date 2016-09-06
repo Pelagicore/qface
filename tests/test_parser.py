@@ -35,19 +35,19 @@ def test_package():
     assert package in system.packages
 
 
-def test_service():
+def test_interface():
     system = loadTuner()
     package = system.lookup_package('entertainment.tuner')
-    service = system.lookup_service('entertainment.tuner.Tuner')
-    assert service in package.services
-    assert service.comment == '/*! Service Tuner */'
+    interface = system.lookup_interface('entertainment.tuner.Tuner')
+    assert interface in package.interfaces
+    assert interface.comment == '/*! Service Tuner */'
 
 
 def test_attribute():
     system = loadTuner()
-    service = system.lookup_service('entertainment.tuner.Tuner')
+    interface = system.lookup_interface('entertainment.tuner.Tuner')
     package = system.lookup_package('entertainment.tuner')
-    attr = service.attributeMap['currentStation']
+    attr = interface.attributeMap['currentStation']
     assert attr.type.name == 'Station'
     assert attr.package == package
     assert attr.type.qualifiedName == 'entertainment.tuner.Station'
@@ -86,14 +86,14 @@ def test_flag():
 
 def test_list():
     system = loadTuner()
-    service = system.lookup_service('entertainment.tuner.Tuner')
-    attr = service.attributeMap['primitiveList']
+    interface = system.lookup_interface('entertainment.tuner.Tuner')
+    attr = interface.attributeMap['primitiveList']
     assert attr.type.name == 'list'
     assert attr.type.is_list is True
     assert attr.type.nested.is_primitive
     assert attr.type.nested.name == 'int'
 
-    attr = service.attributeMap['complexList']
+    attr = interface.attributeMap['complexList']
     assert attr.type.name == 'list'
     assert attr.type.is_list is True
     assert attr.type.nested.is_complex
@@ -102,14 +102,14 @@ def test_list():
 
 def test_model():
     system = loadTuner()
-    service = system.lookup_service('entertainment.tuner.Tuner')
-    attr = service.attributeMap['primitiveModel']
+    interface = system.lookup_interface('entertainment.tuner.Tuner')
+    attr = interface.attributeMap['primitiveModel']
     assert attr.type.name == 'model'
     assert attr.type.is_model is True
     assert attr.type.nested.is_primitive
     assert attr.type.nested.name == 'int'
 
-    attr = service.attributeMap['complexModel']
+    attr = interface.attributeMap['complexModel']
     assert attr.type.name == 'model'
     assert attr.type.is_model is True
     assert attr.type.nested.is_complex

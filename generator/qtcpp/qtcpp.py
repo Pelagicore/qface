@@ -67,10 +67,10 @@ def generate(input, output):
         generator.write('{{path}}/{{package|lower}}.pro', 'project.pro', ctx)
         generator.write('{{path}}/{{module|lower}}module.h', 'module.h', ctx)
         generator.write('{{path}}/{{module|lower}}module.cpp', 'module.cpp', ctx)
-        for service in package.services:
-            ctx.update({'service': service})
-            generator.write('{{path}}/{{service|lower}}.h', 'service.h', ctx)
-            generator.write('{{path}}/{{service|lower}}.cpp', 'service.cpp', ctx)
+        for interface in package.interfaces:
+            ctx.update({'interface': interface})
+            generator.write('{{path}}/{{interface|lower}}.h', 'interface.h', ctx)
+            generator.write('{{path}}/{{interface|lower}}.cpp', 'interface.cpp', ctx)
         for struct in package.structs:
             ctx.update({'struct': struct})
             generator.write('{{path}}/{{struct|lower}}.h', 'struct.h', ctx)

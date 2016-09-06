@@ -4,23 +4,23 @@
 ** Do not edit! All changes made to it will be lost.
 ****************************************************************************/
 
-#include <{{service|lower}}.h>
+#include <{{interface|lower}}.h>
 
 #include <QtQml>
 
-{% set class = 'Qml{0}'.format(service) %}
+{% set class = 'Qml{0}'.format(interface) %}
 
-QObject* {{service|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
+QObject* {{interface|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 {
       return new {{class}}();
 }
 
 
-{{service.comment}}
+{{interface.comment}}
 {{class}}::{{class}}(QObject *parent)
     : QObject(parent)
 {
-{% for attribute in service.attributes %}
+{% for attribute in interface.attributes %}
 {% if attribute.type.is_model %}
     m_{{attribute}} = new {{attribute.type.nested}}Model(this);
 {% endif %}
@@ -29,10 +29,10 @@ QObject* {{service|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 
 void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minorVersion)
 {
-    qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{service}}", {{service|lower}}_singletontype_provider);
+    qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{interface}}", {{interface|lower}}_singletontype_provider);
 }
 
-{% for attribute in service.attributes %}
+{% for attribute in interface.attributes %}
 void {{class}}::set{{attribute|upperfirst}}({{ attribute|parameterType }})
 {
     if(m_{{attribute}} == {{attribute}}) {
@@ -49,7 +49,7 @@ void {{class}}::set{{attribute|upperfirst}}({{ attribute|parameterType }})
 
 {% endfor %}
 
-{% for operation in service.operations %}
+{% for operation in interface.operations %}
 {{operation.comment}}
 {{operation.type}} {{class}}::{{operation}}()
 {

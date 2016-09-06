@@ -17,10 +17,10 @@ def load_system():
     return FileSystem.parse_document(path)
 
 
-def test_service():
+def test_interface():
     system = load_system()
-    service = system.lookup_service('vehicle.climate.ClimateControl')
-    assert service.name == 'ClimateControl'
+    interface = system.lookup_interface('vehicle.climate.ClimateControl')
+    assert interface.name == 'ClimateControl'
 
 
 

@@ -1,7 +1,7 @@
 {# Copyright (c) Pelagicore AG 2016 #}
 {% for package in system.packages %}
-    {%- for service in package.services -%}
-    SERVICE, {{package}}.{{service}}
+    {%- for interface in package.interfaces -%}
+    SERVICE, {{package}}.{{interface}}
     {% endfor -%}
     {%- for struct in package.structs -%}
     STRUCT , {{package}}.{{struct}}

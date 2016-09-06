@@ -26,12 +26,12 @@ def test_gen_package():
     assert text == 'entertainment.tuner'
 
 
-def test_gen_service():
+def test_gen_interface():
     system = loadSystem()
     gen = Generator(searchpath='tests/templates')
     template = """
-        {%- for service in package.services -%}
-            {{service}}
+        {%- for interface in package.interfaces -%}
+            {{interface}}
         {%- endfor -%}
     """
     package = system.lookup_package('entertainment.tuner')

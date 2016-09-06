@@ -11,8 +11,8 @@ CONFIG += c++11
 
 HEADERS += \
     {{module(package)|lower}}.h \
-{% for service in package.services %}
-    {{service|lower}}.h \
+{% for interface in package.interfaces %}
+    {{interface|lower}}.h \
 {% endfor %}
 {% for struct in package.structs %}
     {{struct|lower}}.h \
@@ -22,8 +22,8 @@ HEADERS += \
 
 SOURCES += \
     {{module(package)|lower}}.cpp \
-{% for service in package.services %}
-    {{service|lower}}.cpp \
+{% for interface in package.interfaces %}
+    {{interface|lower}}.cpp \
 {% endfor %}
 {% for struct in package.structs %}
     {{struct|lower}}.cpp \

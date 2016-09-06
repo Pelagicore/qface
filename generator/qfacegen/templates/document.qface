@@ -1,16 +1,16 @@
 {# Copyright (c) Pelagicore AG 2016 #}
 package {{package}}{{counter}};
 
-{%for service in package.services %}
-service {{service}} {
-    {% for attribute in service.attributes %}
+{%for interface in package.interfaces %}
+interface {{interface}} {
+    {% for attribute in interface.attributes %}
     {%+ if attribute.is_readonly %}readonly {% endif %}
     {%if attribute.type.is_list or attribute.type.is_model -%}
     {{attribute.type}}<{{attribute.type.nested}}> {{attribute}};
     {% else %}{{attribute.type}} {{attribute}};
     {% endif %}
     {% endfor %}
-    {% for operation in service.operations %}
+    {% for operation in interface.operations %}
     {{operation.type}} {{operation}}();
     {% endfor %}
 }

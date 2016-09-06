@@ -1,7 +1,7 @@
 package entertainment.tuner;
 
 /*! Service Tuner */
-service Tuner {
+interface Tuner {
     /*! attribute currentStation */
     readonly Station currentStation;
     /*! operation nextStation */

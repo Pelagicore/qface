@@ -105,7 +105,7 @@ intSymbol
 
 INTCONSTANT     : ('+' | '-')? '0'..'9'+;
 HEXCONSTANT     : '0x' ('0'..'9' | 'a'..'f' | 'A'..'F')+;
-IDENTIFIER      : [a-zA-Z0-9_][a-zA-Z0-9_\.]*;
+IDENTIFIER      : [a-zA-Z_][a-zA-Z0-9_\.]*;
 DOCCOMMENT      : '/*!' .*? '*/';
 WHITESPACE      : [ \t\r\n]+ -> skip;
 COMMENT         : '//' ~[\r\n]* -> skip;

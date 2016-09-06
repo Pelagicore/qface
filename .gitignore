@@ -3,3 +3,6 @@ __pycache__
 out
 .idea
 output
+docs/_build/*
+*.pyc
+*.log

@@ -1,4 +1,4 @@
-package vehicle.climate;
+module vehicle.climate;
 
 /*!
  * The ClimateControl provides a QML interface to the climate control

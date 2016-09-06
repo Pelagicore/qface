@@ -115,7 +115,7 @@ class FileSystem(object):
             system = cache[identifier]
         else:
             # if domain model not cached generate it
-            documents = path.rglob('*.qface')
+            documents = path.rglob('*.qdl')
             for document in documents:
                 listener = DomainListener(system)
                 FileSystem._parse_document(document, listener)
@@ -123,7 +123,7 @@ class FileSystem(object):
         return system
 
     @staticmethod
-    def find_files(path, glob='*.qface'):
+    def find_files(path, glob='*.qdl'):
         """Find recursively all files given by glob parameter
            in a give directory path"""
         path = Path(path)

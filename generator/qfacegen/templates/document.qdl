@@ -1,7 +1,7 @@
 {# Copyright (c) Pelagicore AG 2016 #}
-package {{package}}{{counter}};
+module {{module}}{{counter}};
 
-{%for interface in package.interfaces %}
+{%for interface in module.interfaces %}
 interface {{interface}} {
     {% for attribute in interface.attributes %}
     {%+ if attribute.is_readonly %}readonly {% endif %}
@@ -16,7 +16,7 @@ interface {{interface}} {
 }
 
 
-{% for enum in package.enums%}
+{% for enum in module.enums%}
 {% set comma = joiner(",") %}
 enum {{enum}} { 
     {%- for member in enum.members -%}
@@ -27,7 +27,7 @@ enum {{enum}} {
 {%- endfor %}
 
 
-{% for struct in package.structs %}
+{% for struct in module.structs %}
 struct {{struct}} {
     {% for member in struct.members %}
     {{member.type}} {{member}};

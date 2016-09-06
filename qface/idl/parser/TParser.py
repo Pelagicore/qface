@@ -101,7 +101,7 @@ class TParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'import'", "';'", "'package'", "'interface'", 
+    literalNames = [ "<INVALID>", "'import'", "';'", "'module'", "'interface'", 
                      "'{'", "'}'", "'event'", "'void'", "'('", "')'", "'readonly'", 
                      "','", "'bool'", "'int'", "'real'", "'string'", "'list'", 
                      "'<'", "'>'", "'model'", "'struct'", "'enum'", "'flag'", 
@@ -119,7 +119,7 @@ class TParser ( Parser ):
     RULE_documentSymbol = 0
     RULE_headerSymbol = 1
     RULE_importSymbol = 2
-    RULE_packageSymbol = 3
+    RULE_moduleSymbol = 3
     RULE_definitionSymbol = 4
     RULE_interfaceSymbol = 5
     RULE_memberSymbol = 6
@@ -138,7 +138,7 @@ class TParser ( Parser ):
     RULE_enumMemberSymbol = 19
     RULE_intSymbol = 20
 
-    ruleNames =  [ "documentSymbol", "headerSymbol", "importSymbol", "packageSymbol", 
+    ruleNames =  [ "documentSymbol", "headerSymbol", "importSymbol", "moduleSymbol", 
                    "definitionSymbol", "interfaceSymbol", "memberSymbol", 
                    "operationSymbol", "attributeSymbol", "parameterSymbol", 
                    "typeSymbol", "complexTypeSymbol", "primitiveTypeSymbol", 
@@ -257,8 +257,8 @@ class TParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def packageSymbol(self):
-            return self.getTypedRuleContext(TParser.PackageSymbolContext,0)
+        def moduleSymbol(self):
+            return self.getTypedRuleContext(TParser.ModuleSymbolContext,0)
 
 
         def importSymbol(self, i:int=None):
@@ -296,7 +296,7 @@ class TParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 49
-            self.packageSymbol()
+            self.moduleSymbol()
             self.state = 53
             self._errHandler.sync(self)
             _la = self._input.LA(1)
@@ -365,7 +365,7 @@ class TParser ( Parser ):
             self.exitRule()
         return localctx
 
-    class PackageSymbolContext(ParserRuleContext):
+    class ModuleSymbolContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -380,29 +380,29 @@ class TParser ( Parser ):
             return self.getToken(TParser.DOCCOMMENT, 0)
 
         def getRuleIndex(self):
-            return TParser.RULE_packageSymbol
+            return TParser.RULE_moduleSymbol
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterPackageSymbol" ):
-                listener.enterPackageSymbol(self)
+            if hasattr( listener, "enterModuleSymbol" ):
+                listener.enterModuleSymbol(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitPackageSymbol" ):
-                listener.exitPackageSymbol(self)
+            if hasattr( listener, "exitModuleSymbol" ):
+                listener.exitModuleSymbol(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitPackageSymbol" ):
-                return visitor.visitPackageSymbol(self)
+            if hasattr( visitor, "visitModuleSymbol" ):
+                return visitor.visitModuleSymbol(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def packageSymbol(self):
+    def moduleSymbol(self):
 
-        localctx = TParser.PackageSymbolContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 6, self.RULE_packageSymbol)
+        localctx = TParser.ModuleSymbolContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 6, self.RULE_moduleSymbol)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)

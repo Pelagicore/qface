@@ -24,8 +24,8 @@ class TVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by TParser#packageSymbol.
-    def visitPackageSymbol(self, ctx:TParser.PackageSymbolContext):
+    # Visit a parse tree produced by TParser#moduleSymbol.
+    def visitModuleSymbol(self, ctx:TParser.ModuleSymbolContext):
         return self.visitChildren(ctx)
 
 

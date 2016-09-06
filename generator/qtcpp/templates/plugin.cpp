@@ -1,6 +1,6 @@
 {# Copyright (c) Pelagicore AG 2016 #}
-{% from 'helper.tpl' import module %}
-{% set module = module(package) %}
+{% from 'helper.tpl' import qualifiedModuleName %}
+{% set moduleName = qualifiedModuleName(module) %}
 /****************************************************************************
 ** This is an auto-generated file.
 ** Do not edit! All changes made to it will be lost.
@@ -10,18 +10,18 @@
 
 #include <qqml.h>
 
-#include "{{module|lower}}.h"
+#include "{{moduleName|lower}}.h"
 
-{% for interface in package.interfaces %}
+{% for interface in module.interfaces %}
 #include "{{interface|lower}}.h"
 {% endfor %}
 
 void Plugin::registerTypes(const char *uri)
 {
     Qml{{module}}::registerTypes();    
-    // @uri {{package|lower}}
-    {% for interface in package.interfaces %}
-    Qml{{module}}::registerQmlTypes(uri, 1, 0);    
+    // @uri {{module|lower}}
+    {% for interface in module.interfaces %}
+    Qml{{moduleName}}::registerQmlTypes(uri, 1, 0);
     Qml{{interface}}::registerQmlTypes(uri, 1, 0);
     {% endfor %}
 }

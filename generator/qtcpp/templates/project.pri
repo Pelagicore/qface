@@ -10,22 +10,22 @@ CONFIG += c++11
 
 
 HEADERS += \
-    {{module(package)|lower}}.h \
-{% for interface in package.interfaces %}
+    {{qualifiedModuleName(module)|lower}}.h \
+{% for interface in module.interfaces %}
     {{interface|lower}}.h \
 {% endfor %}
-{% for struct in package.structs %}
+{% for struct in module.structs %}
     {{struct|lower}}.h \
     {{struct|lower}}model.h \
 {% endfor %}
     plugin.h
 
 SOURCES += \
-    {{module(package)|lower}}.cpp \
-{% for interface in package.interfaces %}
+    {{qualifiedModuleName(module)|lower}}.cpp \
+{% for interface in module.interfaces %}
     {{interface|lower}}.cpp \
 {% endfor %}
-{% for struct in package.structs %}
+{% for struct in module.structs %}
     {{struct|lower}}.cpp \
     {{struct|lower}}model.cpp \
 {% endfor %}

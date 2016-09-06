@@ -1,4 +1,4 @@
-package entertainment.tuner;
+module entertainment.tuner;
 
 /*! Service Tuner */
 interface Tuner {

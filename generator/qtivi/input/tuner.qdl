@@ -1,0 +1,32 @@
+module ivimedia;
+
+interface AmFmTuner {
+  int frequency;
+  readonly int minimumFrequency;
+  readonly int maximumFrequency;
+  readonly int stepSize;
+  Band band;
+  readonly AmFmStation station;
+  bool scanRunning;
+
+  void tune(AmFmStation station);
+
+  event void scanStarted();
+  event void scanStopped();
+}
+
+enum Band {
+    AMBand,
+    FMBand
+};
+
+
+struct AmFmStation {
+  string stationName;
+  int frequency;
+  string stationLogoUrl;
+  string category;
+  string radioText;
+  int receptionQuality;
+  Band band;
+}

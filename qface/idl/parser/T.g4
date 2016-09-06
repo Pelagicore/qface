@@ -7,19 +7,19 @@ documentSymbol
     ;
 
 /**
-package name;
+module name;
 import name;
 */
 headerSymbol
-    : packageSymbol importSymbol*
+    : moduleSymbol importSymbol*
     ;
 
 importSymbol
     : 'import' name=IDENTIFIER ';'
     ;
 
-packageSymbol
-    : comment=DOCCOMMENT? 'package' name=IDENTIFIER ';'
+moduleSymbol
+    : comment=DOCCOMMENT? 'module' name=IDENTIFIER ';'
     ;
 
 definitionSymbol

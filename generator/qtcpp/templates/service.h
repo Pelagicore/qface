@@ -1,6 +1,6 @@
 {# Copyright (c) Pelagicore AG 2016 #}
-{% from 'helper.tpl' import module %}
-{% set module = module(package) %}
+{% from 'helper.tpl' import qualifiedModuleName %}
+{% set moduleName= qualifiedModuleName(module) %}
 {% set class = 'Qml{0}'.format(interface) %}
 /****************************************************************************
 ** This is an auto-generated file.
@@ -11,7 +11,7 @@
 
 #include <QtCore>
 
-#include "{{module|lower}}.h"
+#include "{{moduleName|lower}}.h"
 
 class {{class}} : public QObject
 {

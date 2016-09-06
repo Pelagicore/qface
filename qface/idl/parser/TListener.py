@@ -35,12 +35,12 @@ class TListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by TParser#packageSymbol.
-    def enterPackageSymbol(self, ctx:TParser.PackageSymbolContext):
+    # Enter a parse tree produced by TParser#moduleSymbol.
+    def enterModuleSymbol(self, ctx:TParser.ModuleSymbolContext):
         pass
 
-    # Exit a parse tree produced by TParser#packageSymbol.
-    def exitPackageSymbol(self, ctx:TParser.PackageSymbolContext):
+    # Exit a parse tree produced by TParser#moduleSymbol.
+    def exitModuleSymbol(self, ctx:TParser.ModuleSymbolContext):
         pass
 
 

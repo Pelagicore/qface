@@ -1,15 +1,15 @@
 {# Copyright (c) Pelagicore AG 2016 #}
-{% from 'helper.tpl' import module %}
+{% from 'helper.tpl' import qualifiedModuleName %}
 /****************************************************************************
 ** This is an auto-generated file.
 ** Do not edit! All changes made to it will be lost.
 ****************************************************************************/
-{% set module = module(package) %}
-{% set class = 'Qml{0}'.format(module) %}
+{% set moduleName = qualifiedModuleName(module) %}
+{% set class = 'Qml{0}'.format(moduleName) %}
 
 #pragma once
 
-{% for struct in package.structs %}
+{% for struct in module.structs %}
 #include "{{struct|lower}}.h"
 #include "{{struct|lower}}model.h"
 {% endfor %}
@@ -19,7 +19,7 @@ class {{class}} : public QObject {
 public:
     {{class}}(QObject *parent=0);
 
-{% for enum in package.enums %}
+{% for enum in module.enums %}
     {% set comma = joiner(",") %}
     enum {{enum}} { 
         {%- for member in enum.members -%}
@@ -30,7 +30,7 @@ public:
     Q_ENUM({{enum}})
 {% endfor %}
 
-{% for struct in package.structs %}
+{% for struct in module.structs %}
     Q_INVOKABLE {{struct}} create{{struct}}();
 {% endfor %}
 

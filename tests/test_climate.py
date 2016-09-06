@@ -13,7 +13,7 @@ log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def load_system():
-    path = inputPath / 'climate.qface'
+    path = inputPath / 'climate.qdl'
     return FileSystem.parse_document(path)
 
 

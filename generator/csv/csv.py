@@ -9,7 +9,7 @@ def generate(input, output):
     system = FileSystem.parse_dir(input)
     generator = Generator(searchpath='templates')
     ctx = {'output': output, 'system': system}
-    generator.write('{{output}}/packages.csv', 'packages.csv', ctx)
+    generator.write('{{output}}/modules.csv', 'modules.csv', ctx)
 
 
 @click.command()

@@ -7,11 +7,11 @@
 TEMPLATE = lib
 QT += qml quick
 CONFIG += qt plugin c++11
-TARGET = $$qtLibraryTarget({{package|lower}})
+TARGET = $$qtLibraryTarget({{module|lower}})
 
-uri = {{package}}
+uri = {{module}}
 
-include( {{package|lower}}.pri )
+include( {{module|lower}}.pri )
 
 
 DISTFILES = qmldir

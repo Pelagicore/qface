@@ -13,16 +13,16 @@ log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def loadSystem():
-    path = inputPath / 'tuner.qface'
+    path = inputPath / 'tuner.qdl'
     return FileSystem.parse_document(path)
 
 
-def test_gen_package():
+def test_gen_module():
     system = loadSystem()
     gen = Generator(searchpath='tests/templates')
-    template = "{{package}}"
-    package = system.lookup_package('entertainment.tuner')
-    text = gen.apply(template, {"package": package})
+    template = "{{module}}"
+    module = system.lookup_module('entertainment.tuner')
+    text = gen.apply(template, {"module": module})
     assert text == 'entertainment.tuner'
 
 
@@ -30,11 +30,11 @@ def test_gen_interface():
     system = loadSystem()
     gen = Generator(searchpath='tests/templates')
     template = """
-        {%- for interface in package.interfaces -%}
+        {%- for interface in module.interfaces -%}
             {{interface}}
         {%- endfor -%}
     """
-    package = system.lookup_package('entertainment.tuner')
-    text = gen.apply(template, {"package": package})
+    module = system.lookup_module('entertainment.tuner')
+    text = gen.apply(template, {"module": module})
     assert text == 'Tuner'
 

@@ -1,4 +1,4 @@
 {# Copyright (c) Pelagicore AG 2016 #}
-{% macro module(package) -%}
-{{package.nameParts|last|capitalize}}Module
+{% macro qualifiedModuleName(module) -%}
+{{module.nameParts|last|capitalize}}Module
 {%- endmacro %}

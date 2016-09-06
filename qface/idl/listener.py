@@ -15,7 +15,7 @@ class DomainListener(TListener):
     def __init__(self, system):
         super(DomainListener, self).__init__()
         self.system = system or System()  # type:System
-        self.package = None  # type:Package
+        self.module = None  # type:Module
         self.interface = None  # type:Interface
         self.struct = None  # type:Struct
         self.enum = None  # type:Enum
@@ -63,37 +63,37 @@ class DomainListener(TListener):
     def exitEveryRule(self, ctx):
         log.debug('exit ' + ctx.__class__.__name__)
 
-    def enterPackageSymbol(self, ctx: TParser.PackageSymbolContext):
+    def enterModuleSymbol(self, ctx: TParser.ModuleSymbolContext):
         assert self.system
         name = ctx.name.text
-        self.package = Package(name, self.system)
+        self.module = Module(name, self.system)
 
-    def exitPackageSymbol(self, ctx: TParser.PackageSymbolContext):
+    def exitModuleSymbol(self, ctx: TParser.ModuleSymbolContext):
         pass
 
     def enterInterfaceSymbol(self, ctx: TParser.InterfaceSymbolContext):
-        assert self.package
+        assert self.module
         name = ctx.name.text
-        self.interface = Interface(name, self.package)
+        self.interface = Interface(name, self.module)
         self.parse_comment(ctx, self.interface)
 
     def exitInterfaceSymbol(self, ctx: TParser.InterfaceSymbolContext):
         self.interface = None
 
     def enterStructSymbol(self, ctx: TParser.StructSymbolContext):
-        assert self.package
+        assert self.module
         name = ctx.name.text
-        self.struct = Struct(name, self.package)
+        self.struct = Struct(name, self.module)
         self.parse_comment(ctx, self.struct)
 
     def exitStructSymbol(self, ctx: TParser.StructSymbolContext):
         self.struct = None
 
     def enterEnumSymbol(self, ctx: TParser.EnumSymbolContext):
-        assert self.package
+        assert self.module
         name = ctx.name.text
         # import ipdb; ipdb.set_trace()
-        self.enum = Enum(name, self.package)
+        self.enum = Enum(name, self.module)
         self.parse_comment(ctx, self.enum)
 
     def exitEnumSymbol(self, ctx: TParser.EnumSymbolContext):
@@ -157,9 +157,9 @@ class DomainListener(TListener):
         self.member = None
 
     def enterImportSymbol(self, ctx:TParser.ImportSymbolContext):
-        assert self.package
+        assert self.module
         name = ctx.name.text
-        self.package.importMap[name] = None
+        self.module.importMap[name] = None
 
 
     def exitImportSymbol(self, ctx:TParser.ImportSymbolContext):

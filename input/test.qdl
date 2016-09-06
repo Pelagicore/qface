@@ -1,4 +1,4 @@
-package com.pelagicore.test;
+module com.pelagicore.test;
 
 interface ContactService {
   State state;

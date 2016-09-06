@@ -1,0 +1,12 @@
+{# Copyright (c) Pelagicore AG 2016 #}
+{% for module in system.modules %}
+    {%- for interface in module.interfaces -%}
+    SERVICE, {{module}}.{{interface}}
+    {% endfor -%}
+    {%- for struct in module.structs -%}
+    STRUCT , {{module}}.{{struct}}
+    {% endfor -%}
+    {%- for enum in module.enums -%}
+    ENUM   , {{module}}.{{enum}}
+    {% endfor -%}
+{% endfor %}

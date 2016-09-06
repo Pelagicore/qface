@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def paramterType(symbol):
-    moduleName = symbol.package.nameParts[-1].capitalize()
+    moduleName = symbol.module.nameParts[-1].capitalize()
     if symbol.type.is_enum:
         return 'Qml{0}Module::{1} {2}'.format(moduleName, symbol.type, symbol)
     if symbol.type.is_void or symbol.type.is_primitive:
@@ -31,7 +31,7 @@ def paramterType(symbol):
 
 
 def returnType(symbol):
-    moduleName = symbol.package.nameParts[-1].capitalize()
+    moduleName = symbol.module.nameParts[-1].capitalize()
     if symbol.type.is_enum:
         return 'Qml{0}Module::{1}'.format(moduleName, symbol.type)
     if symbol.type.is_void or symbol.type.is_primitive:
@@ -54,24 +54,24 @@ def generate(input, output):
     generator.register_filter('returnType', returnType)
     generator.register_filter('parameterType', paramterType)
     ctx = {'output': output}
-    for package in system.packages:
-        logger.debug('process %s' % package)
-        moduleName = package.nameParts[-1].capitalize()
-        ctx.update({'package': package, 'module': moduleName})
-        packageOutput = generator.apply('{{output}}/{{package|lower}}', ctx)
-        ctx.update({'path': packageOutput})
+    for module in system.modules:
+        logger.debug('process %s' % module)
+        moduleName = module.nameParts[-1].capitalize()
+        ctx.update({'module': module, 'module': moduleName})
+        moduleOutput = generator.apply('{{output}}/{{module|lower}}', ctx)
+        ctx.update({'path': moduleOutput})
         generator.write('{{path}}/qmldir', 'qmldir', ctx)
         generator.write('{{path}}/plugin.cpp', 'plugin.cpp', ctx)
         generator.write('{{path}}/plugin.h', 'plugin.h', ctx)
-        generator.write('{{path}}/{{package|lower}}.pri', 'project.pri', ctx)
-        generator.write('{{path}}/{{package|lower}}.pro', 'project.pro', ctx)
+        generator.write('{{path}}/{{module|lower}}.pri', 'project.pri', ctx)
+        generator.write('{{path}}/{{module|lower}}.pro', 'project.pro', ctx)
         generator.write('{{path}}/{{module|lower}}module.h', 'module.h', ctx)
         generator.write('{{path}}/{{module|lower}}module.cpp', 'module.cpp', ctx)
-        for interface in package.interfaces:
+        for interface in module.interfaces:
             ctx.update({'interface': interface})
             generator.write('{{path}}/{{interface|lower}}.h', 'interface.h', ctx)
             generator.write('{{path}}/{{interface|lower}}.cpp', 'interface.cpp', ctx)
-        for struct in package.structs:
+        for struct in module.structs:
             ctx.update({'struct': struct})
             generator.write('{{path}}/{{struct|lower}}.h', 'struct.h', ctx)
             generator.write('{{path}}/{{struct|lower}}.cpp', 'struct.cpp', ctx)

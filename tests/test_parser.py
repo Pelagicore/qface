@@ -14,13 +14,13 @@ log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def loadTuner():
-    path = inputPath / 'tuner.qface'
+    path = inputPath / 'tuner.qdl'
     return FileSystem.parse_document(path)
 
 
 def test_parse():
     log.debug('test parse')
-    names = FileSystem.find_files(inputPath, '*.qface')
+    names = FileSystem.find_files(inputPath, '*.qdl')
     # import pdb; pdb.set_trace()
     system = System()
     for name in names:
@@ -28,28 +28,28 @@ def test_parse():
         FileSystem.parse_document(name, system)
 
 
-def test_package():
+def test_module():
     system = loadTuner()
-    assert len(system.packages) == 1
-    package = system.lookup_package('entertainment.tuner')
-    assert package in system.packages
+    assert len(system.modules) == 1
+    module = system.lookup_module('entertainment.tuner')
+    assert module in system.modules
 
 
 def test_interface():
     system = loadTuner()
-    package = system.lookup_package('entertainment.tuner')
+    module = system.lookup_module('entertainment.tuner')
     interface = system.lookup_interface('entertainment.tuner.Tuner')
-    assert interface in package.interfaces
+    assert interface in module.interfaces
     assert interface.comment == '/*! Service Tuner */'
 
 
 def test_attribute():
     system = loadTuner()
     interface = system.lookup_interface('entertainment.tuner.Tuner')
-    package = system.lookup_package('entertainment.tuner')
+    module = system.lookup_module('entertainment.tuner')
     attr = interface.attributeMap['currentStation']
     assert attr.type.name == 'Station'
-    assert attr.package == package
+    assert attr.module == module
     assert attr.type.qualifiedName == 'entertainment.tuner.Station'
     assert attr.is_readonly
     assert attr.comment == '/*! attribute currentStation */'
@@ -57,10 +57,10 @@ def test_attribute():
 
 def test_struct():
     system = loadTuner()
-    package = system.lookup_package('entertainment.tuner')
+    module = system.lookup_module('entertainment.tuner')
     symbol = system.lookup_struct('entertainment.tuner.Station')
     assert symbol.name == 'Station'
-    assert symbol.package == package
+    assert symbol.module == module
     assert symbol.qualifiedName == 'entertainment.tuner.Station'
     assert symbol.comment == '/*! struct Station */'
 
@@ -68,11 +68,11 @@ def test_struct():
 def test_enum():
     system = loadTuner()
     definition = system.lookup_definition('entertainment.tuner.Waveband')
-    package = system.lookup_package('entertainment.tuner')
+    module = system.lookup_module('entertainment.tuner')
     symbol = system.lookup_enum('entertainment.tuner.Waveband')
     assert definition == symbol
     assert symbol.name == 'Waveband'
-    assert symbol.package == package
+    assert symbol.module == module
     assert symbol.qualifiedName == 'entertainment.tuner.Waveband'
     assert symbol.comment == '/*! enum Waveband */'
     assert symbol.is_enum

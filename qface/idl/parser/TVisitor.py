@@ -49,8 +49,8 @@ class TVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by TParser#attributeSymbol.
-    def visitAttributeSymbol(self, ctx:TParser.AttributeSymbolContext):
+    # Visit a parse tree produced by TParser#propertySymbol.
+    def visitPropertySymbol(self, ctx:TParser.PropertySymbolContext):
         return self.visitChildren(ctx)
 
 

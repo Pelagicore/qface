@@ -2,7 +2,7 @@ module entertainment.tuner;
 
 /*! Service Tuner */
 interface Tuner {
-    /*! attribute currentStation */
+    /*! property currentStation */
     readonly Station currentStation;
     /*! operation nextStation */
     void nextStation();

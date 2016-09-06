@@ -16,8 +16,8 @@
 class {{class}} : public QObject
 {
     Q_OBJECT
-{% for attribute in interface.attributes %}
-    Q_PROPERTY({{attribute|returnType}} {{attribute}} READ {{attribute}} {%if not attribute.is_readonly%}WRITE set{{attribute|upperfirst}} {%endif%}NOTIFY {{attribute}}Changed)
+{% for property in interface.properties %}
+    Q_PROPERTY({{property|returnType}} {{property}} READ {{property}} {%if not property.is_readonly%}WRITE set{{property|upperfirst}} {%endif%}NOTIFY {{property}}Changed)
 {% endfor %}
 
 public:
@@ -31,18 +31,18 @@ public Q_SLOTS:
 {% endfor %}
 
 public:
-{% for attribute in interface.attributes %}
-    void set{{attribute|upperfirst}}({{ attribute|parameterType }});
-    {{attribute|returnType}} {{attribute}}() const;
+{% for property in interface.properties %}
+    void set{{property|upperfirst}}({{ property|parameterType }});
+    {{property|returnType}} {{property}}() const;
 
 {% endfor %}
 Q_SIGNALS:
-{% for attribute in interface.attributes %}
-    void {{attribute}}Changed({{attribute|parameterType}});
+{% for property in interface.properties %}
+    void {{property}}Changed({{property|parameterType}});
 {% endfor %}
 
 private:
-{% for attribute in interface.attributes %}
-    {{attribute|returnType}} m_{{attribute}};
+{% for property in interface.properties %}
+    {{property|returnType}} m_{{property}};
 {% endfor %}
 };

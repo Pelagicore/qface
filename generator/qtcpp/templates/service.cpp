@@ -20,9 +20,9 @@ QObject* {{interface|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 {{class}}::{{class}}(QObject *parent)
     : QObject(parent)
 {
-{% for attribute in interface.attributes %}
-{% if attribute.type.is_model %}
-    m_{{attribute}} = new {{attribute.type.nested}}Model(this);
+{% for property in interface.properties %}
+{% if property.type.is_model %}
+    m_{{property}} = new {{property.type.nested}}Model(this);
 {% endif %}
 {% endfor %}
 }
@@ -32,19 +32,19 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
     qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{interface}}", {{interface|lower}}_singletontype_provider);
 }
 
-{% for attribute in interface.attributes %}
-void {{class}}::set{{attribute|upperfirst}}({{ attribute|parameterType }})
+{% for property in interface.properties %}
+void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {
-    if(m_{{attribute}} == {{attribute}}) {
+    if(m_{{property}} == {{property}}) {
         return;
     }
-    m_{{attribute}} = {{attribute}};
-    emit {{attribute}}Changed({{attribute}});
+    m_{{property}} = {{property}};
+    emit {{property}}Changed({{property}});
 }
 
-{{attribute|returnType}} {{class}}::{{attribute}}() const
+{{property|returnType}} {{class}}::{{property}}() const
 {
-    return m_{{attribute}};
+    return m_{{property}};
 }
 
 {% endfor %}

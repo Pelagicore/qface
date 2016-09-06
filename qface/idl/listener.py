@@ -21,7 +21,7 @@ class DomainListener(TListener):
         self.enum = None  # type:Enum
         self.operation = None  # type:Operation
         self.parameter = None  # type:Parameter
-        self.attribute = None  # type:Attribute
+        self.property = None  # type:Property
         self.member = None  # type:Member
 
     def parse_type(self, ctx, type: TypeSymbol):
@@ -126,16 +126,16 @@ class DomainListener(TListener):
     def exitParameterSymbol(self, ctx: TParser.ParameterSymbolContext):
         self.parse_type(ctx, self.parameter.type)
 
-    def enterAttributeSymbol(self, ctx: TParser.AttributeSymbolContext):
+    def enterPropertySymbol(self, ctx: TParser.PropertySymbolContext):
         assert self.interface
         name = ctx.name.text
-        self.attribute = Attribute(name, self.interface)
-        self.attribute.is_readonly = bool(ctx.isReadOnly)
-        self.parse_comment(ctx, self.attribute)
-        self.parse_type(ctx, self.attribute.type)
+        self.property = Property(name, self.interface)
+        self.property.is_readonly = bool(ctx.isReadOnly)
+        self.parse_comment(ctx, self.property)
+        self.parse_type(ctx, self.property.type)
 
-    def exitAttributeSymbol(self, ctx: TParser.AttributeSymbolContext):
-        self.attribute = None
+    def exitPropertySymbol(self, ctx: TParser.PropertySymbolContext):
+        self.property = None
 
     def enterStructMemberSymbol(self, ctx: TParser.StructMemberSymbolContext):
         assert self.struct

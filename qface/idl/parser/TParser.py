@@ -124,7 +124,7 @@ class TParser ( Parser ):
     RULE_interfaceSymbol = 5
     RULE_memberSymbol = 6
     RULE_operationSymbol = 7
-    RULE_attributeSymbol = 8
+    RULE_propertySymbol = 8
     RULE_parameterSymbol = 9
     RULE_typeSymbol = 10
     RULE_complexTypeSymbol = 11
@@ -140,7 +140,7 @@ class TParser ( Parser ):
 
     ruleNames =  [ "documentSymbol", "headerSymbol", "importSymbol", "moduleSymbol", 
                    "definitionSymbol", "interfaceSymbol", "memberSymbol", 
-                   "operationSymbol", "attributeSymbol", "parameterSymbol", 
+                   "operationSymbol", "propertySymbol", "parameterSymbol", 
                    "typeSymbol", "complexTypeSymbol", "primitiveTypeSymbol", 
                    "listTypeSymbol", "modelTypeSymbol", "structSymbol", 
                    "structMemberSymbol", "enumSymbol", "enumTypeSymbol", 
@@ -591,8 +591,8 @@ class TParser ( Parser ):
             return self.getTypedRuleContext(TParser.OperationSymbolContext,0)
 
 
-        def attributeSymbol(self):
-            return self.getTypedRuleContext(TParser.AttributeSymbolContext,0)
+        def propertySymbol(self):
+            return self.getTypedRuleContext(TParser.PropertySymbolContext,0)
 
 
         def getRuleIndex(self):
@@ -632,7 +632,7 @@ class TParser ( Parser ):
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 87
-                self.attributeSymbol()
+                self.propertySymbol()
                 pass
 
 
@@ -750,7 +750,7 @@ class TParser ( Parser ):
             self.exitRule()
         return localctx
 
-    class AttributeSymbolContext(ParserRuleContext):
+    class PropertySymbolContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -770,29 +770,29 @@ class TParser ( Parser ):
             return self.getToken(TParser.DOCCOMMENT, 0)
 
         def getRuleIndex(self):
-            return TParser.RULE_attributeSymbol
+            return TParser.RULE_propertySymbol
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterAttributeSymbol" ):
-                listener.enterAttributeSymbol(self)
+            if hasattr( listener, "enterPropertySymbol" ):
+                listener.enterPropertySymbol(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitAttributeSymbol" ):
-                listener.exitAttributeSymbol(self)
+            if hasattr( listener, "exitPropertySymbol" ):
+                listener.exitPropertySymbol(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitAttributeSymbol" ):
-                return visitor.visitAttributeSymbol(self)
+            if hasattr( visitor, "visitPropertySymbol" ):
+                return visitor.visitPropertySymbol(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def attributeSymbol(self):
+    def propertySymbol(self):
 
-        localctx = TParser.AttributeSymbolContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 16, self.RULE_attributeSymbol)
+        localctx = TParser.PropertySymbolContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 16, self.RULE_propertySymbol)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)

@@ -3,11 +3,11 @@ module {{module}}{{counter}};
 
 {%for interface in module.interfaces %}
 interface {{interface}} {
-    {% for attribute in interface.attributes %}
-    {%+ if attribute.is_readonly %}readonly {% endif %}
-    {%if attribute.type.is_list or attribute.type.is_model -%}
-    {{attribute.type}}<{{attribute.type.nested}}> {{attribute}};
-    {% else %}{{attribute.type}} {{attribute}};
+    {% for property in interface.properties %}
+    {%+ if property.is_readonly %}readonly {% endif %}
+    {%if property.type.is_list or property.type.is_model -%}
+    {{property.type}}<{{property.type.nested}}> {{property}};
+    {% else %}{{property.type}} {{property}};
     {% endif %}
     {% endfor %}
     {% for operation in interface.operations %}

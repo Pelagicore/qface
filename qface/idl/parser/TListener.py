@@ -80,12 +80,12 @@ class TListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by TParser#attributeSymbol.
-    def enterAttributeSymbol(self, ctx:TParser.AttributeSymbolContext):
+    # Enter a parse tree produced by TParser#propertySymbol.
+    def enterPropertySymbol(self, ctx:TParser.PropertySymbolContext):
         pass
 
-    # Exit a parse tree produced by TParser#attributeSymbol.
-    def exitAttributeSymbol(self, ctx:TParser.AttributeSymbolContext):
+    # Exit a parse tree produced by TParser#propertySymbol.
+    def exitPropertySymbol(self, ctx:TParser.PropertySymbolContext):
         pass
 
 

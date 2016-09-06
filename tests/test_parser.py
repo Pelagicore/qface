@@ -43,16 +43,16 @@ def test_interface():
     assert interface.comment == '/*! Service Tuner */'
 
 
-def test_attribute():
+def test_property():
     system = loadTuner()
     interface = system.lookup_interface('entertainment.tuner.Tuner')
     module = system.lookup_module('entertainment.tuner')
-    attr = interface.attributeMap['currentStation']
-    assert attr.type.name == 'Station'
-    assert attr.module == module
-    assert attr.type.qualifiedName == 'entertainment.tuner.Station'
-    assert attr.is_readonly
-    assert attr.comment == '/*! attribute currentStation */'
+    property = interface.propertyMap['currentStation']
+    assert property.type.name == 'Station'
+    assert property.module == module
+    assert property.type.qualifiedName == 'entertainment.tuner.Station'
+    assert property.is_readonly
+    assert property.comment == '/*! property currentStation */'
 
 
 def test_struct():
@@ -87,33 +87,33 @@ def test_flag():
 def test_list():
     system = loadTuner()
     interface = system.lookup_interface('entertainment.tuner.Tuner')
-    attr = interface.attributeMap['primitiveList']
-    assert attr.type.name == 'list'
-    assert attr.type.is_list is True
-    assert attr.type.nested.is_primitive
-    assert attr.type.nested.name == 'int'
+    property = interface.propertyMap['primitiveList']
+    assert property.type.name == 'list'
+    assert property.type.is_list is True
+    assert property.type.nested.is_primitive
+    assert property.type.nested.name == 'int'
 
-    attr = interface.attributeMap['complexList']
-    assert attr.type.name == 'list'
-    assert attr.type.is_list is True
-    assert attr.type.nested.is_complex
-    assert attr.type.nested.name == 'Station'
+    property = interface.propertyMap['complexList']
+    assert property.type.name == 'list'
+    assert property.type.is_list is True
+    assert property.type.nested.is_complex
+    assert property.type.nested.name == 'Station'
 
 
 def test_model():
     system = loadTuner()
     interface = system.lookup_interface('entertainment.tuner.Tuner')
-    attr = interface.attributeMap['primitiveModel']
-    assert attr.type.name == 'model'
-    assert attr.type.is_model is True
-    assert attr.type.nested.is_primitive
-    assert attr.type.nested.name == 'int'
+    property = interface.propertyMap['primitiveModel']
+    assert property.type.name == 'model'
+    assert property.type.is_model is True
+    assert property.type.nested.is_primitive
+    assert property.type.nested.name == 'int'
 
-    attr = interface.attributeMap['complexModel']
-    assert attr.type.name == 'model'
-    assert attr.type.is_model is True
-    assert attr.type.nested.is_complex
-    assert attr.type.nested.name == 'Station'
+    property = interface.propertyMap['complexModel']
+    assert property.type.name == 'model'
+    assert property.type.is_model is True
+    assert property.type.nested.is_complex
+    assert property.type.nested.name == 'Station'
 
 
 

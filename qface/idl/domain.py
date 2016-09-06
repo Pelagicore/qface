@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 # +- Module
 #   +- Import
 #   +- Interface
-#     +- Attribute => Property
+#     +- Property
 #     +- Operation => Method
 #   +- Struct (has attributes)
 #   +- Enum (has values)
@@ -18,7 +18,7 @@ class System(object):
     """The root entity which consist of modules"""
     def __init__(self):
         log.debug('System()')
-        self.moduleMap = OrderedDict()  # type: Dict[str, Module]
+        self.moduleMap = OrderedDict()  # type: dict[str, Module]
 
     def __unicode__(self):
         return 'system'
@@ -68,11 +68,11 @@ class Module(object):
         self.name = name
         self.system = system
         self.system.moduleMap[name] = self
-        self.interfaceMap = OrderedDict()  # type: Dict[str, Service]
-        self.structMap = OrderedDict()  # type: Dict[str, Struct]
-        self.enumMap = OrderedDict()  # type: Dict[str, Enum]
+        self.interfaceMap = OrderedDict()  # type: dict[str, Interface]
+        self.structMap = OrderedDict()  # type: dict[str, Struct]
+        self.enumMap = OrderedDict()  # type: dict[str, Enum]
         self.definitionMap = ChainMap(self.interfaceMap, self.structMap, self.enumMap)
-        self.importMap = OrderedDict()  # type: Dict[str, Module]
+        self.importMap = OrderedDict()  # type: dict[str, Module]
 
     @property
     def interfaces(self):
@@ -187,18 +187,18 @@ class TypeSymbol(Symbol):
 
 
 class Interface(Symbol):
-    """A interface is an object with operations, attributes and events"""
+    """A interface is an object with operations, properties and events"""
     def __init__(self, name: str, module: Module):
         super().__init__(name, module)
         log.debug('Interface()')
         self.module.interfaceMap[name] = self
-        self.attributeMap = OrderedDict()  # type: Dict[str, Attribute]
-        self.operationMap = OrderedDict()  # type: Dict[str, Operation]
-        self.eventMap = OrderedDict()  # type: Dict[str, Operation]
+        self.propertyMap = OrderedDict()  # type: dict[str, Property]
+        self.operationMap = OrderedDict()  # type: dict[str, Operation]
+        self.eventMap = OrderedDict()  # type: dict[str, Operation]
 
     @property
-    def attributes(self):
-        return self.attributeMap.values()
+    def properties(self):
+        return self.propertyMap.values()
 
     @property
     def operations(self):
@@ -215,7 +215,7 @@ class Struct(Symbol):
         super().__init__(name, module)
         log.debug('Struct()')
         self.module.structMap[name] = self
-        self.memberMap = OrderedDict()  # type: Dict[str, Member]
+        self.memberMap = OrderedDict()  # type: dict[str, Member]
 
     @property
     def members(self):
@@ -242,20 +242,20 @@ class Operation(TypedSymbol):
             self.interface.eventMap[name] = self
         else:
             self.interface.operationMap[name] = self
-        self.parameterMap = OrderedDict()  # type: Dict[Parameter]
+        self.parameterMap = OrderedDict()  # type: dict[Parameter]
 
     @property
     def parameters(self):
         return self.parameterMap.values()
 
 
-class Attribute(TypedSymbol):
-    """A typed attribute inside a interface"""
+class Property(TypedSymbol):
+    """A typed property inside a interface"""
     def __init__(self, name: str, interface: Interface):
         super().__init__(name, interface.module)
-        log.debug('Attribute()')
+        log.debug('Property()')
         self.interface = interface
-        self.interface.attributeMap[name] = self
+        self.interface.propertyMap[name] = self
         self.is_readonly = False
 
 
@@ -267,7 +267,7 @@ class Enum(Symbol):
         self.is_enum = True
         self.is_flag = False
         self.module.enumMap[name] = self
-        self.memberMap = OrderedDict()  # type: Dict[EnumMember]
+        self.memberMap = OrderedDict()  # type: dict[EnumMember]
 
     @property
     def members(self):

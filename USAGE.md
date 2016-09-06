@@ -32,11 +32,11 @@ The IDL grammar is described in the grammar file (see qface/parser/idl/T.g4)
     [import <identifier> <version>];
 
     interface <identifier> {
-        (readonly) <type> <attribute>;
+        (readonly) <type> <property>;
         <type> <operation>([type name]);
         event <type> <operation>([type name]);
-        list<type> <attribute>;
-        model<type> <attribute>;
+        list<type> <property>;
+        model<type> <property>;
     }
 
     enum <identifier> {
@@ -60,7 +60,7 @@ The IDL is converted into an in memory domain model (see qface/idl/domain.py).
         Module
             Import
             Service
-                Attribute
+                Property
                 Operation
             Enum
             Struct

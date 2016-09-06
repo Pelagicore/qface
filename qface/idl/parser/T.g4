@@ -34,14 +34,14 @@ interfaceSymbol
 
 memberSymbol
     : operationSymbol
-    | attributeSymbol
+    | propertySymbol
     ;
 
 operationSymbol
     : comment=DOCCOMMENT? isEvent='event'? (typeSymbol | 'void') name=IDENTIFIER '(' parameterSymbol* ')' ';'
     ;
 
-attributeSymbol
+propertySymbol
     : comment=DOCCOMMENT? isReadOnly='readonly'? typeSymbol name=IDENTIFIER ';'
     ;
 

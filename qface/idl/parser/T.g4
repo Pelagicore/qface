@@ -23,13 +23,13 @@ packageSymbol
     ;
 
 definitionSymbol
-    : serviceSymbol
+    : interfaceSymbol
     | structSymbol
     | enumSymbol
     ;
 
-serviceSymbol
-    : comment=DOCCOMMENT? 'service' name=IDENTIFIER '{' memberSymbol* '}'
+interfaceSymbol
+    : comment=DOCCOMMENT? 'interface' name=IDENTIFIER '{' memberSymbol* '}'
     ;
 
 memberSymbol

@@ -34,8 +34,8 @@ class TVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by TParser#serviceSymbol.
-    def visitServiceSymbol(self, ctx:TParser.ServiceSymbolContext):
+    # Visit a parse tree produced by TParser#interfaceSymbol.
+    def visitInterfaceSymbol(self, ctx:TParser.InterfaceSymbolContext):
         return self.visitChildren(ctx)
 
 

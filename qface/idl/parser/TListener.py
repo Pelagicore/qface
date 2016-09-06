@@ -53,12 +53,12 @@ class TListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by TParser#serviceSymbol.
-    def enterServiceSymbol(self, ctx:TParser.ServiceSymbolContext):
+    # Enter a parse tree produced by TParser#interfaceSymbol.
+    def enterInterfaceSymbol(self, ctx:TParser.InterfaceSymbolContext):
         pass
 
-    # Exit a parse tree produced by TParser#serviceSymbol.
-    def exitServiceSymbol(self, ctx:TParser.ServiceSymbolContext):
+    # Exit a parse tree produced by TParser#interfaceSymbol.
+    def exitInterfaceSymbol(self, ctx:TParser.InterfaceSymbolContext):
         pass
 
 

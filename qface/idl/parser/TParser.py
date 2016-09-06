@@ -101,7 +101,7 @@ class TParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'import'", "';'", "'package'", "'service'", 
+    literalNames = [ "<INVALID>", "'import'", "';'", "'package'", "'interface'", 
                      "'{'", "'}'", "'event'", "'void'", "'('", "')'", "'readonly'", 
                      "','", "'bool'", "'int'", "'real'", "'string'", "'list'", 
                      "'<'", "'>'", "'model'", "'struct'", "'enum'", "'flag'", 
@@ -121,7 +121,7 @@ class TParser ( Parser ):
     RULE_importSymbol = 2
     RULE_packageSymbol = 3
     RULE_definitionSymbol = 4
-    RULE_serviceSymbol = 5
+    RULE_interfaceSymbol = 5
     RULE_memberSymbol = 6
     RULE_operationSymbol = 7
     RULE_attributeSymbol = 8
@@ -139,7 +139,7 @@ class TParser ( Parser ):
     RULE_intSymbol = 20
 
     ruleNames =  [ "documentSymbol", "headerSymbol", "importSymbol", "packageSymbol", 
-                   "definitionSymbol", "serviceSymbol", "memberSymbol", 
+                   "definitionSymbol", "interfaceSymbol", "memberSymbol", 
                    "operationSymbol", "attributeSymbol", "parameterSymbol", 
                    "typeSymbol", "complexTypeSymbol", "primitiveTypeSymbol", 
                    "listTypeSymbol", "modelTypeSymbol", "structSymbol", 
@@ -433,8 +433,8 @@ class TParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def serviceSymbol(self):
-            return self.getTypedRuleContext(TParser.ServiceSymbolContext,0)
+        def interfaceSymbol(self):
+            return self.getTypedRuleContext(TParser.InterfaceSymbolContext,0)
 
 
         def structSymbol(self):
@@ -476,7 +476,7 @@ class TParser ( Parser ):
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 67
-                self.serviceSymbol()
+                self.interfaceSymbol()
                 pass
 
             elif la_ == 2:
@@ -500,7 +500,7 @@ class TParser ( Parser ):
             self.exitRule()
         return localctx
 
-    class ServiceSymbolContext(ParserRuleContext):
+    class InterfaceSymbolContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -522,29 +522,29 @@ class TParser ( Parser ):
             return self.getToken(TParser.DOCCOMMENT, 0)
 
         def getRuleIndex(self):
-            return TParser.RULE_serviceSymbol
+            return TParser.RULE_interfaceSymbol
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterServiceSymbol" ):
-                listener.enterServiceSymbol(self)
+            if hasattr( listener, "enterInterfaceSymbol" ):
+                listener.enterInterfaceSymbol(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitServiceSymbol" ):
-                listener.exitServiceSymbol(self)
+            if hasattr( listener, "exitInterfaceSymbol" ):
+                listener.exitInterfaceSymbol(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitServiceSymbol" ):
-                return visitor.visitServiceSymbol(self)
+            if hasattr( visitor, "visitInterfaceSymbol" ):
+                return visitor.visitInterfaceSymbol(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def serviceSymbol(self):
+    def interfaceSymbol(self):
 
-        localctx = TParser.ServiceSymbolContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 10, self.RULE_serviceSymbol)
+        localctx = TParser.InterfaceSymbolContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 10, self.RULE_interfaceSymbol)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)

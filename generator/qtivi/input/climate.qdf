@@ -1,0 +1,5 @@
+package com.pelagicore.climate 1.0
+
+interface Climate {
+    
+};

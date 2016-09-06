@@ -9,11 +9,14 @@ log = logging.getLogger(__name__)
 
 
 class DomainListener(TListener):
+    """The domain listener is called by the parser to fill the
+       domain data struture. As a result a system is passed
+       back"""
     def __init__(self, system):
         super(DomainListener, self).__init__()
         self.system = system or System()  # type:System
         self.package = None  # type:Package
-        self.service = None  # type:Service
+        self.interface = None  # type:Interface
         self.struct = None  # type:Struct
         self.enum = None  # type:Enum
         self.operation = None  # type:Operation
@@ -68,14 +71,14 @@ class DomainListener(TListener):
     def exitPackageSymbol(self, ctx: TParser.PackageSymbolContext):
         pass
 
-    def enterServiceSymbol(self, ctx: TParser.ServiceSymbolContext):
+    def enterInterfaceSymbol(self, ctx: TParser.InterfaceSymbolContext):
         assert self.package
         name = ctx.name.text
-        self.service = Service(name, self.package)
-        self.parse_comment(ctx, self.service)
+        self.interface = Interface(name, self.package)
+        self.parse_comment(ctx, self.interface)
 
-    def exitServiceSymbol(self, ctx: TParser.ServiceSymbolContext):
-        self.service = None
+    def exitInterfaceSymbol(self, ctx: TParser.InterfaceSymbolContext):
+        self.interface = None
 
     def enterStructSymbol(self, ctx: TParser.StructSymbolContext):
         assert self.package
@@ -106,10 +109,10 @@ class DomainListener(TListener):
         pass
 
     def enterOperationSymbol(self, ctx: TParser.OperationSymbolContext):
-        assert self.service
+        assert self.interface
         name = ctx.name.text
         is_event = bool(ctx.isEvent)
-        self.operation = Operation(name, self.service, is_event)
+        self.operation = Operation(name, self.interface, is_event)
         self.parse_comment(ctx, self.operation)
         self.parse_type(ctx, self.operation.type)
 
@@ -124,9 +127,9 @@ class DomainListener(TListener):
         self.parse_type(ctx, self.parameter.type)
 
     def enterAttributeSymbol(self, ctx: TParser.AttributeSymbolContext):
-        assert self.service
+        assert self.interface
         name = ctx.name.text
-        self.attribute = Attribute(name, self.service)
+        self.attribute = Attribute(name, self.interface)
         self.attribute.is_readonly = bool(ctx.isReadOnly)
         self.parse_comment(ctx, self.attribute)
         self.parse_type(ctx, self.attribute.type)

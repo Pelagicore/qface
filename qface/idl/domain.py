@@ -7,15 +7,15 @@ log = logging.getLogger(__name__)
 # System
 # +- Package
 #   +- Import
-#   +- Service
+#   +- Interface
 #     +- Attribute
 #     +- Operation
 #   +- Struct
 #   +- Enum
 
 
-
 class System(object):
+    """The root entity which consist of packages"""
     def __init__(self):
         log.debug('System()')
         self.packageMap = OrderedDict()  # type: Dict[str, Package]
@@ -33,10 +33,10 @@ class System(object):
     def lookup_package(self, name: str):
         return self.packageMap[name]
 
-    def lookup_service(self, name: str):
+    def lookup_interface(self, name: str):
         package_name, type_name = name.rsplit('.', 1)
         package = self.packageMap[package_name]
-        return package.serviceMap[type_name]
+        return package.interfaceMap[type_name]
 
     def lookup_struct(self, name: str):
         package_name, type_name = name.rsplit('.', 1)
@@ -62,20 +62,21 @@ class System(object):
 
 
 class Package(object):
+    """A packages is a namespace for types, e.g. interfaces, enums, structs"""
     def __init__(self, name: str, system: System):
         log.debug('Package()')
         self.name = name
         self.system = system
         self.system.packageMap[name] = self
-        self.serviceMap = OrderedDict()  # type: Dict[str, Service]
+        self.interfaceMap = OrderedDict()  # type: Dict[str, Service]
         self.structMap = OrderedDict()  # type: Dict[str, Struct]
         self.enumMap = OrderedDict()  # type: Dict[str, Enum]
-        self.definitionMap = ChainMap(self.serviceMap, self.structMap, self.enumMap)
+        self.definitionMap = ChainMap(self.interfaceMap, self.structMap, self.enumMap)
         self.importMap = OrderedDict()  # type: Dict[str, Package]
 
     @property
-    def services(self):
-        return self.serviceMap.values()
+    def interfaces(self):
+        return self.interfaceMap.values()
 
     @property
     def structs(self):
@@ -110,6 +111,7 @@ class Package(object):
 
 
 class Symbol(object):
+    """A symbol represents a base class for names elements"""
     def __init__(self, name: str, package: Package):
         self.name = name
         self.package = package
@@ -131,12 +133,14 @@ class Symbol(object):
 
 
 class TypedSymbol(Symbol):
+    """A symbol which has a type"""
     def __init__(self, name: str, package: Package):
         super().__init__(name, package)
         self.type = TypeSymbol("", self)
 
 
 class TypeSymbol(Symbol):
+    """Defines a type in the system"""
     def __init__(self, name: str, parent: Symbol):
         super().__init__(name, parent.package)
         log.debug('TypeSymbol()')
@@ -182,11 +186,12 @@ class TypeSymbol(Symbol):
 
 
 
-class Service(Symbol):
+class Interface(Symbol):
+    """A interface is an object with operations, attributes and events"""
     def __init__(self, name: str, package: Package):
         super().__init__(name, package)
-        log.debug('Service()')
-        self.package.serviceMap[name] = self
+        log.debug('Interface()')
+        self.package.interfaceMap[name] = self
         self.attributeMap = OrderedDict()  # type: Dict[str, Attribute]
         self.operationMap = OrderedDict()  # type: Dict[str, Operation]
         self.eventMap = OrderedDict()  # type: Dict[str, Operation]
@@ -205,6 +210,7 @@ class Service(Symbol):
 
 
 class Struct(Symbol):
+    """Represents a data container"""
     def __init__(self, name: str, package: Package):
         super().__init__(name, package)
         log.debug('Struct()')
@@ -217,6 +223,7 @@ class Struct(Symbol):
 
 
 class Member(TypedSymbol):
+    """A member in a struct"""
     def __init__(self, name: str, struct: Struct):
         super().__init__(name, struct.package)
         log.debug('Member()')
@@ -225,15 +232,16 @@ class Member(TypedSymbol):
 
 
 class Operation(TypedSymbol):
-    def __init__(self, name: str, service: Service, is_event=False):
-        super().__init__(name, service.package)
+    """An operation inside a interface"""
+    def __init__(self, name: str, interface: Interface, is_event=False):
+        super().__init__(name, interface.package)
         log.debug('Operation()')
-        self.service = service
+        self.interface = interface
         self.is_event = is_event
         if is_event:
-            self.service.eventMap[name] = self
+            self.interface.eventMap[name] = self
         else:
-            self.service.operationMap[name] = self
+            self.interface.operationMap[name] = self
         self.parameterMap = OrderedDict()  # type: Dict[Parameter]
 
     @property
@@ -242,15 +250,17 @@ class Operation(TypedSymbol):
 
 
 class Attribute(TypedSymbol):
-    def __init__(self, name: str, service: Service):
-        super().__init__(name, service.package)
+    """A typed attribute inside a interface"""
+    def __init__(self, name: str, interface: Interface):
+        super().__init__(name, interface.package)
         log.debug('Attribute()')
-        self.service = service
-        self.service.attributeMap[name] = self
+        self.interface = interface
+        self.interface.attributeMap[name] = self
         self.is_readonly = False
 
 
 class Enum(Symbol):
+    """An enum (flag) inside a package"""
     def __init__(self, name: str, package: Package):
         super().__init__(name, package)
         log.debug('Enum()')
@@ -265,6 +275,7 @@ class Enum(Symbol):
 
 
 class EnumMember(Symbol):
+    """A enum value"""
     def __init__(self, name: str, enum: Enum):
         super().__init__(name, enum.package)
         log.debug('EnumMember()')
@@ -274,6 +285,7 @@ class EnumMember(Symbol):
 
 
 class Parameter(TypedSymbol):
+    """An operation parameter"""
     def __init__(self, name: str, operation: Operation):
         super().__init__(name, operation.package)
         log.debug('Parameter()')

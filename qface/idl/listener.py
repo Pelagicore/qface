@@ -24,6 +24,7 @@ class DomainListener(TListener):
         self.interface = None  # type:Interface
         self.struct = None  # type:Struct
         self.enum = None  # type:Enum
+        self.enumCounter = 0 # int
         self.operation = None  # type:Operation
         self.parameter = None  # type:Parameter
         self.property = None  # type:Property
@@ -107,12 +108,15 @@ class DomainListener(TListener):
 
     def exitEnumSymbol(self, ctx: TParser.EnumSymbolContext):
         self.enum = None
+        self.enumCounter = 0
 
     def enterEnumTypeSymbol(self, ctx: TParser.EnumTypeSymbolContext):
         assert self.enum
+        self.enumCounter = 0
         if ctx.isFlag:
             self.enum.is_enum = False
             self.enum.is_flag = True
+            self.enumCounter = 1
 
     def exitEnumTypeSymbol(self, ctx: TParser.EnumTypeSymbolContext):
         pass
@@ -163,9 +167,16 @@ class DomainListener(TListener):
         assert self.enum
         name = ctx.name.text
         self.member = EnumMember(name, self.enum)
-        self.member.value = int(ctx.intSymbol().value.text, 0)
+        value = self.enumCounter
+        if ctx.intSymbol():
+            value = int(ctx.intSymbol().value.text, 0)
+        self.member.value = value
         contextMap[ctx] = self.member
         # import ipdb; ipdb.set_trace()
+        if self.enum.is_flag:
+            self.enumCounter <<= 1
+        else:
+            self.enumCounter += 1
 
     def exitEnumMemberSymbol(self, ctx: TParser.EnumMemberSymbolContext):
         self.member = None

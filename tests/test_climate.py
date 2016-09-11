@@ -22,7 +22,3 @@ def test_interface():
     interface = system.lookup('vehicle.climate.ClimateControl')
     assert interface.name == 'ClimateControl'
 
-
-
-
-

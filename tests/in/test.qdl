@@ -17,10 +17,16 @@ interface ContactService {
 }
 
 enum State {
-    Null = 0x00,
-    Loading = 0x01,
-    Ready = 0x02,
-    Failure = 0x03
+    Null,
+    Loading,
+    Ready,
+    Failure
+}
+
+flag Phase {
+  PhaseOne,
+  PhaseTwo,
+  PhaseThree
 }
 
 /*!

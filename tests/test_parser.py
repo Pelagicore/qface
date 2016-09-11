@@ -18,6 +18,10 @@ def loadTuner():
     return FileSystem.parse_document(path)
 
 
+def loadTest():
+    path = inputPath / 'test.qdl'
+    return FileSystem.parse_document(path)
+
 def test_parse():
     log.debug('test parse')
     names = FileSystem.find_files(inputPath, '*.qdl')
@@ -77,6 +81,23 @@ def test_enum():
     assert symbol.comment == '/*! enum Waveband */'
     assert symbol.is_enum
 
+
+def test_enum_counter():
+    system = loadTest()
+    enum = system.lookup('com.pelagicore.test.State')
+    assert enum
+    # import ipdb; ipdb.set_trace()
+    assert enum._memberMap['Null'].value is 0
+    assert enum._memberMap['Failure'].value is 3
+
+def test_flag_counter():
+    system = loadTest()
+    flag = system.lookup('com.pelagicore.test.Phase')
+    assert flag
+    # import ipdb; ipdb.set_trace()
+    assert flag._memberMap['PhaseOne'].value is 1
+    assert flag._memberMap['PhaseTwo'].value is 2
+    assert flag._memberMap['PhaseThree'].value is 4
 
 def test_flag():
     system = loadTuner()

@@ -93,7 +93,7 @@ enumTypeSymbol
     ;
 
 enumMemberSymbol
-    : comment=DOCCOMMENT? name=IDENTIFIER '=' intSymbol ','?
+    : comment=DOCCOMMENT? name=IDENTIFIER ('=' intSymbol)? ','?
     ;
 
 

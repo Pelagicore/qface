@@ -173,7 +173,7 @@ class DomainListener(TListener):
     def enterImportSymbol(self, ctx: TParser.ImportSymbolContext):
         assert self.module
         name = ctx.name.text
-        self.module.importMap[name] = None
+        self.module._importMap[name] = None
 
     def exitImportSymbol(self, ctx: TParser.ImportSymbolContext):
         pass

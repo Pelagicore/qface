@@ -24,17 +24,17 @@ def test_resolve():
     assert module
     service = module.lookup_definition('OneService')
     assert service
-    operation = service.operationMap['echo']
+    operation = service._operationMap['echo']
     assert operation
     struct = module.lookup_definition('StringStruct')
     assert struct
     assert operation.type.reference is struct
 
-    parameter = operation.parameterMap['message']
+    parameter = operation._parameterMap['message']
     assert parameter
     assert parameter.type.reference is struct
 
-    property = service.propertyMap['message']
+    property = service._propertyMap['message']
     assert property
 
     assert property.type.reference is struct
@@ -47,17 +47,17 @@ def test_resolve_nested():
     struct = module.lookup_definition('one.StringStruct')
     nested = module.lookup_definition('one.NestedStruct')
     assert struct and nested
-    member = struct.memberMap['nested']
+    member = struct._memberMap['nested']
     assert member
     assert member.type.reference is nested
 
     service = module.lookup_definition('one.OneService')
     assert service
-    listProperty = service.propertyMap['messageList']
+    listProperty = service._propertyMap['messageList']
     assert listProperty
     assert listProperty.type.nested.reference is struct
 
-    modelProperty = service.propertyMap['messageModel']
+    modelProperty = service._propertyMap['messageModel']
     assert modelProperty
     assert modelProperty.type.nested.reference is struct
 

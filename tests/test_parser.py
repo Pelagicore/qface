@@ -47,7 +47,7 @@ def test_property():
     system = loadTuner()
     interface = system.lookup_interface('entertainment.tuner.Tuner')
     module = system.lookup_module('entertainment.tuner')
-    property = interface.propertyMap['currentStation']
+    property = interface._propertyMap['currentStation']
     assert property.type.name == 'Station'
     assert property.module == module
     assert property.type.qualifiedName == 'entertainment.tuner.Station'
@@ -87,13 +87,13 @@ def test_flag():
 def test_list():
     system = loadTuner()
     interface = system.lookup_interface('entertainment.tuner.Tuner')
-    property = interface.propertyMap['primitiveList']
+    property = interface._propertyMap['primitiveList']
     assert property.type.name == 'list'
     assert property.type.is_list is True
     assert property.type.nested.is_primitive
     assert property.type.nested.name == 'int'
 
-    property = interface.propertyMap['complexList']
+    property = interface._propertyMap['complexList']
     assert property.type.name == 'list'
     assert property.type.is_list is True
     assert property.type.nested.is_complex
@@ -103,13 +103,13 @@ def test_list():
 def test_model():
     system = loadTuner()
     interface = system.lookup_interface('entertainment.tuner.Tuner')
-    property = interface.propertyMap['primitiveModel']
+    property = interface._propertyMap['primitiveModel']
     assert property.type.name == 'model'
     assert property.type.is_model is True
     assert property.type.nested.is_primitive
     assert property.type.nested.name == 'int'
 
-    property = interface.propertyMap['complexModel']
+    property = interface._propertyMap['complexModel']
     assert property.type.name == 'model'
     assert property.type.is_model is True
     assert property.type.nested.is_complex

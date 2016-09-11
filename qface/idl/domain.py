@@ -18,7 +18,7 @@ class System(object):
     """The root entity which consist of modules"""
     def __init__(self):
         log.debug('System()')
-        self.moduleMap = OrderedDict()  # type: dict[str, Module]
+        self._moduleMap = OrderedDict()  # type: dict[str, Module]
 
     def __unicode__(self):
         return 'system'
@@ -28,25 +28,25 @@ class System(object):
 
     @property
     def modules(self):
-        return self.moduleMap.values()
+        return self._moduleMap.values()
 
     def lookup_module(self, name: str):
-        return self.moduleMap[name]
+        return self._moduleMap[name]
 
     def lookup_interface(self, name: str):
         module_name, type_name = name.rsplit('.', 1)
-        module = self.moduleMap[module_name]
-        return module.interfaceMap[type_name]
+        module = self._moduleMap[module_name]
+        return module._interfaceMap[type_name]
 
     def lookup_struct(self, name: str):
         module_name, type_name = name.rsplit('.', 1)
-        module = self.moduleMap[module_name]
-        return module.structMap[type_name]
+        module = self._moduleMap[module_name]
+        return module._structMap[type_name]
 
     def lookup_enum(self, name: str):
         module_name, type_name = name.rsplit('.', 1)
-        module = self.moduleMap[module_name]
-        return module.enumMap[type_name]
+        module = self._moduleMap[module_name]
+        return module._enumMap[type_name]
 
     def lookup_definition(self, name: str):
         # import ipdb; ipdb.set_trace()
@@ -54,7 +54,7 @@ class System(object):
         if len(parts) == 2:
             module_name = parts[0]
             type_name = parts[1]
-            module = self.moduleMap[module_name]
+            module = self._moduleMap[module_name]
             return module.lookup_definition(type_name)
 
     @property
@@ -68,41 +68,41 @@ class Module(object):
         log.debug('Module()')
         self.name = name
         self.system = system
-        self.system.moduleMap[name] = self
-        self.interfaceMap = OrderedDict()  # type: dict[str, Interface]
-        self.structMap = OrderedDict()  # type: dict[str, Struct]
-        self.enumMap = OrderedDict()  # type: dict[str, Enum]
-        self.definitionMap = ChainMap(self.interfaceMap, self.structMap, self.enumMap)
-        self.importMap = OrderedDict()  # type: dict[str, Module]
+        self.system._moduleMap[name] = self
+        self._interfaceMap = OrderedDict()  # type: dict[str, Interface]
+        self._structMap = OrderedDict()  # type: dict[str, Struct]
+        self._enumMap = OrderedDict()  # type: dict[str, Enum]
+        self._definitionMap = ChainMap(self._interfaceMap, self._structMap, self._enumMap)
+        self._importMap = OrderedDict()  # type: dict[str, Module]
 
     @property
     def interfaces(self):
-        return self.interfaceMap.values()
+        return self._interfaceMap.values()
 
     @property
     def structs(self):
-        return self.structMap.values()
+        return self._structMap.values()
 
     @property
     def enums(self):
-        return self.enumMap.values()
+        return self._enumMap.values()
 
     @property
     def imports(self):
-        return self.importMap.values()
+        return self._importMap.values()
 
     @property
     def nameParts(self):
         return self.name.split('.')
 
     def lookup_definition(self, name: str):
-        if name in self.definitionMap:
-            return self.definitionMap[name]
+        if name in self._definitionMap:
+            return self._definitionMap[name]
         return self.system.lookup_definition(name)
 
     def lookup_module(self, name: str):
-        if name in self.system.moduleMap:
-            return self.system.moduleMap[name]
+        if name in self.system._moduleMap:
+            return self.system._moduleMap[name]
 
     def __unicode__(self):
         return self.name
@@ -207,22 +207,22 @@ class Interface(Symbol):
     def __init__(self, name: str, module: Module):
         super().__init__(name, module)
         log.debug('Interface()')
-        self.module.interfaceMap[name] = self
-        self.propertyMap = OrderedDict()  # type: dict[str, Property]
-        self.operationMap = OrderedDict()  # type: dict[str, Operation]
-        self.eventMap = OrderedDict()  # type: dict[str, Operation]
+        self.module._interfaceMap[name] = self
+        self._propertyMap = OrderedDict()  # type: dict[str, Property]
+        self._operationMap = OrderedDict()  # type: dict[str, Operation]
+        self._eventMap = OrderedDict()  # type: dict[str, Operation]
 
     @property
     def properties(self):
-        return self.propertyMap.values()
+        return self._propertyMap.values()
 
     @property
     def operations(self):
-        return self.operationMap.values()
+        return self._operationMap.values()
 
     @property
     def events(self):
-        return self.eventMap.values()
+        return self._eventMap.values()
 
 
 class Struct(Symbol):
@@ -230,12 +230,12 @@ class Struct(Symbol):
     def __init__(self, name: str, module: Module):
         super().__init__(name, module)
         log.debug('Struct()')
-        self.module.structMap[name] = self
-        self.memberMap = OrderedDict()  # type: dict[str, Member]
+        self.module._structMap[name] = self
+        self._memberMap = OrderedDict()  # type: dict[str, Member]
 
     @property
     def members(self):
-        return self.memberMap.values()
+        return self._memberMap.values()
 
 
 class Member(TypedSymbol):
@@ -244,7 +244,7 @@ class Member(TypedSymbol):
         super().__init__(name, struct.module)
         log.debug('Member()')
         self.struct = struct  # type:Struct
-        self.struct.memberMap[name] = self
+        self.struct._memberMap[name] = self
 
 
 class Operation(TypedSymbol):
@@ -255,14 +255,14 @@ class Operation(TypedSymbol):
         self.interface = interface
         self.is_event = is_event
         if is_event:
-            self.interface.eventMap[name] = self
+            self.interface._eventMap[name] = self
         else:
-            self.interface.operationMap[name] = self
-        self.parameterMap = OrderedDict()  # type: dict[Parameter]
+            self.interface._operationMap[name] = self
+        self._parameterMap = OrderedDict()  # type: dict[Parameter]
 
     @property
     def parameters(self):
-        return self.parameterMap.values()
+        return self._parameterMap.values()
 
 
 class Property(TypedSymbol):
@@ -271,7 +271,7 @@ class Property(TypedSymbol):
         super().__init__(name, interface.module)
         log.debug('Property()')
         self.interface = interface
-        self.interface.propertyMap[name] = self
+        self.interface._propertyMap[name] = self
         self.is_readonly = False
 
 
@@ -282,12 +282,12 @@ class Enum(Symbol):
         log.debug('Enum()')
         self.is_enum = True
         self.is_flag = False
-        self.module.enumMap[name] = self
-        self.memberMap = OrderedDict()  # type: dict[EnumMember]
+        self.module._enumMap[name] = self
+        self._memberMap = OrderedDict()  # type: dict[EnumMember]
 
     @property
     def members(self):
-        return self.memberMap.values()
+        return self._memberMap.values()
 
 
 class EnumMember(Symbol):
@@ -296,7 +296,7 @@ class EnumMember(Symbol):
         super().__init__(name, enum.module)
         log.debug('EnumMember()')
         self.enum = enum
-        self.enum.memberMap[name] = self
+        self.enum._memberMap[name] = self
         self.value = 0
 
 
@@ -306,4 +306,4 @@ class Parameter(TypedSymbol):
         super().__init__(name, operation.module)
         log.debug('Parameter()')
         self.operation = operation
-        self.operation.parameterMap[name] = self
+        self.operation._parameterMap[name] = self

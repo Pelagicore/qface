@@ -12,7 +12,7 @@ from .idl.parser.TLexer import TLexer
 from .idl.parser.TParser import TParser
 from .idl.parser.TListener import TListener
 from .idl.domain import System
-from .idl.listener import DomainListener, ResolveListener
+from .idl.listener import DomainListener
 
 
 logger = logging.getLogger(__name__)
@@ -89,7 +89,6 @@ class FileSystem(object):
         tree = parser.documentSymbol()
         walker = ParseTreeWalker()
         walker.walk(DomainListener(system), tree)
-        walker.walk(ResolveListener(), tree)
 
         return system
 

@@ -158,8 +158,9 @@ class TypeSymbol(Symbol):
         self.is_complex = False  # type:bool
         self.is_list = False  # type:bool
         self.is_model = False  # type:bool
-        self.reference = None
         self.nested = None
+        self.__reference = None
+        self.__is_resolved = False
 
     @property
     def is_bool(self):
@@ -193,6 +194,20 @@ class TypeSymbol(Symbol):
     @property
     def is_struct(self):
         return self.is_complex and isinstance(self.definition, Struct)
+
+    @property
+    def reference(self):
+        """returns the symbol reference of the type name"""
+        if not self.__is_resolved:
+            self.resolve()
+        return self.__reference
+
+    def resolve(self):
+        """resolve the type symbol from name by doing a lookup"""
+        self.__is_resolved = True
+        if self.is_complex:
+            type = self.nested if self.nested else self
+            type.__reference = self.module.lookup_definition(type.name)
 
 
 

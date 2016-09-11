@@ -178,31 +178,3 @@ class DomainListener(TListener):
     def exitImportSymbol(self, ctx: TParser.ImportSymbolContext):
         pass
 
-
-class ResolveListener(TListener):
-    """2nd pass: Resolves the type references"""
-    def resolveSymbol(self, ctx):
-        symbol = contextMap[ctx]  # type: Symbol
-        if not symbol or not isinstance(symbol, TypedSymbol):
-            log.warn('No valid symbol found for context', ctx)
-        module = symbol.module
-        if symbol.type.nested:
-            type = symbol.type.nested
-        else:
-            type = symbol.type
-        if type.is_complex:
-            reference = module.lookup_definition(type.name)
-            if reference:
-                type.reference = reference
-
-    def enterOperationSymbol(self, ctx: TParser.OperationSymbolContext):
-        self.resolveSymbol(ctx)
-
-    def enterParameterSymbol(self, ctx: TParser.ParameterSymbolContext):
-        self.resolveSymbol(ctx)
-
-    def enterPropertySymbol(self, ctx: TParser.PropertySymbolContext):
-        self.resolveSymbol(ctx)
-
-    def enterStructMemberSymbol(self, ctx: TParser.StructMemberSymbolContext):
-        self.resolveSymbol(ctx)

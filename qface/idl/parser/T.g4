@@ -15,7 +15,7 @@ headerSymbol
     ;
 
 importSymbol
-    : 'import' name=IDENTIFIER ';'
+    : 'import' name=IDENTIFIER version=VERSION ';'
     ;
 
 moduleSymbol
@@ -106,6 +106,7 @@ intSymbol
 INTCONSTANT     : ('+' | '-')? '0'..'9'+;
 HEXCONSTANT     : '0x' ('0'..'9' | 'a'..'f' | 'A'..'F')+;
 IDENTIFIER      : [a-zA-Z_][a-zA-Z0-9_\.]*;
+VERSION         : [0-9]'.'[0-9];
 DOCCOMMENT      : '/*!' .*? '*/';
 WHITESPACE      : [ \t\r\n]+ -> skip;
 COMMENT         : '//' ~[\r\n]* -> skip;

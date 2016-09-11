@@ -1,5 +1,5 @@
 {# Copyright (c) Pelagicore AG 2016 #}
-{% from 'helper.tpl' import module %}
+{% from 'helper.tpl' import qualifiedModuleName %}
 #############################################################################
 ## This is an auto-generated file.
 ## Do not edit! All changes made to it will be lost.

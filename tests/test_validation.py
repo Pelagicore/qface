@@ -20,13 +20,13 @@ def loadOne():
 
 def test_resolve():
     system = loadOne()
-    module = system.lookup_module('one')
+    module = system.lookup('one')
     assert module
-    service = module.lookup_definition('OneService')
+    service = module.lookup('OneService')
     assert service
     operation = service._operationMap['echo']
     assert operation
-    struct = module.lookup_definition('StringStruct')
+    struct = module.lookup('StringStruct')
     assert struct
     assert operation.type.reference is struct
 
@@ -42,16 +42,16 @@ def test_resolve():
 
 def test_resolve_nested():
     system = loadOne()
-    module = system.lookup_module('one')
+    module = system.lookup('one')
     assert module
-    struct = module.lookup_definition('one.StringStruct')
-    nested = module.lookup_definition('one.NestedStruct')
+    struct = module.lookup('one.StringStruct')
+    nested = module.lookup('one.NestedStruct')
     assert struct and nested
     member = struct._memberMap['nested']
     assert member
     assert member.type.reference is nested
 
-    service = module.lookup_definition('one.OneService')
+    service = module.lookup('one.OneService')
     assert service
     listProperty = service._propertyMap['messageList']
     assert listProperty

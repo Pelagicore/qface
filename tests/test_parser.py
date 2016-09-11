@@ -31,22 +31,22 @@ def test_parse():
 def test_module():
     system = loadTuner()
     assert len(system.modules) == 1
-    module = system.lookup_module('entertainment.tuner')
+    module = system.lookup('entertainment.tuner')
     assert module in system.modules
 
 
 def test_interface():
     system = loadTuner()
-    module = system.lookup_module('entertainment.tuner')
-    interface = system.lookup_interface('entertainment.tuner.Tuner')
+    module = system.lookup('entertainment.tuner')
+    interface = system.lookup('entertainment.tuner.Tuner')
     assert interface in module.interfaces
     assert interface.comment == '/*! Service Tuner */'
 
 
 def test_property():
     system = loadTuner()
-    interface = system.lookup_interface('entertainment.tuner.Tuner')
-    module = system.lookup_module('entertainment.tuner')
+    interface = system.lookup('entertainment.tuner.Tuner')
+    module = system.lookup('entertainment.tuner')
     property = interface._propertyMap['currentStation']
     assert property.type.name == 'Station'
     assert property.module == module
@@ -57,8 +57,8 @@ def test_property():
 
 def test_struct():
     system = loadTuner()
-    module = system.lookup_module('entertainment.tuner')
-    symbol = system.lookup_struct('entertainment.tuner.Station')
+    module = system.lookup('entertainment.tuner')
+    symbol = system.lookup('entertainment.tuner.Station')
     assert symbol.name == 'Station'
     assert symbol.module == module
     assert symbol.qualifiedName == 'entertainment.tuner.Station'
@@ -67,9 +67,9 @@ def test_struct():
 
 def test_enum():
     system = loadTuner()
-    definition = system.lookup_definition('entertainment.tuner.Waveband')
-    module = system.lookup_module('entertainment.tuner')
-    symbol = system.lookup_enum('entertainment.tuner.Waveband')
+    definition = system.lookup('entertainment.tuner.Waveband')
+    module = system.lookup('entertainment.tuner')
+    symbol = system.lookup('entertainment.tuner.Waveband')
     assert definition == symbol
     assert symbol.name == 'Waveband'
     assert symbol.module == module
@@ -80,13 +80,13 @@ def test_enum():
 
 def test_flag():
     system = loadTuner()
-    symbol = system.lookup_enum('entertainment.tuner.Features')
+    symbol = system.lookup('entertainment.tuner.Features')
     assert symbol.is_flag
 
 
 def test_list():
     system = loadTuner()
-    interface = system.lookup_interface('entertainment.tuner.Tuner')
+    interface = system.lookup('entertainment.tuner.Tuner')
     property = interface._propertyMap['primitiveList']
     assert property.type.name == 'list'
     assert property.type.is_list is True
@@ -102,7 +102,7 @@ def test_list():
 
 def test_model():
     system = loadTuner()
-    interface = system.lookup_interface('entertainment.tuner.Tuner')
+    interface = system.lookup('entertainment.tuner.Tuner')
     property = interface._propertyMap['primitiveModel']
     assert property.type.name == 'model'
     assert property.type.is_model is True

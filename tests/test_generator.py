@@ -21,7 +21,7 @@ def test_gen_module():
     system = loadSystem()
     gen = Generator(searchpath='tests/templates')
     template = "{{module}}"
-    module = system.lookup_module('entertainment.tuner')
+    module = system.lookup('entertainment.tuner')
     text = gen.apply(template, {"module": module})
     assert text == 'entertainment.tuner'
 
@@ -34,7 +34,7 @@ def test_gen_interface():
             {{interface}}
         {%- endfor -%}
     """
-    module = system.lookup_module('entertainment.tuner')
+    module = system.lookup('entertainment.tuner')
     text = gen.apply(template, {"module": module})
     assert text == 'Tuner'
 

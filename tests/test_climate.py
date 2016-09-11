@@ -19,7 +19,7 @@ def load_system():
 
 def test_interface():
     system = load_system()
-    interface = system.lookup_interface('vehicle.climate.ClimateControl')
+    interface = system.lookup('vehicle.climate.ClimateControl')
     assert interface.name == 'ClimateControl'
 
 

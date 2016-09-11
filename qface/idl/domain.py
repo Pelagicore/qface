@@ -179,15 +179,6 @@ class TypeSymbol(Symbol):
         return self.is_primitive and self.name == 'string'
 
     @property
-    def definition(self):
-        if not self.is_complex:
-            return
-        result = self.module.lookup_definition(self.name)
-        if not result:
-            result = self.system.lookup_definition(self.name)
-        return result
-
-    @property
     def is_enum(self):
         return self.is_complex and isinstance(self.definition, Enum)
 

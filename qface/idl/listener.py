@@ -56,12 +56,13 @@ class DomainListener(TListener):
                 type.name = 'model'
                 type.nested = TypeSymbol("", type)
                 self.parse_type(ctxSymbol, type.nested)
+        if not type.module.checkType(type):
+            log.warn('Unknown type: {0}. Missing import?'.format(type.name))
 
     def parse_comment(self, ctx, symbol):
         if ctx.comment:
             comment = ctx.comment.text
             symbol.comment = comment
-
 
     def enterEveryRule(self, ctx):
         log.debug('enter ' + ctx.__class__.__name__)
@@ -184,7 +185,9 @@ class DomainListener(TListener):
     def enterImportSymbol(self, ctx: TParser.ImportSymbolContext):
         assert self.module
         name = ctx.name.text
-        self.module._importMap[name] = None
+        version = ctx.version.text
+        # import ipdb; ipdb.set_trace()
+        self.module._importMap[name] = '{0} {1}'.format(name, version)
 
     def exitImportSymbol(self, ctx: TParser.ImportSymbolContext):
         pass

@@ -1,5 +1,7 @@
 module com.pelagicore.test;
 
+import common 1.0;
+
 interface ContactService {
   State state;
   int intValue;
@@ -7,6 +9,8 @@ interface ContactService {
   bool boolValue;
   real realValue;
   Contact currentContact;
+  common.Date today;
+  example.Date tomorrow;
 
   void addContact(Contact contact);
   void removeContact(Contact contact);

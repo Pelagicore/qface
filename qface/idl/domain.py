@@ -51,13 +51,19 @@ class System(object):
         if name in self._moduleMap:
             return self._moduleMap[name]
         # <module>.<Symbol>
-        parts = name.rsplit('.', 1)
-        if not len(parts) == 2:
-            return
-        module_name = parts[0]
-        type_name = parts[1]
+        (module_name, type_name) = self.splitTypeName(name)
         module = self._moduleMap[module_name]
         return module.lookup(type_name)
+
+    @staticmethod
+    def splitTypeName(name):
+        parts = name.rsplit('.', 1)
+        if len(parts) == 1:
+            return ('', parts[0])
+        if len(parts) == 2:
+            return parts
+        return ('', '')
+
 
 
 class Symbol(object):
@@ -193,6 +199,14 @@ class Module(Symbol):
     def imports(self):
         '''returns ordered list of import symbols'''
         return self._importMap.values()
+
+    def checkType(self, type: str):
+        if type.is_primitive:
+            return True
+        (module_name, type_name) = System.splitTypeName(type.name)
+        if module_name and module_name not in self._importMap:
+            return False
+        return True
 
     @property
     def nameParts(self):

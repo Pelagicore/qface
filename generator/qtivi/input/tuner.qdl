@@ -1,27 +1,33 @@
-module ivimedia;
+module media;
 
-interface AmFmTuner {
+interface Tuner {
   int frequency;
   readonly int minimumFrequency;
   readonly int maximumFrequency;
   readonly int stepSize;
   Band band;
-  readonly AmFmStation station;
+  readonly Station station;
   bool scanRunning;
 
-  void tune(AmFmStation station);
+  void tune(Station station);
+  void stepUp();
+  void stepDown();
+  void seekUp();
+  void seekDown();
+  void startScan();
+  void stopScan();
 
   event void scanStarted();
   event void scanStopped();
 }
 
 enum Band {
-    AMBand,
-    FMBand
-};
+    AMBand=0,
+    FMBand=1
+}
 
 
-struct AmFmStation {
+struct Station {
   string stationName;
   int frequency;
   string stationLogoUrl;

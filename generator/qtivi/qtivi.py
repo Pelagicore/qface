@@ -12,6 +12,10 @@ logging.config.dictConfig(yaml.load(open('log.yaml')))
 logger = logging.getLogger(__name__)
 
 
+def className(symbol):
+    return 'QIvi{0}'.format(symbol.name)
+
+
 def paramterType(symbol):
     moduleName = symbol.module.nameParts[-1].capitalize()
     if symbol.type.is_enum:
@@ -33,7 +37,7 @@ def paramterType(symbol):
 def returnType(symbol):
     moduleName = symbol.module.nameParts[-1].capitalize()
     if symbol.type.is_enum:
-        return 'Qml{0}Module::{1}'.format(moduleName, symbol.type)
+        return 'QIvi{0}Module::{1}'.format(moduleName, symbol.type)
     if symbol.type.is_void or symbol.type.is_primitive:
         if symbol.type.name == 'string':
             return 'QString'
@@ -51,32 +55,28 @@ def returnType(symbol):
 def generate(input, output):
     system = FileSystem.parse_dir(input)
     generator = Generator(searchpath='./templates')
+    generator.register_filter('className', className)
     generator.register_filter('returnType', returnType)
     generator.register_filter('parameterType', paramterType)
     ctx = {'output': output}
     for module in system.modules:
         logger.debug('process %s' % module)
         moduleName = module.nameParts[-1].capitalize()
-        ctx.update({'module': module, 'module': moduleName})
-        moduleOutput = generator.apply('{{output}}/{{module|lower}}', ctx)
+        ctx.update({'module': module, 'moduleName': moduleName})
+        moduleOutput = generator.apply('{{output}}/ivi{{moduleName|lower}}', ctx)
         ctx.update({'path': moduleOutput})
-        generator.write('{{path}}/qmldir', 'qmldir', ctx)
-        generator.write('{{path}}/plugin.cpp', 'plugin.cpp', ctx)
-        generator.write('{{path}}/plugin.h', 'plugin.h', ctx)
-        generator.write('{{path}}/{{module|lower}}.pri', 'project.pri', ctx)
-        generator.write('{{path}}/{{module|lower}}.pro', 'project.pro', ctx)
-        generator.write('{{path}}/{{module|lower}}module.h', 'module.h', ctx)
-        generator.write('{{path}}/{{module|lower}}module.cpp', 'module.cpp', ctx)
+        generator.write('{{path}}/ivi{{moduleName|lower}}.pro', 'project.pro', ctx)
         for interface in module.interfaces:
             ctx.update({'interface': interface})
-            generator.write('{{path}}/{{interface|lower}}.h', 'interface.h', ctx)
-            generator.write('{{path}}/{{interface|lower}}.cpp', 'interface.cpp', ctx)
+            generator.write('{{path}}/{{interface|className|lower}}.h', 'interface.h', ctx)
+            generator.write('{{path}}/{{interface|className|lower}}_p.h', 'interface_p.h', ctx)
+            generator.write('{{path}}/{{interface|className|lower}}.cpp', 'interface.cpp', ctx)
+            generator.write('{{path}}/{{interface|className|lower}}backendinterface.h', 'backendinterface.h', ctx)
+            generator.write('{{path}}/{{interface|className|lower}}backendinterface.cpp', 'backendinterface.cpp', ctx)
         for struct in module.structs:
             ctx.update({'struct': struct})
-            generator.write('{{path}}/{{struct|lower}}.h', 'struct.h', ctx)
-            generator.write('{{path}}/{{struct|lower}}.cpp', 'struct.cpp', ctx)
-            generator.write('{{path}}/{{struct|lower}}model.h', 'structmodel.h', ctx)
-            generator.write('{{path}}/{{struct|lower}}model.cpp', 'structmodel.cpp', ctx)
+            generator.write('{{path}}/{{struct|className|lower}}.h', 'struct.h', ctx)
+            generator.write('{{path}}/{{struct|className|lower}}.cpp', 'struct.cpp', ctx)
 
 
 @click.command()

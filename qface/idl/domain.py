@@ -49,6 +49,7 @@ class System(object):
         return module.enumMap[type_name]
 
     def lookup_definition(self, name: str):
+        # import ipdb; ipdb.set_trace()
         parts = name.rsplit('.', 1)
         if len(parts) == 2:
             module_name = parts[0]
@@ -97,6 +98,7 @@ class Module(object):
     def lookup_definition(self, name: str):
         if name in self.definitionMap:
             return self.definitionMap[name]
+        return self.system.lookup_definition(name)
 
     def lookup_module(self, name: str):
         if name in self.system.moduleMap:
@@ -106,6 +108,9 @@ class Module(object):
         return self.name
 
     def __repr__(self):
+        return '<{0} name={1}>'.format(type(self), self.name)
+
+    def __str__(self):
         return self.name
 
 
@@ -124,8 +129,11 @@ class Symbol(object):
     def __unicode__(self):
         return self.name
 
-    def __repr__(self):
+    def __str__(self):
         return self.name
+
+    def __repr__(self):
+        return '<{0} name={1}>'.format(type(self), self.name)
 
     @property
     def qualifiedName(self):
@@ -150,6 +158,8 @@ class TypeSymbol(Symbol):
         self.is_complex = False  # type:bool
         self.is_list = False  # type:bool
         self.is_model = False  # type:bool
+        self.reference = None
+        self.nested = None
 
     @property
     def is_bool(self):

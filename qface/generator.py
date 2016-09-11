@@ -1,4 +1,5 @@
 # Copyright (c) Pelagicore AG 2016
+
 from jinja2 import Environment, FileSystemLoader, Template
 from pathlib import Path
 import shelve
@@ -11,7 +12,7 @@ from .idl.parser.TLexer import TLexer
 from .idl.parser.TParser import TParser
 from .idl.parser.TListener import TListener
 from .idl.domain import System
-from .idl.listener import DomainListener
+from .idl.listener import DomainListener, ResolveListener
 
 
 logger = logging.getLogger(__name__)
@@ -41,8 +42,8 @@ class Generator(object):
         return template.render(context)
 
     def apply(self, template: Template, context: dict):
-        """Return the rendered text of a template instance"""
-        return Template(template).render(context)
+        """Return the rendered text of a template instance"""        
+        return self.env.from_string(template).render(context)
 
     def write(self, fileTemplate: str, template: str, context: dict):
         """Using a templated file name it renders a template
@@ -76,14 +77,10 @@ class FileSystem(object):
         :param path: document path to parse
         :param system: system to be used (optional)
         """
-        system = system or System()
-        listener = DomainListener(system)
-        FileSystem._parse_document(path, listener)
-        return system
-
-    @staticmethod
-    def _parse_document(path: str, listener: TListener):
         logger.debug('parse document: {0}'.format(path))
+
+        system = system or System()
+
         data = FileStream(str(path), encoding='utf-8')
         lexer = TLexer(data)
         stream = CommonTokenStream(lexer)
@@ -91,7 +88,10 @@ class FileSystem(object):
         parser.addErrorListener(DiagnosticErrorListener.DiagnosticErrorListener())
         tree = parser.documentSymbol()
         walker = ParseTreeWalker()
-        walker.walk(listener, tree)
+        walker.walk(DomainListener(system), tree)
+        walker.walk(ResolveListener(), tree)
+
+        return system
 
     @staticmethod
     def parse_dir(path, identifier: str = None, clear_cache=True):
@@ -117,8 +117,7 @@ class FileSystem(object):
             # if domain model not cached generate it
             documents = path.rglob('*.qdl')
             for document in documents:
-                listener = DomainListener(system)
-                FileSystem._parse_document(document, listener)
+                FileSystem._parse_document(document, system)
             cache[identifier] = system
         return system
 

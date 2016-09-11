@@ -110,6 +110,7 @@ def generate_monitor(runner, generator, input, output):
     observer = Observer()
     observer.schedule(event_handler, generator.as_posix(), recursive=True)
     observer.schedule(event_handler, input.as_posix(), recursive=True)
+    observer.schedule(event_handler, './qface', recursive=True)
     observer.start()
     try:
         while True:
@@ -157,10 +158,11 @@ def _generate_reload(generator, input, output):
     observer = Observer()
     observer.schedule(event_handler, generator.as_posix(), recursive=True)
     observer.schedule(event_handler, input.as_posix(), recursive=True)
+    observer.schedule(event_handler, './qface', recursive=True)
     observer.start()
     try:
         while True:
-            time.sleep(1)
+            time.sleep(2)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()

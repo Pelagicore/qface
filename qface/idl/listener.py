@@ -1,5 +1,7 @@
 # Copyright (c) Pelagicore AG 2016
 import logging
+from _operator import concat
+
 from .parser.TListener import TListener
 from .parser.TParser import TParser
 from .domain import *
@@ -7,6 +9,8 @@ from .domain import *
 
 log = logging.getLogger(__name__)
 
+# associates parser context to domain objects
+contextMap = {}
 
 class DomainListener(TListener):
     """The domain listener is called by the parser to fill the
@@ -14,6 +18,7 @@ class DomainListener(TListener):
        back"""
     def __init__(self, system):
         super(DomainListener, self).__init__()
+        contextMap.clear()
         self.system = system or System()  # type:System
         self.module = None  # type:Module
         self.interface = None  # type:Interface
@@ -67,6 +72,7 @@ class DomainListener(TListener):
         assert self.system
         name = ctx.name.text
         self.module = Module(name, self.system)
+        contextMap[ctx] = self.module
 
     def exitModuleSymbol(self, ctx: TParser.ModuleSymbolContext):
         pass
@@ -76,6 +82,7 @@ class DomainListener(TListener):
         name = ctx.name.text
         self.interface = Interface(name, self.module)
         self.parse_comment(ctx, self.interface)
+        contextMap[ctx] = self.interface
 
     def exitInterfaceSymbol(self, ctx: TParser.InterfaceSymbolContext):
         self.interface = None
@@ -85,6 +92,7 @@ class DomainListener(TListener):
         name = ctx.name.text
         self.struct = Struct(name, self.module)
         self.parse_comment(ctx, self.struct)
+        contextMap[ctx] = self.struct
 
     def exitStructSymbol(self, ctx: TParser.StructSymbolContext):
         self.struct = None
@@ -95,6 +103,7 @@ class DomainListener(TListener):
         # import ipdb; ipdb.set_trace()
         self.enum = Enum(name, self.module)
         self.parse_comment(ctx, self.enum)
+        contextMap[ctx] = self.enum
 
     def exitEnumSymbol(self, ctx: TParser.EnumSymbolContext):
         self.enum = None
@@ -115,6 +124,7 @@ class DomainListener(TListener):
         self.operation = Operation(name, self.interface, is_event)
         self.parse_comment(ctx, self.operation)
         self.parse_type(ctx, self.operation.type)
+        contextMap[ctx] = self.operation
 
     def exitOperationSymbol(self, ctx: TParser.OperationSymbolContext):
         self.operation = None
@@ -122,6 +132,7 @@ class DomainListener(TListener):
     def enterParameterSymbol(self, ctx: TParser.ParameterSymbolContext):
         name = ctx.name.text
         self.parameter = Parameter(name, self.operation)
+        contextMap[ctx] = self.parameter
 
     def exitParameterSymbol(self, ctx: TParser.ParameterSymbolContext):
         self.parse_type(ctx, self.parameter.type)
@@ -133,6 +144,7 @@ class DomainListener(TListener):
         self.property.is_readonly = bool(ctx.isReadOnly)
         self.parse_comment(ctx, self.property)
         self.parse_type(ctx, self.property.type)
+        contextMap[ctx] = self.property
 
     def exitPropertySymbol(self, ctx: TParser.PropertySymbolContext):
         self.property = None
@@ -141,6 +153,7 @@ class DomainListener(TListener):
         assert self.struct
         name = ctx.name.text
         self.member = Member(name, self.struct)
+        contextMap[ctx] = self.member
 
     def exitStructMemberSymbol(self, ctx: TParser.StructMemberSymbolContext):
         self.parse_type(ctx, self.member.type)
@@ -151,22 +164,45 @@ class DomainListener(TListener):
         name = ctx.name.text
         self.member = EnumMember(name, self.enum)
         self.member.value = int(ctx.intSymbol().value.text, 0)
+        contextMap[ctx] = self.member
         # import ipdb; ipdb.set_trace()
 
     def exitEnumMemberSymbol(self, ctx: TParser.EnumMemberSymbolContext):
         self.member = None
 
-    def enterImportSymbol(self, ctx:TParser.ImportSymbolContext):
+    def enterImportSymbol(self, ctx: TParser.ImportSymbolContext):
         assert self.module
         name = ctx.name.text
         self.module.importMap[name] = None
 
-
-    def exitImportSymbol(self, ctx:TParser.ImportSymbolContext):
+    def exitImportSymbol(self, ctx: TParser.ImportSymbolContext):
         pass
 
 
+class ResolveListener(TListener):
+    """2nd pass: Resolves the type references"""
+    def resolveSymbol(self, ctx):
+        symbol = contextMap[ctx]  # type: Symbol
+        if not symbol or not isinstance(symbol, TypedSymbol):
+            log.warn('No valid symbol found for context', ctx)
+        module = symbol.module
+        if symbol.type.nested:
+            type = symbol.type.nested
+        else:
+            type = symbol.type
+        if type.is_complex:
+            reference = module.lookup_definition(type.name)
+            if reference:
+                type.reference = reference
 
+    def enterOperationSymbol(self, ctx: TParser.OperationSymbolContext):
+        self.resolveSymbol(ctx)
 
+    def enterParameterSymbol(self, ctx: TParser.ParameterSymbolContext):
+        self.resolveSymbol(ctx)
 
+    def enterPropertySymbol(self, ctx: TParser.PropertySymbolContext):
+        self.resolveSymbol(ctx)
 
+    def enterStructMemberSymbol(self, ctx: TParser.StructMemberSymbolContext):
+        self.resolveSymbol(ctx)

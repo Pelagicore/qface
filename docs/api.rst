@@ -1,15 +1,14 @@
 API
 ===
 
-.. module:: qface.generator
+.. toctree::
+   :maxdepth: 2
 
-Generator module
-----------------
+   api_generator
+   api_domain
 
-.. autoclass:: Generator
-   :members:
 
-.. autoclass:: FileSystem
-   :members:
+
+
 
 

@@ -1,17 +1,31 @@
 # Copyright (c) Pelagicore AG 2016
+
+'''The domian module contains an object hierachy which resembles the
+QDL grammar as a domain model. It is created from the QDL and the main 
+input for the code generation templates.
+
+.. note:: Changes on this API will result into broken templates
+
+.. code-block:: text
+
+    System
+     +- Module
+       +- Import
+       +- Interface
+         +- Property
+         +- Operation
+         +- Event
+       +- Struct (has attributes)
+       +- Enum (has values)
+
+.. note:: When the API talks about an order list, the order is by appearance in the QDL file.
+'''
+
 from collections import OrderedDict, ChainMap
 import logging
 
 log = logging.getLogger(__name__)
 
-# System
-# +- Module
-#   +- Import
-#   +- Interface
-#     +- Property
-#     +- Operation => Method
-#   +- Struct (has attributes)
-#   +- Enum (has values)
 
 
 class System(object):
@@ -32,7 +46,7 @@ class System(object):
         return self._moduleMap.values()
 
     def lookup(self, name: str):
-        '''lookup a symbol by fully qualified name'''
+        '''lookup a symbol by fully qualified name.'''
         # <module>
         if name in self._moduleMap:
             return self._moduleMap[name]
@@ -45,78 +59,26 @@ class System(object):
         module = self._moduleMap[module_name]
         return module.lookup(type_name)
 
-    @property
-    def system(self):
-        '''returns reference to system'''
-        return self
-
-
-class Module(object):
-    """Module is a namespace for types, e.g. interfaces, enums, structs"""
-    def __init__(self, name: str, system: System):
-        log.debug('Module()')
-        self.name = name
-        self.system = system
-        self.system._moduleMap[name] = self
-        self._interfaceMap = OrderedDict()  # type: dict[str, Interface]
-        self._structMap = OrderedDict()  # type: dict[str, Struct]
-        self._enumMap = OrderedDict()  # type: dict[str, Enum]
-        self._definitionMap = ChainMap(self._interfaceMap, self._structMap, self._enumMap)
-        self._importMap = OrderedDict()  # type: dict[str, Module]
-
-    @property
-    def interfaces(self):
-        '''returns ordered list of interface symbols'''
-        return self._interfaceMap.values()
-
-    @property
-    def structs(self):
-        '''returns ordered list of struct symbols'''
-        return self._structMap.values()
-
-    @property
-    def enums(self):
-        '''returns ordered list of enum symbols'''
-        return self._enumMap.values()
-
-    @property
-    def imports(self):
-        '''returns ordered list of import symbols'''
-        return self._importMap.values()
-
-    @property
-    def nameParts(self):
-        '''return module name splitted by '.' in parts'''
-        return self.name.split('.')
-
-    def lookup(self, name: str):
-        '''lookup a symbol by name. If symbol is not local
-        it will be looked up system wide'''
-        if name in self._definitionMap:
-            return self._definitionMap[name]
-        return self.system.lookup(name)
-
-    def __unicode__(self):
-        return self.name
-
-    def __repr__(self):
-        return '<{0} name={1}>'.format(type(self), self.name)
-
-    def __str__(self):
-        return self.name
-
 
 class Symbol(object):
     """A symbol represents a base class for names elements"""
-    def __init__(self, name: str, module: Module):
+    def __init__(self, name: str, module: 'Module'):
         self.name = name
+        """symbol name"""
         self.module = module
+        """module the symbol belongs to"""
         self.comment = ''
+        """comment which appeared in QDL right before symbol"""
 
     @property
     def system(self):
-        ''' returns reference to system'''
-        return self.module.system
+        '''returns reference to system'''
+        return self.module._system
+
+    @property
+    def qualifiedName(self):
+        '''return the fully qualified name (`module + "." + name`)'''
+        return '{0}.{1}'.format(self.module.name, self.name)
 
     def __unicode__(self):
         return self.name
@@ -127,17 +89,14 @@ class Symbol(object):
     def __repr__(self):
         return '<{0} name={1}>'.format(type(self), self.name)
 
-    @property
-    def qualifiedName(self):
-        '''return the fully qualified name (module + name)'''
-        return '{0}.{1}'.format(self.module.name, self.name)
 
 
 class TypedSymbol(Symbol):
-    """A symbol which has a type"""
-    def __init__(self, name: str, module: Module):
-        super().__init__(name, module)
+    """A symbol which has a type, like an operation or property."""
+    def __init__(self, name: str, module: 'Module'):
+        super().__init__(name, module)        
         self.type = TypeSymbol("", self)
+        """type object of the symbol"""
 
 
 class TypeSymbol(Symbol):
@@ -152,6 +111,7 @@ class TypeSymbol(Symbol):
         self.is_list = False  # type:bool
         self.is_model = False  # type:bool
         self.nested = None
+        """nested type if symbol is list or model"""
         self.__reference = None
         self.__is_resolved = False
 
@@ -199,6 +159,52 @@ class TypeSymbol(Symbol):
             type = self.nested if self.nested else self
             type.__reference = self.module.lookup(type.name)
 
+
+class Module(Symbol):
+    """Module is a namespace for types, e.g. interfaces, enums, structs"""
+    def __init__(self, name: str, system: System):
+        """init"""
+        super().__init__(name, self)
+        log.debug('Module()')
+        self._system = system
+        self._system._moduleMap[name] = self
+        self._interfaceMap = OrderedDict()  # type: dict[str, Interface]
+        self._structMap = OrderedDict()  # type: dict[str, Struct]
+        self._enumMap = OrderedDict()  # type: dict[str, Enum]
+        self._definitionMap = ChainMap(self._interfaceMap, self._structMap, self._enumMap)
+        self._importMap = OrderedDict()  # type: dict[str, Module]
+
+    @property
+    def interfaces(self):
+        '''returns ordered list of interface symbols'''
+        return self._interfaceMap.values()
+
+    @property
+    def structs(self):
+        '''returns ordered list of struct symbols'''
+        return self._structMap.values()
+
+    @property
+    def enums(self):
+        '''returns ordered list of enum symbols'''
+        return self._enumMap.values()
+
+    @property
+    def imports(self):
+        '''returns ordered list of import symbols'''
+        return self._importMap.values()
+
+    @property
+    def nameParts(self):
+        '''return module name splitted by '.' in parts'''
+        return self.name.split('.')
+
+    def lookup(self, name: str):
+        '''lookup a symbol by name. If symbol is not local
+        it will be looked up system wide'''
+        if name in self._definitionMap:
+            return self._definitionMap[name]
+        return self.system.lookup(name)
 
 
 class Interface(Symbol):

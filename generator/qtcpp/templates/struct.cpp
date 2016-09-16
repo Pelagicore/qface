@@ -13,8 +13,8 @@
 bool {{struct}}::operator==(const {{struct}} &other) const
 {
     return (
-        {%- for member in struct.members %}{{ ampersand() }}
-        m_{{member}} == other.m_{{member}}
+        {%- for field in struct.fields %}{{ ampersand() }}
+        m_{{field}} == other.m_{{field}}
         {%- endfor %} );
 }
 

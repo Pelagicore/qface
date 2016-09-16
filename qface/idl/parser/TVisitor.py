@@ -39,8 +39,8 @@ class TVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by TParser#memberSymbol.
-    def visitMemberSymbol(self, ctx:TParser.MemberSymbolContext):
+    # Visit a parse tree produced by TParser#interfaceMemberSymbol.
+    def visitInterfaceMemberSymbol(self, ctx:TParser.InterfaceMemberSymbolContext):
         return self.visitChildren(ctx)
 
 
@@ -54,8 +54,8 @@ class TVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by TParser#parameterSymbol.
-    def visitParameterSymbol(self, ctx:TParser.ParameterSymbolContext):
+    # Visit a parse tree produced by TParser#operationParameterSymbol.
+    def visitOperationParameterSymbol(self, ctx:TParser.OperationParameterSymbolContext):
         return self.visitChildren(ctx)
 
 
@@ -89,8 +89,8 @@ class TVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by TParser#structMemberSymbol.
-    def visitStructMemberSymbol(self, ctx:TParser.StructMemberSymbolContext):
+    # Visit a parse tree produced by TParser#structFieldSymbol.
+    def visitStructFieldSymbol(self, ctx:TParser.StructFieldSymbolContext):
         return self.visitChildren(ctx)
 
 

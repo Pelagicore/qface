@@ -47,7 +47,7 @@ def test_resolve_nested():
     struct = module.lookup('one.StringStruct')
     nested = module.lookup('one.NestedStruct')
     assert struct and nested
-    member = struct._memberMap['nested']
+    member = struct._fieldMap['nested']
     assert member
     assert member.type.reference is nested
 

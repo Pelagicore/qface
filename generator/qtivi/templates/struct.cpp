@@ -9,20 +9,20 @@ class {{class}}Private : public QSharedDataPointer
 public:
     {{class}}Private()
     : 
-    {% for member in struct.members %}
-    , m_{{member}}(XXX)
+    {% for field in struct.fields %}
+    , m_{{field}}(XXX)
     {% endfor %}
     {}
 
     {{class}}Private(const {{class}}Private &other)
     : QSharedData(other)
-    {% for member in struct.members %}
-    , m_{{member}}(other.m_{{member}})
+    {% for field in struct.fields %}
+    , m_{{field}}(other.m_{{field}})
     {% endfor %}
     {}
 
-    {% for member in struct.members %}
-    {{member|returnType}} m_{{member}};
+    {% for field in struct.fields %}
+    {{field|returnType}} m_{{field}};
     {% endfor %}
 };
 
@@ -52,15 +52,15 @@ QT_END_NAMESPACE
 {
 }
 
-{% for member in struct.members %}
-void {{class}}::set{{member|upperfirst}}({{ member|parameterType }})
+{% for field in struct.fields %}
+void {{class}}::set{{field|upperfirst}}({{ field|parameterType }})
 {
-    d->m_{{member}} = {{member}};
+    d->m_{{field}} = {{field}};
 }
 
-{{member|returnType}} {{class}}::{{member}}() const
+{{field|returnType}} {{class}}::{{field}}() const
 {
-    return d->m_{{member}};    
+    return d->m_{{field}};    
 }
 {% endfor %}
 
@@ -77,8 +77,8 @@ QString {{class}}::type() const
 bool {{class}}::operator==(const {{class}} &other)
 {
     return (QIviSearchAndBrowseModelItem::operator==(other)
-            {% for member in struct.members %}
-            && d->m_{{member}} == other.d->m_{{member}}
+            {% for field in struct.fields %}
+            && d->m_{{field}} == other.d->m_{{member}}
             {%endfor%}
             );
 }

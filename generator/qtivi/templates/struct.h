@@ -9,8 +9,8 @@ class {{class}}Private;
 class {{class}} : public QIviSearchAndBrowseModelItem
 {
     Q_GADGET
-{% for member in struct.members %}
-    Q_PROPERTY({{member|returnType}} {{member}} READ {{member}} WRITE set{{member|upperfirst}})
+{% for field in struct.fields %}
+    Q_PROPERTY({{field|returnType}} {{field}} READ {{field}} WRITE set{{field|upperfirst}})
 {% endfor %}
 public:
     {{class}}();
@@ -18,9 +18,9 @@ public:
     {{class}} &operator=(const {{class}} &);
     virtual ~{{class}}();
 
-{% for member in struct.members %}
-    void set{{member|upperfirst}}({{ member|parameterType }});
-    {{member|returnType}} {{member}}() const;
+{% for field in struct.fields %}
+    void set{{field|upperfirst}}({{ field|parameterType }});
+    {{field|returnType}} {{field}}() const;
 {% endfor %}
 
     virtual QString name() const Q_DECL_OVERRIDE;

@@ -10,8 +10,8 @@
 {{class}}::{{class}}(QObject *parent)
     : QAbstractListModel(parent)
 {
-    {% for member in struct.members %}
-    m_roleNames.insert(Roles::{{member|upperfirst}}, QByteArray("{{member}}"));
+    {% for field in struct.fields %}
+    m_roleNames.insert(Roles::{{field|upperfirst}}, QByteArray("{{field}}"));
     {% endfor %}
 }
 
@@ -38,9 +38,9 @@ QVariant {{class}}::data(const QModelIndex &index, int role) const
     }
     const {{struct}} &{{struct|lower}} = m_data.at(index.row());
     switch(role) {
-    {% for member in struct.members %}
-    case Roles::{{member|upperfirst}}:
-        return QVariant::fromValue(contact.m_{{member}});
+    {% for field in struct.fields %}
+    case Roles::{{field|upperfirst}}:
+        return QVariant::fromValue(contact.m_{{field}});
         break;
     {% endfor %}
     }

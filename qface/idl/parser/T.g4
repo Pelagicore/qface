@@ -29,23 +29,23 @@ definitionSymbol
     ;
 
 interfaceSymbol
-    : comment=DOCCOMMENT? 'interface' name=IDENTIFIER '{' memberSymbol* '}'
+    : comment=DOCCOMMENT? 'interface' name=IDENTIFIER '{' interfaceMemberSymbol* '}'
     ;
 
-memberSymbol
+interfaceMemberSymbol
     : operationSymbol
     | propertySymbol
     ;
 
 operationSymbol
-    : comment=DOCCOMMENT? isEvent='event'? (typeSymbol | 'void') name=IDENTIFIER '(' parameterSymbol* ')' ';'
+    : comment=DOCCOMMENT? isEvent='event'? (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'
     ;
 
 propertySymbol
     : comment=DOCCOMMENT? isReadOnly='readonly'? typeSymbol name=IDENTIFIER ';'
     ;
 
-parameterSymbol
+operationParameterSymbol
     : typeSymbol name=IDENTIFIER ','?
     ;
 
@@ -76,10 +76,10 @@ modelTypeSymbol
     ;
 
 structSymbol
-    : comment=DOCCOMMENT? 'struct' name=IDENTIFIER '{' structMemberSymbol* '}'
+    : comment=DOCCOMMENT? 'struct' name=IDENTIFIER '{' structFieldSymbol* '}'
     ;
 
-structMemberSymbol
+structFieldSymbol
     : comment=DOCCOMMENT? typeSymbol name=IDENTIFIER ';'?
     ;
 
@@ -96,12 +96,10 @@ enumMemberSymbol
     : comment=DOCCOMMENT? name=IDENTIFIER ('=' intSymbol)? ','?
     ;
 
-
 intSymbol
     : value=INTCONSTANT
     | value=HEXCONSTANT
     ;
-
 
 INTCONSTANT     : ('+' | '-')? '0'..'9'+;
 HEXCONSTANT     : '0x' ('0'..'9' | 'a'..'f' | 'A'..'F')+;

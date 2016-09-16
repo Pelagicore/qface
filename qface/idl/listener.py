@@ -5,6 +5,7 @@ from _operator import concat
 from .parser.TListener import TListener
 from .parser.TParser import TParser
 from .domain import *
+from antlr4 import ParserRuleContext
 
 
 log = logging.getLogger(__name__)
@@ -24,13 +25,13 @@ class DomainListener(TListener):
         self.interface = None  # type:Interface
         self.struct = None  # type:Struct
         self.enum = None  # type:Enum
-        self.enumCounter = 0 # int
+        self.enumCounter = 0  # int
         self.operation = None  # type:Operation
         self.parameter = None  # type:Parameter
         self.property = None  # type:Property
-        self.member = None  # type:Member
+        self.field = None  # type:Field
 
-    def parse_type(self, ctx, type: TypeSymbol):
+    def parse_type(self, ctx: ParserRuleContext, type: TypeSymbol):
         if not ctx.typeSymbol():
             # import pdb; pdb.set_trace()
             type.is_void = True
@@ -134,12 +135,12 @@ class DomainListener(TListener):
     def exitOperationSymbol(self, ctx: TParser.OperationSymbolContext):
         self.operation = None
 
-    def enterParameterSymbol(self, ctx: TParser.ParameterSymbolContext):
+    def enterOperationParameterSymbol(self, ctx: TParser.OperationParameterSymbolContext):
         name = ctx.name.text
         self.parameter = Parameter(name, self.operation)
         contextMap[ctx] = self.parameter
 
-    def exitParameterSymbol(self, ctx: TParser.ParameterSymbolContext):
+    def exitOperationParameterSymbol(self, ctx: TParser.OperationParameterSymbolContext):
         self.parse_type(ctx, self.parameter.type)
 
     def enterPropertySymbol(self, ctx: TParser.PropertySymbolContext):
@@ -154,25 +155,25 @@ class DomainListener(TListener):
     def exitPropertySymbol(self, ctx: TParser.PropertySymbolContext):
         self.property = None
 
-    def enterStructMemberSymbol(self, ctx: TParser.StructMemberSymbolContext):
+    def enterStructFieldSymbol(self, ctx: TParser.StructFieldSymbolContext):
         assert self.struct
         name = ctx.name.text
-        self.member = Member(name, self.struct)
-        contextMap[ctx] = self.member
+        self.field = Field(name, self.struct)
+        contextMap[ctx] = self.field
 
-    def exitStructMemberSymbol(self, ctx: TParser.StructMemberSymbolContext):
-        self.parse_type(ctx, self.member.type)
-        self.member = None
+    def exitStructFieldSymbol(self, ctx: TParser.StructFieldSymbolContext):
+        self.parse_type(ctx, self.field.type)
+        self.field = None
 
     def enterEnumMemberSymbol(self, ctx: TParser.EnumMemberSymbolContext):
         assert self.enum
         name = ctx.name.text
-        self.member = EnumMember(name, self.enum)
+        self.field = EnumMember(name, self.enum)
         value = self.enumCounter
         if ctx.intSymbol():
             value = int(ctx.intSymbol().value.text, 0)
-        self.member.value = value
-        contextMap[ctx] = self.member
+        self.field.value = value
+        contextMap[ctx] = self.field
         # import ipdb; ipdb.set_trace()
         if self.enum.is_flag:
             self.enumCounter <<= 1
@@ -180,7 +181,7 @@ class DomainListener(TListener):
             self.enumCounter += 1
 
     def exitEnumMemberSymbol(self, ctx: TParser.EnumMemberSymbolContext):
-        self.member = None
+        self.field = None
 
     def enterImportSymbol(self, ctx: TParser.ImportSymbolContext):
         assert self.module

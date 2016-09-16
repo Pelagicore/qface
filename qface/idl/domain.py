@@ -48,10 +48,14 @@ class System(object):
     def lookup(self, name: str):
         '''lookup a symbol by fully qualified name.'''
         # <module>
+        print('lookup: ' + name)
         if name in self._moduleMap:
             return self._moduleMap[name]
         # <module>.<Symbol>
         (module_name, type_name) = self.splitTypeName(name)
+        if not module_name and type_name:
+            print('not able to lookup symbol: {0}'.format(name))
+            return None
         module = self._moduleMap[module_name]
         return module.lookup(type_name)
 
@@ -144,12 +148,12 @@ class TypeSymbol(Symbol):
     @property
     def is_enum(self):
         '''checks if type is complex and enum'''
-        return self.is_complex and isinstance(self.definition, Enum)
+        return self.is_complex and isinstance(self.reference, Enum)
 
     @property
     def is_struct(self):
         '''checks if type is complex and struct'''
-        return self.is_complex and isinstance(self.definition, Struct)
+        return self.is_complex and isinstance(self.reference, Struct)
 
     @property
     def reference(self):
@@ -291,21 +295,21 @@ class Struct(Symbol):
         super().__init__(name, module)
         log.debug('Struct()')
         self.module._structMap[name] = self
-        self._memberMap = OrderedDict()  # type: dict[str, Member]
+        self._fieldMap = OrderedDict()  # type: dict[str, Field]
 
     @property
-    def members(self):
+    def fields(self):
         '''returns ordered list of members'''
-        return self._memberMap.values()
+        return self._fieldMap.values()
 
 
-class Member(TypedSymbol):
+class Field(TypedSymbol):
     """A member in a struct"""
     def __init__(self, name: str, struct: Struct):
         super().__init__(name, struct.module)
-        log.debug('Member()')
+        log.debug('Field()')
         self.struct = struct  # type:Struct
-        self.struct._memberMap[name] = self
+        self.struct._fieldMap[name] = self
 
 
 class Enum(Symbol):

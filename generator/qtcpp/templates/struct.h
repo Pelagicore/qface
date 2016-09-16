@@ -11,13 +11,13 @@
 class {{struct}}
 {
     Q_GADGET
-{% for member in struct.members %}
-    Q_PROPERTY({{member|returnType}} {{member}} MEMBER m_{{member}})
+{% for field in struct.fields %}
+    Q_PROPERTY({{field|returnType}} {{field}} MEMBER m_{{field}})
 {% endfor %}
 
 public:
-{% for member in struct.members %}
-    {{member|returnType}} m_{{member}};
+{% for field in struct.fields %}
+    {{field|returnType}} m_{{field}};
 {% endfor %}
 
     bool operator==(const {{struct}} &other) const;

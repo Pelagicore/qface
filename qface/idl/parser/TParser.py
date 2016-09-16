@@ -125,28 +125,28 @@ class TParser ( Parser ):
     RULE_moduleSymbol = 3
     RULE_definitionSymbol = 4
     RULE_interfaceSymbol = 5
-    RULE_memberSymbol = 6
+    RULE_interfaceMemberSymbol = 6
     RULE_operationSymbol = 7
     RULE_propertySymbol = 8
-    RULE_parameterSymbol = 9
+    RULE_operationParameterSymbol = 9
     RULE_typeSymbol = 10
     RULE_complexTypeSymbol = 11
     RULE_primitiveTypeSymbol = 12
     RULE_listTypeSymbol = 13
     RULE_modelTypeSymbol = 14
     RULE_structSymbol = 15
-    RULE_structMemberSymbol = 16
+    RULE_structFieldSymbol = 16
     RULE_enumSymbol = 17
     RULE_enumTypeSymbol = 18
     RULE_enumMemberSymbol = 19
     RULE_intSymbol = 20
 
     ruleNames =  [ "documentSymbol", "headerSymbol", "importSymbol", "moduleSymbol", 
-                   "definitionSymbol", "interfaceSymbol", "memberSymbol", 
-                   "operationSymbol", "propertySymbol", "parameterSymbol", 
+                   "definitionSymbol", "interfaceSymbol", "interfaceMemberSymbol", 
+                   "operationSymbol", "propertySymbol", "operationParameterSymbol", 
                    "typeSymbol", "complexTypeSymbol", "primitiveTypeSymbol", 
                    "listTypeSymbol", "modelTypeSymbol", "structSymbol", 
-                   "structMemberSymbol", "enumSymbol", "enumTypeSymbol", 
+                   "structFieldSymbol", "enumSymbol", "enumTypeSymbol", 
                    "enumMemberSymbol", "intSymbol" ]
 
     EOF = Token.EOF
@@ -521,11 +521,11 @@ class TParser ( Parser ):
         def IDENTIFIER(self):
             return self.getToken(TParser.IDENTIFIER, 0)
 
-        def memberSymbol(self, i:int=None):
+        def interfaceMemberSymbol(self, i:int=None):
             if i is None:
-                return self.getTypedRuleContexts(TParser.MemberSymbolContext)
+                return self.getTypedRuleContexts(TParser.InterfaceMemberSymbolContext)
             else:
-                return self.getTypedRuleContext(TParser.MemberSymbolContext,i)
+                return self.getTypedRuleContext(TParser.InterfaceMemberSymbolContext,i)
 
 
         def DOCCOMMENT(self):
@@ -576,7 +576,7 @@ class TParser ( Parser ):
             _la = self._input.LA(1)
             while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << TParser.T__6) | (1 << TParser.T__7) | (1 << TParser.T__10) | (1 << TParser.T__12) | (1 << TParser.T__13) | (1 << TParser.T__14) | (1 << TParser.T__15) | (1 << TParser.T__16) | (1 << TParser.T__19) | (1 << TParser.IDENTIFIER) | (1 << TParser.DOCCOMMENT))) != 0):
                 self.state = 79
-                self.memberSymbol()
+                self.interfaceMemberSymbol()
                 self.state = 84
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
@@ -591,7 +591,7 @@ class TParser ( Parser ):
             self.exitRule()
         return localctx
 
-    class MemberSymbolContext(ParserRuleContext):
+    class InterfaceMemberSymbolContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -606,29 +606,29 @@ class TParser ( Parser ):
 
 
         def getRuleIndex(self):
-            return TParser.RULE_memberSymbol
+            return TParser.RULE_interfaceMemberSymbol
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterMemberSymbol" ):
-                listener.enterMemberSymbol(self)
+            if hasattr( listener, "enterInterfaceMemberSymbol" ):
+                listener.enterInterfaceMemberSymbol(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitMemberSymbol" ):
-                listener.exitMemberSymbol(self)
+            if hasattr( listener, "exitInterfaceMemberSymbol" ):
+                listener.exitInterfaceMemberSymbol(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitMemberSymbol" ):
-                return visitor.visitMemberSymbol(self)
+            if hasattr( visitor, "visitInterfaceMemberSymbol" ):
+                return visitor.visitInterfaceMemberSymbol(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def memberSymbol(self):
+    def interfaceMemberSymbol(self):
 
-        localctx = TParser.MemberSymbolContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 12, self.RULE_memberSymbol)
+        localctx = TParser.InterfaceMemberSymbolContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 12, self.RULE_interfaceMemberSymbol)
         try:
             self.state = 89
             self._errHandler.sync(self);
@@ -670,11 +670,11 @@ class TParser ( Parser ):
             return self.getTypedRuleContext(TParser.TypeSymbolContext,0)
 
 
-        def parameterSymbol(self, i:int=None):
+        def operationParameterSymbol(self, i:int=None):
             if i is None:
-                return self.getTypedRuleContexts(TParser.ParameterSymbolContext)
+                return self.getTypedRuleContexts(TParser.OperationParameterSymbolContext)
             else:
-                return self.getTypedRuleContext(TParser.ParameterSymbolContext,i)
+                return self.getTypedRuleContext(TParser.OperationParameterSymbolContext,i)
 
 
         def DOCCOMMENT(self):
@@ -743,7 +743,7 @@ class TParser ( Parser ):
             _la = self._input.LA(1)
             while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << TParser.T__12) | (1 << TParser.T__13) | (1 << TParser.T__14) | (1 << TParser.T__15) | (1 << TParser.T__16) | (1 << TParser.T__19) | (1 << TParser.IDENTIFIER))) != 0):
                 self.state = 103
-                self.parameterSymbol()
+                self.operationParameterSymbol()
                 self.state = 108
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
@@ -834,7 +834,7 @@ class TParser ( Parser ):
             self.exitRule()
         return localctx
 
-    class ParameterSymbolContext(ParserRuleContext):
+    class OperationParameterSymbolContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -849,29 +849,29 @@ class TParser ( Parser ):
             return self.getToken(TParser.IDENTIFIER, 0)
 
         def getRuleIndex(self):
-            return TParser.RULE_parameterSymbol
+            return TParser.RULE_operationParameterSymbol
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterParameterSymbol" ):
-                listener.enterParameterSymbol(self)
+            if hasattr( listener, "enterOperationParameterSymbol" ):
+                listener.enterOperationParameterSymbol(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitParameterSymbol" ):
-                listener.exitParameterSymbol(self)
+            if hasattr( listener, "exitOperationParameterSymbol" ):
+                listener.exitOperationParameterSymbol(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitParameterSymbol" ):
-                return visitor.visitParameterSymbol(self)
+            if hasattr( visitor, "visitOperationParameterSymbol" ):
+                return visitor.visitOperationParameterSymbol(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def parameterSymbol(self):
+    def operationParameterSymbol(self):
 
-        localctx = TParser.ParameterSymbolContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 18, self.RULE_parameterSymbol)
+        localctx = TParser.OperationParameterSymbolContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 18, self.RULE_operationParameterSymbol)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
@@ -1203,11 +1203,11 @@ class TParser ( Parser ):
         def IDENTIFIER(self):
             return self.getToken(TParser.IDENTIFIER, 0)
 
-        def structMemberSymbol(self, i:int=None):
+        def structFieldSymbol(self, i:int=None):
             if i is None:
-                return self.getTypedRuleContexts(TParser.StructMemberSymbolContext)
+                return self.getTypedRuleContexts(TParser.StructFieldSymbolContext)
             else:
-                return self.getTypedRuleContext(TParser.StructMemberSymbolContext,i)
+                return self.getTypedRuleContext(TParser.StructFieldSymbolContext,i)
 
 
         def DOCCOMMENT(self):
@@ -1258,7 +1258,7 @@ class TParser ( Parser ):
             _la = self._input.LA(1)
             while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << TParser.T__12) | (1 << TParser.T__13) | (1 << TParser.T__14) | (1 << TParser.T__15) | (1 << TParser.T__16) | (1 << TParser.T__19) | (1 << TParser.IDENTIFIER) | (1 << TParser.DOCCOMMENT))) != 0):
                 self.state = 157
-                self.structMemberSymbol()
+                self.structFieldSymbol()
                 self.state = 162
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
@@ -1273,7 +1273,7 @@ class TParser ( Parser ):
             self.exitRule()
         return localctx
 
-    class StructMemberSymbolContext(ParserRuleContext):
+    class StructFieldSymbolContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1292,29 +1292,29 @@ class TParser ( Parser ):
             return self.getToken(TParser.DOCCOMMENT, 0)
 
         def getRuleIndex(self):
-            return TParser.RULE_structMemberSymbol
+            return TParser.RULE_structFieldSymbol
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterStructMemberSymbol" ):
-                listener.enterStructMemberSymbol(self)
+            if hasattr( listener, "enterStructFieldSymbol" ):
+                listener.enterStructFieldSymbol(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitStructMemberSymbol" ):
-                listener.exitStructMemberSymbol(self)
+            if hasattr( listener, "exitStructFieldSymbol" ):
+                listener.exitStructFieldSymbol(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitStructMemberSymbol" ):
-                return visitor.visitStructMemberSymbol(self)
+            if hasattr( visitor, "visitStructFieldSymbol" ):
+                return visitor.visitStructFieldSymbol(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def structMemberSymbol(self):
+    def structFieldSymbol(self):
 
-        localctx = TParser.StructMemberSymbolContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 32, self.RULE_structMemberSymbol)
+        localctx = TParser.StructFieldSymbolContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 32, self.RULE_structFieldSymbol)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)

@@ -15,7 +15,7 @@ class {{struct}}Model : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    enum Roles { {{struct.members|map('upperfirst')|join(', ')}} };
+    enum Roles { {{struct.fields|map('upperfirst')|join(', ')}} };
     {{struct}}Model(QObject *parent=0);
     Q_INVOKABLE {{struct}} get(int index);
     int count() const;

@@ -62,12 +62,12 @@ class TListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by TParser#memberSymbol.
-    def enterMemberSymbol(self, ctx:TParser.MemberSymbolContext):
+    # Enter a parse tree produced by TParser#interfaceMemberSymbol.
+    def enterInterfaceMemberSymbol(self, ctx:TParser.InterfaceMemberSymbolContext):
         pass
 
-    # Exit a parse tree produced by TParser#memberSymbol.
-    def exitMemberSymbol(self, ctx:TParser.MemberSymbolContext):
+    # Exit a parse tree produced by TParser#interfaceMemberSymbol.
+    def exitInterfaceMemberSymbol(self, ctx:TParser.InterfaceMemberSymbolContext):
         pass
 
 
@@ -89,12 +89,12 @@ class TListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by TParser#parameterSymbol.
-    def enterParameterSymbol(self, ctx:TParser.ParameterSymbolContext):
+    # Enter a parse tree produced by TParser#operationParameterSymbol.
+    def enterOperationParameterSymbol(self, ctx:TParser.OperationParameterSymbolContext):
         pass
 
-    # Exit a parse tree produced by TParser#parameterSymbol.
-    def exitParameterSymbol(self, ctx:TParser.ParameterSymbolContext):
+    # Exit a parse tree produced by TParser#operationParameterSymbol.
+    def exitOperationParameterSymbol(self, ctx:TParser.OperationParameterSymbolContext):
         pass
 
 
@@ -152,12 +152,12 @@ class TListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by TParser#structMemberSymbol.
-    def enterStructMemberSymbol(self, ctx:TParser.StructMemberSymbolContext):
+    # Enter a parse tree produced by TParser#structFieldSymbol.
+    def enterStructFieldSymbol(self, ctx:TParser.StructFieldSymbolContext):
         pass
 
-    # Exit a parse tree produced by TParser#structMemberSymbol.
-    def exitStructMemberSymbol(self, ctx:TParser.StructMemberSymbolContext):
+    # Exit a parse tree produced by TParser#structFieldSymbol.
+    def exitStructFieldSymbol(self, ctx:TParser.StructFieldSymbolContext):
         pass
 
 

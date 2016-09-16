@@ -7,6 +7,8 @@ There is a central client to interface the commands for generation, called cli.
 
 To use an existing generator just provide the path to the generator script.
 
+.. image:: qface_concept.png
+
 .. code-block:: sh
 
     ./cli.py generator --generator generator/csv --input input --output output

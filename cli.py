@@ -5,7 +5,7 @@ import click
 from subprocess import call
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
-from pathlib import Path
+from path import Path
 import time
 import os
 import sys
@@ -94,36 +94,6 @@ class RunScriptChangeHandler(FileSystemEventHandler):
 
 
 @cli.command()
-@click.option('--runner', type=click.File('r'))
-@click.option('--generator', type=click.Path(exists=True))
-@click.option('--input', type=click.Path(exists=True))
-@click.option('--output', type=click.Path(exists=True))
-def generate_monitor(runner, generator, input, output):
-    """run the named generator and monitor the input and generator folder"""
-    if runner:
-        config = yaml.load(runner)
-        generator = config['generator']
-        input = config['input']
-        output = config['output']
-    generator = Path(generator).absolute()
-    input = Path(input).absolute()
-    output = Path(output).absolute()
-    script = generator / '{0}.py --input {1} --output {2}'.format(generator.name, input, output)
-    event_handler = RunScriptChangeHandler(script, cwd=generator.as_posix())
-    observer = Observer()
-    observer.schedule(event_handler, generator.as_posix(), recursive=True)
-    observer.schedule(event_handler, input.as_posix(), recursive=True)
-    observer.schedule(event_handler, './qface', recursive=True)
-    observer.start()
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
-
-
-@cli.command()
 @click.option('--runner', type=click.File('r'), help="use the runner YAML file to configure the generation")
 @click.option('--reload/--no-reload', default=False, help="if enabled auto-reload the generator on input changes")
 @click.option('--generator', help="specifies the generator (either by name or path)")
@@ -132,7 +102,7 @@ def generate_monitor(runner, generator, input, output):
 @click.option('--list/--no-list', help="lists the available generators")
 def generate(runner, generator, input, output, reload, list):
     if list:
-        entries = [e.name for e in Path('generator').iterdir()]
+        entries = [str(x.name) for x in Path('generator').dirs()]
         click.echo('generators: {0}'.format(entries))
         sys.exit(0)
     """run the named generator"""
@@ -144,38 +114,38 @@ def generate(runner, generator, input, output, reload, list):
     if not generator or not input or not output:
         print('generator, input and output arguments are required')
         sys.exit(-1)
-    generator = Path('generator') / generator
+    # check for embedded generator by name
+    generator = Path('generator/{0}'.format(generator))
     if not generator.exists():
-        generator = Path(generator).absolute()
+        generator = Path(generator).abspath()
+    # look if generator points to an external generator
     if not generator.exists():
         print('can not find the specified generator: ' + str(generator))
         sys.exit(-1)
-    input = Path(input).absolute()
-    output = Path(output).absolute()
+    input = Path(input).abspath()
+    output = Path(output).abspath()
+    generator = Path(generator).abspath()
     if not reload:
         _generate_once(generator, input, output)
     else:
         _generate_reload(generator, input, output)
 
 
-
 def _generate_once(generator, input, output):
     script = '{0}.py'.format(generator.name)
-    input = Path(input).absolute()
-    output = Path(output).absolute()
     sh('python3 {0} --input {1} --output {2}'
         .format(script, input, output),
-        cwd=generator.as_posix())
+        cwd=generator)
 
 
 def _generate_reload(generator, input, output):
     """run the named generator and monitor the input and generator folder"""
     script = generator / '{0}.py --input {1} --output {2}'.format(generator.name, input, output)
-    event_handler = RunScriptChangeHandler(script, cwd=generator.as_posix())
-    event_handler.run() # run always once
+    event_handler = RunScriptChangeHandler(script, cwd=generator)
+    event_handler.run()  # run always once
     observer = Observer()
-    observer.schedule(event_handler, generator.as_posix(), recursive=True)
-    observer.schedule(event_handler, input.as_posix(), recursive=True)
+    observer.schedule(event_handler, generator, recursive=True)
+    observer.schedule(event_handler, input, recursive=True)
     observer.schedule(event_handler, './qface', recursive=True)
     observer.start()
 
@@ -191,7 +161,7 @@ def _generate_reload(generator, input, output):
 @cli.command()
 def install(editable):
     """install the script onto the system using pip3"""
-    script_dir = str(Path(__file__).parent.absolute())
+    script_dir = str(Path(__file__).parent.abspath())
     print(script_dir)
     if editable:
         sh('pip3 install --editable {0} --upgrade'.format(script_dir))

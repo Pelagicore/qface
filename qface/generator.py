@@ -116,7 +116,7 @@ class FileSystem(object):
             # if domain model not cached generate it
             documents = path.rglob('*.qdl')
             for document in documents:
-                FileSystem._parse_document(document, system)
+                FileSystem.parse_document(document, system)
             cache[identifier] = system
         return system
 

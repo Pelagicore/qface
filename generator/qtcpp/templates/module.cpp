@@ -8,7 +8,7 @@
 {% set class = 'Qml{0}'.format(module) %}
 
 
-#include "{{ module|lower }}.h"
+#include "qml{{ module|lower }}.h"
 
 #include <QtQml>
 

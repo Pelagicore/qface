@@ -56,8 +56,7 @@ def generate(input, output):
     ctx = {'output': output}
     for module in system.modules:
         logger.debug('process %s' % module)
-        moduleName = module.nameParts[-1].capitalize()
-        ctx.update({'module': module, 'module': moduleName})
+        ctx.update({'module': module})
         moduleOutput = generator.apply('{{output}}/{{module|lower}}', ctx)
         ctx.update({'path': moduleOutput})
         generator.write('{{path}}/qmldir', 'qmldir', ctx)
@@ -65,8 +64,8 @@ def generate(input, output):
         generator.write('{{path}}/plugin.h', 'plugin.h', ctx)
         generator.write('{{path}}/{{module|lower}}.pri', 'project.pri', ctx)
         generator.write('{{path}}/{{module|lower}}.pro', 'project.pro', ctx)
-        generator.write('{{path}}/{{module|lower}}module.h', 'module.h', ctx)
-        generator.write('{{path}}/{{module|lower}}module.cpp', 'module.cpp', ctx)
+        generator.write('{{path}}/qml{{module.moduleName|lower}}module.h', 'module.h', ctx)
+        generator.write('{{path}}/qml{{module.moduleName|lower}}module.cpp', 'module.cpp', ctx)
         for interface in module.interfaces:
             ctx.update({'interface': interface})
             generator.write('{{path}}/{{interface|lower}}.h', 'interface.h', ctx)

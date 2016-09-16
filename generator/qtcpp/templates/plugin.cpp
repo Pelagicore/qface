@@ -18,10 +18,10 @@
 
 void Plugin::registerTypes(const char *uri)
 {
-    Qml{{module}}::registerTypes();    
+    Qml{{moduleName}}::registerTypes();    
     // @uri {{module|lower}}
-    {% for interface in module.interfaces %}
     Qml{{moduleName}}::registerQmlTypes(uri, 1, 0);
+{% for interface in module.interfaces %}
     Qml{{interface}}::registerQmlTypes(uri, 1, 0);
-    {% endfor %}
+{% endfor %}
 }

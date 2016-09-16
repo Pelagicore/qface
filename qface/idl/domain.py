@@ -217,6 +217,10 @@ class Module(Symbol):
         '''return module name splitted by '.' in parts'''
         return self.name.split('.')
 
+    @property
+    def moduleName(self):
+        return self.name.split('.')[-1].capitalize()
+
     def lookup(self, name: str):
         '''lookup a symbol by name. If symbol is not local
         it will be looked up system wide'''

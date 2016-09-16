@@ -1,5 +1,6 @@
 {# Copyright (c) Pelagicore AB 2016 #}
 {% from 'helper.tpl' import qualifiedModuleName %}
+{% set moduleName = qualifiedModuleName(module) %}
 #############################################################################
 ## This is an auto-generated file.
 ## Do not edit! All changes made to it will be lost.
@@ -10,7 +11,7 @@ CONFIG += c++11
 
 
 HEADERS += \
-    {{qualifiedModuleName(module)|lower}}.h \
+    qml{{moduleName|lower}}.h \
 {% for interface in module.interfaces %}
     {{interface|lower}}.h \
 {% endfor %}
@@ -21,7 +22,7 @@ HEADERS += \
     plugin.h
 
 SOURCES += \
-    {{qualifiedModuleName(module)|lower}}.cpp \
+    qml{{moduleName|lower}}.cpp \
 {% for interface in module.interfaces %}
     {{interface|lower}}.cpp \
 {% endfor %}

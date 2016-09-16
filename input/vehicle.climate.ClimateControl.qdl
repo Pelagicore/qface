@@ -88,7 +88,7 @@ interface ClimateControl {
     int automaticClimateFanIntensityLevel;
 }
 
-flag AirflowDirection {
+flag AirflowDirections {
     Windshield = 1,
     Dashboard = 2,
     Floor = 4

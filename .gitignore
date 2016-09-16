@@ -6,3 +6,5 @@ output
 docs/_build/*
 *.pyc
 *.log
+qface.egg-info
+build-*

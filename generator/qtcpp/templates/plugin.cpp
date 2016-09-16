@@ -1,4 +1,4 @@
-{# Copyright (c) Pelagicore AG 2016 #}
+{# Copyright (c) Pelagicore AB 2016 #}
 {% from 'helper.tpl' import qualifiedModuleName %}
 {% set moduleName = qualifiedModuleName(module) %}
 /****************************************************************************

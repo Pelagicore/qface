@@ -1,4 +1,4 @@
-{# Copyright (c) Pelagicore AG 2016 #}
+{# Copyright (c) Pelagicore AB 2016 #}
 {% set class = '{0}Model'.format(struct) %}
 /****************************************************************************
 ** This is an auto-generated file.

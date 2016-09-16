@@ -1,4 +1,4 @@
-# Copyright (c) Pelagicore AG 2016
+# Copyright (c) Pelagicore AB 2016
 
 '''The domian module contains an object hierachy which resembles the
 QDL grammar as a domain model. It is created from the QDL and the main 

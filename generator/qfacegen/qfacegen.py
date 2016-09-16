@@ -1,4 +1,4 @@
-# Copyright (c) Pelagicore AG 2016
+# Copyright (c) Pelagicore AB 2016
 # !/usr/bin/env python3
 import click
 import logging

@@ -1,19 +1,18 @@
 # Copyright (c) Pelagicore AB 2016
 
 from jinja2 import Environment, FileSystemLoader, Template
-from pathlib import Path
-import shelve
-import logging
-
+from path import Path
 from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
 from antlr4.error import DiagnosticErrorListener
+import shelve
+import logging
+import hashlib
 
 from .idl.parser.TLexer import TLexer
 from .idl.parser.TParser import TParser
 from .idl.parser.TListener import TListener
 from .idl.domain import System
 from .idl.listener import DomainListener
-
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ class Generator(object):
     """Manages the templates and applies your context data"""
     def __init__(self, searchpath: str):
         if searchpath:
-            searchpath = Path(searchpath).resolve().as_posix()
+            searchpath = Path(searchpath).expand()
             self.env = Environment(loader=FileSystemLoader(searchpath), trim_blocks=True, lstrip_blocks=True)
         self.env.filters['upperfirst'] = upper_first_filter
 
@@ -42,25 +41,27 @@ class Generator(object):
         return template.render(context)
 
     def apply(self, template: Template, context: dict):
-        """Return the rendered text of a template instance"""        
+        """Return the rendered text of a template instance"""
         return self.env.from_string(template).render(context)
 
     def write(self, fileTemplate: str, template: str, context: dict):
         """Using a templated file name it renders a template
            into a file given a context"""
         path = Path(self.apply(fileTemplate, context))
-        self.mkdir(path.parent)
+        path.parent.makedirs_p()
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
-        path.open('w').write(data)
+        if self.hasDifferentContent(data, path):
+            print('write file: {0}'.format(path))
+            path.open('w').write(data)
 
-    def mkdir(self, path: str):
-        """Makes a directory including all its parents"""
-        path = Path(path)
-        try:
-            path.mkdir(parents=True)
-        except OSError:
-            pass
+    def hasDifferentContent(self, data, path):
+        if not path.exists():
+            return True
+        dataHash = hashlib.new('md5', data.encode('utf-8')).digest()
+        pathHash = path.read_hash('md5')
+        return dataHash != pathHash
+
 
     def register_filter(self, name, callback):
         """Register your custom template filter"""
@@ -114,8 +115,7 @@ class FileSystem(object):
             system = cache[identifier]
         else:
             # if domain model not cached generate it
-            documents = path.rglob('*.qdl')
-            for document in documents:
+            for document in path.walkfiles('*.qdl'):
                 FileSystem.parse_document(document, system)
             cache[identifier] = system
         return system
@@ -126,4 +126,4 @@ class FileSystem(object):
            in a give directory path"""
         path = Path(path)
         logging.debug('find_files path={0} glob={1}'.format(path, glob))
-        return path.rglob(glob)
+        return list(path.walkfiles(glob))

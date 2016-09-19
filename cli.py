@@ -12,6 +12,8 @@ import sys
 import yaml
 
 
+CWD = Path(__file__).parent
+
 os.environ['PYTHONPATH'] = os.getcwd()
 
 
@@ -53,15 +55,15 @@ class RunTestChangeHandler(FileSystemEventHandler):
     def on_any_event(self, event):
         if event.is_directory:
             return
-        if Path(event.src_path).suffix == '.py':
-            sh('python3 -m pytest -v -s -l')
+        if Path(event.src_path).ext == '.py':
+            sh('python3 -m pytest')
 
 
 @cli.command()
 @click.pass_context
 def test_monitor(ctx):
     """run the tests and re-run on changes"""
-    sh('python3 -m pytest -v -s -l')
+    sh('python3 -m pytest')
     while True:
         event_handler = RunTestChangeHandler(ctx)
         observer = Observer()
@@ -98,9 +100,10 @@ class RunScriptChangeHandler(FileSystemEventHandler):
 @click.option('--reload/--no-reload', default=False, help="if enabled auto-reload the generator on input changes")
 @click.option('--generator', help="specifies the generator (either by name or path)")
 @click.option('--input', type=click.Path(exists=True), help="specifies the input folder")
-@click.option('--output', type=click.Path(exists=True), help="specified the output folder")
+@click.option('--output', type=click.Path(exists=False), help="specified the output folder")
 @click.option('--list/--no-list', help="lists the available generators")
-def generate(runner, generator, input, output, reload, list):
+@click.option('--clean/--no-clean', help="initially cleans the output directory")
+def generate(runner, generator, input, output, reload, list, clean):
     if list:
         entries = [str(x.name) for x in Path('generator').dirs()]
         click.echo('generators: {0}'.format(entries))
@@ -115,7 +118,7 @@ def generate(runner, generator, input, output, reload, list):
         print('generator, input and output arguments are required')
         sys.exit(-1)
     # check for embedded generator by name
-    generator = Path('generator/{0}'.format(generator))
+    generator = CWD / 'generator/{0}'.format(generator)
     if not generator.exists():
         generator = Path(generator).abspath()
     # look if generator points to an external generator
@@ -125,6 +128,9 @@ def generate(runner, generator, input, output, reload, list):
     input = Path(input).abspath()
     output = Path(output).abspath()
     generator = Path(generator).abspath()
+    if clean:
+        output.rmtree_p()
+    output.makedirs_p()
     if not reload:
         _generate_once(generator, input, output)
     else:

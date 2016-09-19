@@ -11,7 +11,7 @@
 
 #include <QtCore>
 
-#include "{{moduleName|lower}}.h"
+#include "qml{{moduleName|lower}}.h"
 
 class {{class}} : public QObject
 {

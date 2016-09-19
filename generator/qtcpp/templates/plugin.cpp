@@ -10,7 +10,7 @@
 
 #include <qqml.h>
 
-#include "{{moduleName|lower}}.h"
+#include "qml{{moduleName|lower}}.h"
 
 {% for interface in module.interfaces %}
 #include "{{interface|lower}}.h"

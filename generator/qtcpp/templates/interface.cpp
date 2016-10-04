@@ -54,5 +54,4 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {{operation|returnType}} {{class}}::{{operation}}({{operation.parameters|map('parameterType')|join(', ')}})
 {
 }
-
 {% endfor %}

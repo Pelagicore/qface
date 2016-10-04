@@ -30,7 +30,7 @@ def cli():
 @cli.command()
 def antlr():
     """generate a new parser based on the grammar using antlr"""
-    cwd = str(Path('qface/idl/parser').absolute())
+    cwd = str(Path('qface/idl/parser').abspath())
     sh('antlr4 -Dlanguage=Python3 -Werror -package qface.idl.parser -o . -listener -visitor T.g4', cwd=cwd)
 
 

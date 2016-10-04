@@ -19,6 +19,8 @@ def paramterType(symbol):
     if symbol.type.is_void or symbol.type.is_primitive:
         if symbol.type.name == 'string':
             return 'const QString &{0}'.format(symbol)
+        if symbol.type.name == 'var':
+            return 'const QVariant &{0}'.format(symbol)
         if symbol.type.name == 'real':
             return 'float {0}'.format(symbol)
         return '{0} {1}'.format(symbol.type, symbol)
@@ -37,6 +39,8 @@ def returnType(symbol):
     if symbol.type.is_void or symbol.type.is_primitive:
         if symbol.type.name == 'string':
             return 'QString'
+        if symbol.type.name == 'var':
+            return 'QVariant'
         if symbol.type.name == 'real':
             return 'float'
         return symbol.type

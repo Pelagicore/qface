@@ -156,6 +156,11 @@ class TypeSymbol(Symbol):
         return self.is_complex and isinstance(self.reference, Struct)
 
     @property
+    def is_variant(self):
+        '''checks if type is primitive and string'''
+        return self.is_primitive and self.name == 'var'
+
+    @property
     def reference(self):
         """returns the symbol reference of the type name"""
         if not self.__is_resolved:

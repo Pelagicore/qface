@@ -65,6 +65,7 @@ primitiveTypeSymbol
     | name='int'
     | name='real'
     | name='string'
+    | name='var'
     ;
 
 listTypeSymbol

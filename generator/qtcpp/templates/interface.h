@@ -26,9 +26,9 @@ public:
     static void registerQmlTypes(const QString& uri, int majorVersion=1, int minorVersion=0);
 
 public Q_SLOTS:
-{% for operation in interface.operations %}
-    {{operation|returnType}} {{operation}}();
-{% endfor %}
+{% for operation in interface.operations %}    
+    {{operation|returnType}} {{operation}}({{operation.parameters|map('parameterType')|join(', ')}});
+{%- endfor %}
 
 public:
 {% for property in interface.properties %}

@@ -51,7 +51,7 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 
 {% for operation in interface.operations %}
 {{operation.comment}}
-{{operation.type}} {{class}}::{{operation}}()
+{{operation|returnType}} {{class}}::{{operation}}({{operation.parameters|map('parameterType')|join(', ')}})
 {
 }
 

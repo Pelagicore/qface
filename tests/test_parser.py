@@ -22,6 +22,7 @@ def loadTest():
     path = inputPath / 'test.qdl'
     return FileSystem.parse_document(path)
 
+
 def test_parse():
     log.debug('test parse')
     names = FileSystem.find_files(inputPath, '*.qdl')

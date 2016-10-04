@@ -74,7 +74,9 @@ class DomainListener(TListener):
     def enterModuleSymbol(self, ctx: TParser.ModuleSymbolContext):
         assert self.system
         name = ctx.name.text
+        version = ctx.version.text
         self.module = Module(name, self.system)
+        self.module.version = version
         contextMap[ctx] = self.module
 
     def exitModuleSymbol(self, ctx: TParser.ModuleSymbolContext):

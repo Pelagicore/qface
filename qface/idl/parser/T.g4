@@ -15,11 +15,11 @@ headerSymbol
     ;
 
 importSymbol
-    : 'import' name=IDENTIFIER version=VERSION ';'
+    : 'import' name=IDENTIFIER version=VERSION
     ;
 
 moduleSymbol
-    : comment=DOCCOMMENT? 'module' name=IDENTIFIER ';'
+    : comment=DOCCOMMENT? 'module' name=IDENTIFIER version=VERSION
     ;
 
 definitionSymbol

@@ -1,4 +1,4 @@
-module com.pelagicore.test;
+module com.pelagicore.test 1.0;
 
 import common 1.0;
 
@@ -8,6 +8,7 @@ interface ContactService {
   readonly string stringValue;
   bool boolValue;
   real realValue;
+  var varValue;
   Contact currentContact;
   common.Date today;
   example.Date tomorrow;

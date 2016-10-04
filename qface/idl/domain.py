@@ -181,6 +181,7 @@ class Module(Symbol):
         """init"""
         super().__init__(name, self)
         log.debug('Module()')
+        self.version = '1.0'
         self._system = system
         self._system._moduleMap[name] = self
         self._interfaceMap = OrderedDict()  # type: dict[str, Interface]

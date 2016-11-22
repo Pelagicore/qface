@@ -1,4 +1,4 @@
-# Generated from T.g4 by ANTLR 4.5.2
+# Generated from T.g4 by ANTLR 4.5.3
 from antlr4 import *
 from io import StringIO
 
@@ -12,9 +12,9 @@ def serializedATN():
         buf.write("\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30")
         buf.write("\4\31\t\31\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\4\36")
         buf.write("\t\36\4\37\t\37\4 \t \4!\t!\4\"\t\"\3\2\3\2\3\2\3\2\3")
-        buf.write("\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4")
-        buf.write("\3\4\3\4\3\4\3\4\3\4\3\4\3\5\3\5\3\6\3\6\3\7\3\7\3\7\3")
-        buf.write("\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\t\3\t\3\n\3\n\3\13\3")
+        buf.write("\2\3\2\3\2\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\5\3\5")
+        buf.write("\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\6\3\6\3\7\3\7\3\b\3")
+        buf.write("\b\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\n\3\n\3\13\3")
         buf.write("\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\r\3\r\3\16\3")
         buf.write("\16\3\16\3\16\3\16\3\17\3\17\3\17\3\17\3\20\3\20\3\20")
         buf.write("\3\20\3\20\3\21\3\21\3\21\3\21\3\21\3\21\3\21\3\22\3\22")
@@ -41,8 +41,8 @@ def serializedATN():
         buf.write("\3\2\2\2\2\'\3\2\2\2\2)\3\2\2\2\2+\3\2\2\2\2-\3\2\2\2")
         buf.write("\2/\3\2\2\2\2\61\3\2\2\2\2\63\3\2\2\2\2\65\3\2\2\2\2\67")
         buf.write("\3\2\2\2\29\3\2\2\2\2;\3\2\2\2\2=\3\2\2\2\2?\3\2\2\2\2")
-        buf.write("A\3\2\2\2\2C\3\2\2\2\3E\3\2\2\2\5L\3\2\2\2\7S\3\2\2\2")
-        buf.write("\t]\3\2\2\2\13_\3\2\2\2\ra\3\2\2\2\17g\3\2\2\2\21l\3\2")
+        buf.write("A\3\2\2\2\2C\3\2\2\2\3E\3\2\2\2\5L\3\2\2\2\7N\3\2\2\2")
+        buf.write("\tU\3\2\2\2\13_\3\2\2\2\ra\3\2\2\2\17c\3\2\2\2\21i\3\2")
         buf.write("\2\2\23n\3\2\2\2\25p\3\2\2\2\27r\3\2\2\2\31{\3\2\2\2\33")
         buf.write("}\3\2\2\2\35\u0082\3\2\2\2\37\u0086\3\2\2\2!\u008b\3\2")
         buf.write("\2\2#\u0092\3\2\2\2%\u0096\3\2\2\2\'\u009b\3\2\2\2)\u009d")
@@ -51,16 +51,16 @@ def serializedATN():
         buf.write("\u00c0\3\2\2\29\u00c8\3\2\2\2;\u00cf\3\2\2\2=\u00d3\3")
         buf.write("\2\2\2?\u00e1\3\2\2\2A\u00e7\3\2\2\2C\u00f2\3\2\2\2EF")
         buf.write("\7k\2\2FG\7o\2\2GH\7r\2\2HI\7q\2\2IJ\7t\2\2JK\7v\2\2K")
-        buf.write("\4\3\2\2\2LM\7o\2\2MN\7q\2\2NO\7f\2\2OP\7w\2\2PQ\7n\2")
-        buf.write("\2QR\7g\2\2R\6\3\2\2\2ST\7k\2\2TU\7p\2\2UV\7v\2\2VW\7")
-        buf.write("g\2\2WX\7t\2\2XY\7h\2\2YZ\7c\2\2Z[\7e\2\2[\\\7g\2\2\\")
-        buf.write("\b\3\2\2\2]^\7}\2\2^\n\3\2\2\2_`\7\177\2\2`\f\3\2\2\2")
-        buf.write("ab\7g\2\2bc\7x\2\2cd\7g\2\2de\7p\2\2ef\7v\2\2f\16\3\2")
-        buf.write("\2\2gh\7x\2\2hi\7q\2\2ij\7k\2\2jk\7f\2\2k\20\3\2\2\2l")
-        buf.write("m\7*\2\2m\22\3\2\2\2no\7+\2\2o\24\3\2\2\2pq\7=\2\2q\26")
-        buf.write("\3\2\2\2rs\7t\2\2st\7g\2\2tu\7c\2\2uv\7f\2\2vw\7q\2\2")
-        buf.write("wx\7p\2\2xy\7n\2\2yz\7{\2\2z\30\3\2\2\2{|\7.\2\2|\32\3")
-        buf.write("\2\2\2}~\7d\2\2~\177\7q\2\2\177\u0080\7q\2\2\u0080\u0081")
+        buf.write("\4\3\2\2\2LM\7=\2\2M\6\3\2\2\2NO\7o\2\2OP\7q\2\2PQ\7f")
+        buf.write("\2\2QR\7w\2\2RS\7n\2\2ST\7g\2\2T\b\3\2\2\2UV\7k\2\2VW")
+        buf.write("\7p\2\2WX\7v\2\2XY\7g\2\2YZ\7t\2\2Z[\7h\2\2[\\\7c\2\2")
+        buf.write("\\]\7e\2\2]^\7g\2\2^\n\3\2\2\2_`\7}\2\2`\f\3\2\2\2ab\7")
+        buf.write("\177\2\2b\16\3\2\2\2cd\7g\2\2de\7x\2\2ef\7g\2\2fg\7p\2")
+        buf.write("\2gh\7v\2\2h\20\3\2\2\2ij\7x\2\2jk\7q\2\2kl\7k\2\2lm\7")
+        buf.write("f\2\2m\22\3\2\2\2no\7*\2\2o\24\3\2\2\2pq\7+\2\2q\26\3")
+        buf.write("\2\2\2rs\7t\2\2st\7g\2\2tu\7c\2\2uv\7f\2\2vw\7q\2\2wx")
+        buf.write("\7p\2\2xy\7n\2\2yz\7{\2\2z\30\3\2\2\2{|\7.\2\2|\32\3\2")
+        buf.write("\2\2}~\7d\2\2~\177\7q\2\2\177\u0080\7q\2\2\u0080\u0081")
         buf.write("\7n\2\2\u0081\34\3\2\2\2\u0082\u0083\7k\2\2\u0083\u0084")
         buf.write("\7p\2\2\u0084\u0085\7v\2\2\u0085\36\3\2\2\2\u0086\u0087")
         buf.write("\7t\2\2\u0087\u0088\7g\2\2\u0088\u0089\7c\2\2\u0089\u008a")
@@ -157,8 +157,8 @@ class TLexer(Lexer):
     modeNames = [ "DEFAULT_MODE" ]
 
     literalNames = [ "<INVALID>",
-            "'import'", "'module'", "'interface'", "'{'", "'}'", "'event'", 
-            "'void'", "'('", "')'", "';'", "'readonly'", "','", "'bool'", 
+            "'import'", "';'", "'module'", "'interface'", "'{'", "'}'", 
+            "'event'", "'void'", "'('", "')'", "'readonly'", "','", "'bool'", 
             "'int'", "'real'", "'string'", "'var'", "'list'", "'<'", "'>'", 
             "'model'", "'struct'", "'enum'", "'flag'", "'='" ]
 
@@ -177,7 +177,7 @@ class TLexer(Lexer):
 
     def __init__(self, input=None):
         super().__init__(input)
-        self.checkVersion("4.5.2")
+        self.checkVersion("4.5.3")
         self._interp = LexerATNSimulator(self, self.atn, self.decisionsToDFA, PredictionContextCache())
         self._actions = None
         self._predicates = None

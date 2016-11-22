@@ -15,11 +15,11 @@ headerSymbol
     ;
 
 importSymbol
-    : 'import' name=IDENTIFIER version=VERSION
+    : 'import' name=IDENTIFIER version=VERSION ';'?
     ;
 
 moduleSymbol
-    : comment=DOCCOMMENT? 'module' name=IDENTIFIER version=VERSION
+    : comment=DOCCOMMENT? 'module' name=IDENTIFIER version=VERSION ';'?
     ;
 
 definitionSymbol
@@ -38,11 +38,11 @@ interfaceMemberSymbol
     ;
 
 operationSymbol
-    : comment=DOCCOMMENT? isEvent='event'? (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'
+    : comment=DOCCOMMENT? isEvent='event'? (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
     ;
 
 propertySymbol
-    : comment=DOCCOMMENT? isReadOnly='readonly'? typeSymbol name=IDENTIFIER ';'
+    : comment=DOCCOMMENT? isReadOnly='readonly'? typeSymbol name=IDENTIFIER ';'?
     ;
 
 operationParameterSymbol

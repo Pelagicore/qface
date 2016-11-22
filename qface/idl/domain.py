@@ -52,7 +52,7 @@ class System(object):
         if name in self._moduleMap:
             return self._moduleMap[name]
         # <module>.<Symbol>
-        (module_name, type_name) = self.splitTypeName(name)
+        (module_name, type_name) = self.split_typename(name)
         if not module_name and type_name:
             print('not able to lookup symbol: {0}'.format(name))
             return None
@@ -60,7 +60,7 @@ class System(object):
         return module.lookup(type_name)
 
     @staticmethod
-    def splitTypeName(name):
+    def split_typename(name):
         parts = name.rsplit('.', 1)
         if len(parts) == 1:
             return ('', parts[0])
@@ -86,7 +86,7 @@ class Symbol(object):
         return self.module._system
 
     @property
-    def qualifiedName(self):
+    def qualified_name(self):
         '''return the fully qualified name (`module + "." + name`)'''
         return '{0}.{1}'.format(self.module.name, self.name)
 
@@ -213,18 +213,18 @@ class Module(Symbol):
     def checkType(self, type: str):
         if type.is_primitive:
             return True
-        (module_name, type_name) = System.splitTypeName(type.name)
+        (module_name, type_name) = System.split_typename(type.name)
         if module_name and module_name not in self._importMap:
             return False
         return True
 
     @property
-    def nameParts(self):
+    def name_parts(self):
         '''return module name splitted by '.' in parts'''
         return self.name.split('.')
 
     @property
-    def moduleName(self):
+    def module_name(self):
         return self.name.split('.')[-1].capitalize()
 
     def lookup(self, name: str):

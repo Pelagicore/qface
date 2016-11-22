@@ -17,9 +17,9 @@ def className(symbol):
 
 
 def paramterType(symbol):
-    moduleName = symbol.module.nameParts[-1].capitalize()
+    module_name = symbol.module.name_parts[-1].capitalize()
     if symbol.type.is_enum:
-        return 'Qml{0}Module::{1} {2}'.format(moduleName, symbol.type, symbol)
+        return 'Qml{0}Module::{1} {2}'.format(module_name, symbol.type, symbol)
     if symbol.type.is_void or symbol.type.is_primitive:
         if symbol.type.name == 'string':
             return 'const QString &{0}'.format(symbol)
@@ -35,9 +35,9 @@ def paramterType(symbol):
 
 
 def returnType(symbol):
-    moduleName = symbol.module.nameParts[-1].capitalize()
+    module_name = symbol.module.module_name()
     if symbol.type.is_enum:
-        return 'QIvi{0}Module::{1}'.format(moduleName, symbol.type)
+        return 'QIvi{0}Module::{1}'.format(module_name, symbol.type)
     if symbol.type.is_void or symbol.type.is_primitive:
         if symbol.type.name == 'string':
             return 'QString'
@@ -61,11 +61,11 @@ def generate(input, output):
     ctx = {'output': output}
     for module in system.modules:
         logger.debug('process %s' % module)
-        moduleName = module.nameParts[-1].capitalize()
-        ctx.update({'module': module, 'moduleName': moduleName})
-        moduleOutput = generator.apply('{{output}}/ivi{{moduleName|lower}}', ctx)
+        module_name = module.module_name()
+        ctx.update({'module': module, 'module_name': module_name})
+        moduleOutput = generator.apply('{{output}}/ivi{{module_name|lower}}', ctx)
         ctx.update({'path': moduleOutput})
-        generator.write('{{path}}/ivi{{moduleName|lower}}.pro', 'project.pro', ctx)
+        generator.write('{{path}}/ivi{{module_name|lower}}.pro', 'project.pro', ctx)
         for interface in module.interfaces:
             ctx.update({'interface': interface})
             generator.write('{{path}}/{{interface|className|lower}}.h', 'interface.h', ctx)

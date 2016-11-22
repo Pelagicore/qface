@@ -55,7 +55,7 @@ def test_property():
     property = interface._propertyMap['currentStation']
     assert property.type.name == 'Station'
     assert property.module == module
-    assert property.type.qualifiedName == 'entertainment.tuner.Station'
+    assert property.type.qualified_name == 'entertainment.tuner.Station'
     assert property.is_readonly
     assert property.comment == '/*! property currentStation */'
 
@@ -66,7 +66,7 @@ def test_struct():
     symbol = system.lookup('entertainment.tuner.Station')
     assert symbol.name == 'Station'
     assert symbol.module == module
-    assert symbol.qualifiedName == 'entertainment.tuner.Station'
+    assert symbol.qualified_name == 'entertainment.tuner.Station'
     assert symbol.comment == '/*! struct Station */'
 
 
@@ -78,7 +78,7 @@ def test_enum():
     assert definition == symbol
     assert symbol.name == 'Waveband'
     assert symbol.module == module
-    assert symbol.qualifiedName == 'entertainment.tuner.Waveband'
+    assert symbol.qualified_name == 'entertainment.tuner.Waveband'
     assert symbol.comment == '/*! enum Waveband */'
     assert symbol.is_enum
 

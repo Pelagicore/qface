@@ -1,11 +1,9 @@
 {# Copyright (c) Pelagicore AB 2016 #}
-{% from 'helper.tpl' import qualifiedModuleName %}
 /****************************************************************************
 ** This is an auto-generated file.
 ** Do not edit! All changes made to it will be lost.
 ****************************************************************************/
-{% set moduleName = qualifiedModuleName(module) %}
-{% set class = 'Qml{0}'.format(moduleName) %}
+{% set class = 'Qml{0}Module'.format(module.module_name) %}
 
 #pragma once
 

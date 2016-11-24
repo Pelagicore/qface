@@ -14,13 +14,13 @@ log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def loadOne():
-    path = inputPath / 'one.qdl'
+    path = inputPath / 'com.pelagicore.one.qdl'
     return FileSystem.parse_document(path)
 
 
 def test_resolve():
     system = loadOne()
-    module = system.lookup('one')
+    module = system.lookup('com.pelagicore.one')
     assert module
     service = module.lookup('OneService')
     assert service
@@ -42,16 +42,16 @@ def test_resolve():
 
 def test_resolve_nested():
     system = loadOne()
-    module = system.lookup('one')
+    module = system.lookup('com.pelagicore.one')
     assert module
-    struct = module.lookup('one.StringStruct')
-    nested = module.lookup('one.NestedStruct')
+    struct = module.lookup('com.pelagicore.one.StringStruct')
+    nested = module.lookup('com.pelagicore.one.NestedStruct')
     assert struct and nested
     member = struct._fieldMap['nested']
     assert member
     assert member.type.reference is nested
 
-    service = module.lookup('one.OneService')
+    service = module.lookup('com.pelagicore.one.OneService')
     assert service
     listProperty = service._propertyMap['messageList']
     assert listProperty

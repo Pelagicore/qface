@@ -1,4 +1,4 @@
-module entertainment.tuner;
+module com.pelagicore.ivi.tuner 1.0;
 
 /*! Service Tuner */
 interface Tuner {

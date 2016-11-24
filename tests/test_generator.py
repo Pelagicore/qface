@@ -13,7 +13,7 @@ log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def loadSystem():
-    path = inputPath / 'tuner.qdl'
+    path = inputPath / 'com.pelagicore.ivi.tuner.qdl'
     return FileSystem.parse_document(path)
 
 
@@ -21,9 +21,9 @@ def test_gen_module():
     system = loadSystem()
     gen = Generator(searchpath='tests/templates')
     template = "{{module}}"
-    module = system.lookup('entertainment.tuner')
+    module = system.lookup('com.pelagicore.ivi.tuner')
     text = gen.apply(template, {"module": module})
-    assert text == 'entertainment.tuner'
+    assert text == 'com.pelagicore.ivi.tuner'
 
 
 def test_gen_interface():
@@ -34,7 +34,7 @@ def test_gen_interface():
             {{interface}}
         {%- endfor -%}
     """
-    module = system.lookup('entertainment.tuner')
+    module = system.lookup('com.pelagicore.ivi.tuner')
     text = gen.apply(template, {"module": module})
     assert text == 'Tuner'
 

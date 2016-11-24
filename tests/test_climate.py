@@ -13,12 +13,12 @@ log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def load_system():
-    path = inputPath / 'climate.qdl'
+    path = inputPath / 'com.pelagicore.ivi.climate.qdl'
     return FileSystem.parse_document(path)
 
 
 def test_interface():
     system = load_system()
-    interface = system.lookup('vehicle.climate.ClimateControl')
+    interface = system.lookup('com.pelagicore.ivi.climate.ClimateControl')
     assert interface.name == 'ClimateControl'
 

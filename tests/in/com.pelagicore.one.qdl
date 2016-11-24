@@ -1,4 +1,4 @@
-module one 1.0;
+module com.pelagicore.one 1.0;
 
 interface OneService {
     StringStruct message;

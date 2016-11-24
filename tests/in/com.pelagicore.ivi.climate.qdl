@@ -1,4 +1,4 @@
-module vehicle.climate 1.0;
+module com.pelagicore.ivi.climate 1.0;
 
 /*!
  * The ClimateControl provides a QML interface to the climate control

@@ -1,8 +1,0 @@
-antlr4-python3-runtime
-jinja2
-click
-path.py
-watchdog
-pyyaml
-pytest
-ipdb

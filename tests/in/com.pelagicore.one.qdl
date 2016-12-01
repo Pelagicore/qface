@@ -1,0 +1,19 @@
+module com.pelagicore.one 1.0;
+
+interface OneService {
+    StringStruct message;
+    list<StringStruct> messageList;
+    model<StringStruct> messageModel;
+    StringStruct echo(StringStruct message);
+    event void echoMessage(StringStruct mnessage);
+
+}
+
+struct StringStruct {
+    string text;
+    NestedStruct nested;
+}
+
+struct NestedStruct {
+    string value;
+}

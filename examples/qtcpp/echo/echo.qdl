@@ -1,0 +1,15 @@
+module org.example 1.0;
+
+/*!
+ * Provide a simple echo service.
+ */
+interface Echo {
+    /*!
+     * The last echo message.
+     */
+    string currentMessage;
+    /*!
+     * Returns the passed in message
+     */
+    string echo(string message);
+}

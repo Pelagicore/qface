@@ -42,7 +42,7 @@ The QDL does not allow to extend interfaces. It is by design kept simple.
 
 Below is an example of a QDL file.
 
-```java
+```javascript
 module entertainment.tuner 1.0;
 
 import common 1.0

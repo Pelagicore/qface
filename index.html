@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>QFace - Write your own generator!</title>
+
+  <!-- Bootstrap Core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link href="/css/stylish-portfolio.css" rel="stylesheet">
+
+  <!-- Custom Fonts -->
+  <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+
+<body>
+
+  <a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle"><i class="fa fa-bars"></i></a>
+<nav id="sidebar-wrapper">
+  <ul class="sidebar-nav">
+    <a id="menu-close" href="#" class="btn btn-light btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
+    <li class="sidebar-brand">
+      <a href="#top"  onclick = $("#menu-close").click(); >QmlLive</a>
+    </li>
+    <li>
+      <a href="#top" onclick = $("#menu-close").click(); >Home</a>
+    </li>
+    <li>
+      <a href="#about" onclick = $("#menu-close").click(); >About</a>
+    </li>
+    <li>
+      <a href="#services" onclick = $("#menu-close").click(); >Benefits</a>
+    </li>
+    <li>
+      <a href="#portfolio" onclick = $("#menu-close").click(); >Demos</a>
+    </li>
+  </ul>
+</nav>
+
+  <header id="top" class="header">
+  <div class="text-vertical-center">
+    <h1>QFace - A Generator Framework</h1>
+    <h3>Use a common IDL, bring your own generator. Inspired by Qt5.</h3>
+    <br>
+    <a href="#about" class="btn btn-dark btn-lg">Find Out More</a>
+  </div>
+</header>
+
+  <section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2>QFace is a generator framework based on a modern IDL.</h2>
+        <p class="lead">QFace is not a generator as such but enforces a common IDL format. It makes it very easy to build your own generator program to generate your custom code.</p>
+      </div>
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
+</section>
+
+  <!-- The circle icons use Font Awesome's stacked icon classes. For more information, visit http://fontawesome.io/examples/ -->
+<section id="services" class="services bg-primary">
+  <div class="container">
+    <div class="row text-center row-eq-height">
+      <div class="col-lg-10 col-lg-offset-1">
+        <h2>QFace Benefits</h2>
+        <hr class="small">
+        <div class="row">
+          <div class="col-md-3 col-sm-6">
+            <div class="service-item">
+              <span class="fa-stack fa-4x">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-share-alt fa-stack-1x text-primary"></i>
+              </span>
+              <h4>
+                <strong>Common IDL</strong>
+              </h4>
+              <p>Use a common modern IDL <br>for all your APIs.</p>
+              <a href="#" class="btn btn-light">Learn More</a>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <div class="service-item">
+              <span class="fa-stack fa-4x">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-cubes fa-stack-1x text-primary"></i>
+            </span>
+              <h4>
+                <strong>Easy to Extend</strong>
+              </h4>
+              <p>Easy to use <br>and easy to extend.</p>
+              <a href="#" class="btn btn-light">Learn More</a>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <div class="service-item">
+              <span class="fa-stack fa-4x">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-flask fa-stack-1x text-primary"></i>
+            </span>
+              <h4>
+                <strong>Modern IDL</strong>
+              </h4>
+              <p>Inspired by QML <br>from Qt5.</p>
+              <a href="#" class="btn btn-light">Learn More</a>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <div class="service-item">
+              <span class="fa-stack fa-4x">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-shield fa-stack-1x text-primary"></i>
+            </span>
+              <h4>
+                <strong>Strongly Typed</strong>
+              </h4>
+              <p>Support for primitive and complex data types.</p>
+              <a href="#" class="btn btn-light">Learn More</a>
+            </div>
+          </div>
+        </div>
+        <!-- /.row (nested) -->
+      </div>
+      <!-- /.col-lg-10 -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
+</section>
+
+  <aside class="callout">
+  <div class="text-vertical-center">
+    <h1>Use a common IDL<br>Generate what you want</h1>
+  </div>
+</aside>
+
+  <section id="portfolio" class="portfolio">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-lg-offset-1 text-center">
+        <h2>Demos</h2>
+        <hr class="small">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="portfolio-item">
+              <a href="#">
+              <iframe style="width: 100%;" width="560" height="313" src="https://www.youtube.com/embed/nsvOOWUrDbM" frameborder="0" allowfullscreen></iframe>
+              </a>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="portfolio-item">
+              <a href="#">
+              <iframe style="width: 100%;" width="560" height="313" src="https://www.youtube.com/embed/nsvOOWUrDbM" frameborder="0" allowfullscreen></iframe>
+              </a>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="portfolio-item">
+              <a href="#">
+              <iframe style="width: 100%;" width="560" height="313" src="https://www.youtube.com/embed/nsvOOWUrDbM" frameborder="0" allowfullscreen></iframe>
+              </a>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="portfolio-item">
+              <a href="#">
+              <iframe style="width: 100%;" width="560" height="313" src="https://www.youtube.com/embed/nsvOOWUrDbM" frameborder="0" allowfullscreen></iframe>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- /.row (nested) -->
+        <a href="#" class="btn btn-dark">View More Items</a>
+      </div>
+      <!-- /.col-lg-10 -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
+</section>
+
+  <aside class="call-to-action bg-primary">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h3>Try QFace today!</h3>
+        <a href="https://github.com/Pelagicore/qface/blob/master/docs/welcome.md" class="btn btn-lg btn-dark">Documentation</a>
+    <a href="https://github.com/Pelagicore/qface" class="btn btn-lg btn-dark">Source Code</a>
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <!-- <section id="map" class="map">
+  <iframe id="map_iframe"
+    width="100%"
+    height="100%"
+    frameborder="0"
+    scrolling="no"
+    marginheight="0"
+    marginwidth="0"
+    src="https://maps.google.com/maps/embed/v1/place?key=&q=,,"
+    allowfullscreen>
+  </iframe>
+  <br>
+  <small id="map_iframe"
+    width="100%"
+    height="100%"
+    frameborder="0"
+    scrolling="no"
+    marginheight="0"
+    marginwidth="0"
+    src="https://maps.google.com/maps/embed/v1/place?key=&q=,,"
+    allowfullscreen>
+  </small>
+</section> -->
+  <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-lg-offset-1 text-center">
+        <h4><strong>JRyannel</strong>
+        </h4>
+        <p>
+          
+          <br>
+          
+          <br>
+          
+        </p>
+        <ul class="list-unstyled">
+          <li><i class="fa fa-phone fa-fw"></i> </li>
+          <li><i class="fa fa-envelope-o fa-fw"></i>  <a href="mailto:"></a>
+          </li>
+        </ul>
+        <br>
+        <ul class="list-inline">
+          <li>
+            <a href="https://facebook.com/"><i class="fa fa-facebook fa-fw fa-3x"></i></a>
+          </li>
+          <li>
+            <a href="https://twitter.com/"><i class="fa fa-twitter fa-fw fa-3x"></i></a>
+          </li>
+          <li>
+            <a href="https://github.com/pelagicore"><i class="fa fa-github fa-fw fa-3x"></i></a>
+          </li>
+        </ul>
+        <hr class="small">
+        <p class="text-muted">Copyright &copy; Pelagicore AB 2016</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <!-- jQuery -->
+<script src="js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="js/custom.js"></script> 
+
+  
+</body>
+
+</html>

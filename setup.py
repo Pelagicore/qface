@@ -55,8 +55,4 @@ setup(
             'ipdb',
         ],
     },
-    entry_points='''
-        [console_scripts]
-        qface=cli:cli
-    '''
 )

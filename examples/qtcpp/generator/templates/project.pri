@@ -1,5 +1,5 @@
 {# Copyright (c) Pelagicore AB 2016 #}
-{% set module_name = 'Qml{0}Module'.format(module.module_name()) %}
+{% set module_name = 'Qml{0}Module'.format(module.module_name) %}
 #############################################################################
 ## This is an auto-generated file.
 ## Do not edit! All changes made to it will be lost.

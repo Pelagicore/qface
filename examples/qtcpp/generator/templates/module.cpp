@@ -3,7 +3,7 @@
 ** This is an auto-generated file.
 ** Do not edit! All changes made to it will be lost.
 ****************************************************************************/
-{% set class = 'Qml{0}Module'.format(module.module_name()) %}
+{% set class = 'Qml{0}Module'.format(module.module_name) %}
 
 
 #include "qml{{ module|lower }}.h"

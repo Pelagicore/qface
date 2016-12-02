@@ -41,8 +41,24 @@ struct Message {
 };
 ```
 
-Now calling the generator to generate the C++ code.
+Now you write a small script using qface to generate your code
 
-    qface --generator qtcpp --input echo.qdl --output out
+```python
+# mygenerator.py
+from qface.generator import FileSystem, Generator
+
+# load the interface files
+system = FileSystem.parse_document('echo.qdl')
+# prepare the generator
+generator = Generator(searchpath='.')
+
+# iterate over the domain model
+for module in system:
+    for interface in module:
+        # prepare a context object
+        ctx = { 'interface': interface }
+        # use header.h template with ctx to write to a file
+        generator.write('{{interface|lower}}.h', 'header.h', ctx)
+``` 
 
 Depending on the used generator it reads the input file and runs it through the generator. The output files are written relative to the given output directory. The input can be either a file or a folder.

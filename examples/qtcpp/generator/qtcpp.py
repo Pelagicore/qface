@@ -6,14 +6,12 @@ import logging
 import logging.config
 import yaml
 from qface.generator import FileSystem, Generator
+import os
 
-
-logging.config.dictConfig(yaml.load(open('log.yaml')))
-logger = logging.getLogger(__name__)
-
+here = os.path.dirname(__file__)
 
 def paramterType(symbol):
-    module_name = symbol.module.module_name()
+    module_name = symbol.module.module_name
     if symbol.type.is_enum:
         return 'Qml{0}Module::{1} {2}'.format(module_name, symbol.type, symbol)
     if symbol.type.is_void or symbol.type.is_primitive:
@@ -33,7 +31,7 @@ def paramterType(symbol):
 
 
 def returnType(symbol):
-    module_name = symbol.module.module_name()
+    module_name = symbol.module.module_name
     if symbol.type.is_enum:
         return 'Qml{0}Module::{1}'.format(module_name, symbol.type)
     if symbol.type.is_void or symbol.type.is_primitive:
@@ -54,12 +52,11 @@ def returnType(symbol):
 
 def generate(input, output):
     system = FileSystem.parse_dir(input)
-    generator = Generator(searchpath='./templates')
+    generator = Generator(searchpath=os.path.join(here, 'templates'))
     generator.register_filter('returnType', returnType)
     generator.register_filter('parameterType', paramterType)
     ctx = {'output': output}
     for module in system.modules:
-        logger.debug('process %s' % module)
         ctx.update({'module': module})
         moduleOutput = generator.apply('{{output}}/{{module|lower}}', ctx)
         ctx.update({'path': moduleOutput})

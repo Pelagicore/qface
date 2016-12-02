@@ -5,5 +5,5 @@ path.py
 watchdog
 pyyaml
 pytest
-ipdb
-pypandoc
+coverage
+pytest-cov

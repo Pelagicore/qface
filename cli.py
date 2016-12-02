@@ -44,7 +44,7 @@ def test(debug):
 @cli.command()
 def test_ci():
     """run the tests for CI integration"""
-    sh('python3 -m pytest -v -s -l')
+    sh('python3 -m pytest --cov=qface -v -l tests/')
 
 
 class RunTestChangeHandler(FileSystemEventHandler):

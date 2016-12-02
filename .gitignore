@@ -10,4 +10,5 @@ qface.egg-info/*
 build-*
 build/*
 dist/*
+.coverage
 

@@ -1,5 +1,6 @@
 # Qt Interface Builder (QFace)
 
+[![Build Status](https://travis-ci.org/travis-ci/travis-web.svg?branch=master)](https://travis-ci.org/travis-ci/travis-web)
 
 QFace is an generator framework based on a common modern IDL. It is not a generator a such but enforces a common IDL format and provides a library to write your own generator. It is actually very easy to create your own generator and generate your custom solution based on your needs from the same IDL.
 

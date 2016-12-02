@@ -181,5 +181,13 @@ def uninstall():
     sh('pip3 uninstall qface')
 
 
+@cli.command()
+def upload():
+    dist = Path('dist')
+    dist.rmdir_p()
+    sh('python3 setup.py bdist_wheel')
+    sh('twine upload dist/*')
+
+
 if __name__ == '__main__':
     cli()

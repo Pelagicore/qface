@@ -6,3 +6,4 @@ watchdog
 pyyaml
 pytest
 ipdb
+pypandoc

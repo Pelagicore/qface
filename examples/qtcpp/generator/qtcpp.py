@@ -51,7 +51,7 @@ def returnType(symbol):
 
 
 def generate(input, output):
-    system = FileSystem.parse_dir(input)
+    system = FileSystem.parse(input)
     generator = Generator(searchpath=os.path.join(here, 'templates'))
     generator.register_filter('returnType', returnType)
     generator.register_filter('parameterType', paramterType)
@@ -80,11 +80,13 @@ def generate(input, output):
 
 
 @click.command()
-@click.option('--input', type=click.Path(exists=True))
-@click.option('--output', type=click.Path(exists=True))
-def runner(input, output):
+@click.argument('input', nargs=-1, type=click.Path(exists=True))
+@click.argument('output', nargs=1, type=click.Path(exists=True))
+def main(input, output):
+    """Takes several files or directories as input and generates the code
+    in the given output directory."""
     generate(input, output)
 
 
 if __name__ == '__main__':
-    runner()
+    main()

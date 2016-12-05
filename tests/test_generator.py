@@ -38,3 +38,22 @@ def test_gen_interface():
     text = gen.apply(template, {"module": module})
     assert text == 'Tuner'
 
+
+def test_parse_document():
+    system = FileSystem.parse(inputPath / 'com.pelagicore.ivi.tuner.qdl')
+    assert system.lookup('com.pelagicore.ivi.tuner')
+
+
+def test_parse_document_list():
+    input = [inputPath / 'com.pelagicore.ivi.tuner.qdl', inputPath / 'com.pelagicore.ivi.climate.qdl']
+    system = FileSystem.parse(input)
+    assert system.lookup('com.pelagicore.ivi.tuner')
+    assert system.lookup('com.pelagicore.ivi.climate')
+
+
+def test_parse_document_mixed():
+    input = [inputPath, inputPath / 'com.pelagicore.ivi.climate.qdl']
+    system = FileSystem.parse(input)
+    assert system.lookup('com.pelagicore.ivi.tuner')
+    assert system.lookup('com.pelagicore.ivi.climate')
+    assert system.lookup('com.pelagicore.one')

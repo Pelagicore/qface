@@ -62,7 +62,6 @@ class Generator(object):
         pathHash = path.read_hash('md5')
         return dataHash != pathHash
 
-
     def register_filter(self, name, callback):
         """Register your custom template filter"""
         self.env.filters[name] = callback
@@ -94,16 +93,18 @@ class FileSystem(object):
         return system
 
     @staticmethod
-    def parse_dir(path, identifier: str = None, clear_cache=True):
-        """Recursively parses a directory and returns the resulting system.
+    def parse(input, identifier: str = None, clear_cache=True):
+        """Input can be either a file or directory or a list of files or directory.
+        A directory will be parsed recursively. The function returns the resulting system.
         Stores the result of the run in the domain cache named after the identifier.
 
         :param path: directory to parse
         :param identifier: identifies the parse run. Used to name the cache
         :param clear_cache: clears the domain cache (defaults to true)
         """
-        path = Path(path)
-        logging.debug('parse_tree path={0}'.format(path))
+        inputs = input if not isinstance(input, str) else [input]
+        logging.debug('parse input={0}'.format(inputs))
+        CWD = Path.getcwd()
         if not identifier:
             identifier = 'system'
         system = System()
@@ -115,8 +116,13 @@ class FileSystem(object):
             system = cache[identifier]
         else:
             # if domain model not cached generate it
-            for document in path.walkfiles('*.qdl'):
-                FileSystem.parse_document(document, system)
+            for input in inputs:
+                path = CWD / input
+                if path.isfile():
+                    FileSystem.parse_document(path, system)
+                else:
+                    for document in path.walkfiles('*.qdl'):
+                        FileSystem.parse_document(document, system)
             cache[identifier] = system
         return system
 

@@ -1,4 +1,5 @@
 {# Copyright (c) Pelagicore AB 2016 #}
+{% set class = 'QmlAbstract{0}'.format(interface) %}
 /****************************************************************************
 ** This is an auto-generated file.
 ** Do not edit! All changes made to it will be lost.
@@ -53,5 +54,6 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {{operation.comment}}
 {{operation|returnType}} {{class}}::{{operation}}({{operation.parameters|map('parameterType')|join(', ')}})
 {
+    qWarn() << "Not implemented: {{class}}::{{operation}}(...)";
 }
 {% endfor %}

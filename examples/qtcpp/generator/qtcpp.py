@@ -70,8 +70,8 @@ def run_generation(input, output):
         generator.write('{{path}}/qml{{module.module_name|lower}}module.cpp', 'module.cpp', ctx)
         for interface in module.interfaces:
             ctx.update({'interface': interface})
-            generator.write('{{path}}/{{interface|lower}}.h', 'interface.h', ctx)
-            generator.write('{{path}}/{{interface|lower}}.cpp', 'interface.cpp', ctx)
+            generator.write('{{path}}/qmlabstract{{interface|lower}}.h', 'interface.h', ctx)
+            generator.write('{{path}}/qmlabstract{{interface|lower}}.cpp', 'interface.cpp', ctx)
         for struct in module.structs:
             ctx.update({'struct': struct})
             generator.write('{{path}}/{{struct|lower}}.h', 'struct.h', ctx)

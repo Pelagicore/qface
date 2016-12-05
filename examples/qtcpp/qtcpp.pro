@@ -1,2 +1,2 @@
 TEMPLATE = subdirs
-SUBDIRS = plugins
+SUBDIRS = src

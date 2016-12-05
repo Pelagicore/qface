@@ -13,13 +13,20 @@ uri = {{module}}
 
 
 HEADERS += \
+{% for interface in module.interfaces %}
+    qml{{interface|lower}}.h \
+{% endfor %}
     plugin.h
 
 
 SOURCES += \
+{% for interface in module.interfaces %}
+    qml{{interface|lower}}.cpp \
+{% endfor %}
     plugin.cpp
 
-include( _generated/{{module|lower}}.pri )
+
+include( generated/generated.pri )
 
 DISTFILES = qmldir
 

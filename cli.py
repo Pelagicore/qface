@@ -86,6 +86,7 @@ class RunScriptChangeHandler(FileSystemEventHandler):
     def __init__(self, script):
         super(RunTestChangeHandler).__init__()
         self.script = script
+        self.is_running = False
 
     def on_modified(self, event):
         if event.src_path.endswith('.cache'):
@@ -95,7 +96,11 @@ class RunScriptChangeHandler(FileSystemEventHandler):
         self.run()
 
     def run(self):
+        if self.is_running:
+            return
+        self.is_running = True
         sh(self.script, cwd=Path.getcwd())
+        self.is_running = False
 
 
 @cli.command()
@@ -151,7 +156,7 @@ def _generate_reload(generator, input, output):
 
     try:
         while True:
-            time.sleep(2)
+            time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()

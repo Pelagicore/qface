@@ -96,7 +96,7 @@ class FileSystem(object):
         return system
 
     @staticmethod
-    def parse(input, identifier: str = None, clear_cache=True):
+    def parse(input, identifier: str = None, use_cache=False, clear_cache=True):
         """Input can be either a file or directory or a list of files or directory.
         A directory will be parsed recursively. The function returns the resulting system.
         Stores the result of the run in the domain cache named after the identifier.
@@ -107,24 +107,24 @@ class FileSystem(object):
         """
         inputs = input if isinstance(input, (list, tuple)) else [input]
         logging.debug('parse input={0}'.format(inputs))
-        CWD = Path.getcwd()
-        if not identifier:
-            identifier = 'system'
+        identifier = 'system' if not identifier else identifier
         system = System()
-        cache = shelve.open('qface.cache')
-        if identifier in cache and clear_cache:
-            del cache[identifier]
-        if identifier in cache:
-            # use the cached domain model
-            system = cache[identifier]
-        else:
-            # if domain model not cached generate it
-            for input in inputs:
-                path = CWD / str(input)
-                if path.isfile():
-                    FileSystem.parse_document(path, system)
-                else:
-                    for document in path.walkfiles('*.qdl'):
-                        FileSystem.parse_document(document, system)
+        cache = None
+        if use_cache:
+            cache = shelve.open('qface.cache')
+            if identifier in cache and clear_cache:
+                del cache[identifier]
+            if identifier in cache:
+                # use the cached domain model
+                system = cache[identifier]
+        # if domain model not cached generate it
+        for input in inputs:
+            path = Path.getcwd() / str(input)
+            if path.isfile():
+                FileSystem.parse_document(path, system)
+            else:
+                for document in path.walkfiles('*.qdl'):
+                    FileSystem.parse_document(document, system)
+        if use_cache:
             cache[identifier] = system
         return system

@@ -9,10 +9,10 @@
 
 #include <qqml.h>
 
-#include "{{module_name|lower}}.h"
+#include "generated/{{module_name|lower}}.h"
 
 {% for interface in module.interfaces %}
-#include "qmlabstract{{interface|lower}}.h"
+#include "qml{{interface|lower}}.h"
 {% endfor %}
 
 void Plugin::registerTypes(const char *uri)
@@ -21,6 +21,6 @@ void Plugin::registerTypes(const char *uri)
     // @uri {{module|lower}}
     {{module_name}}::registerQmlTypes(uri, 1, 0);
 {% for interface in module.interfaces %}
-    QmlAbstract{{interface}}::registerQmlTypes(uri, 1, 0);
+    Qml{{interface}}::registerQmlTypes(uri, 1, 0);
 {% endfor %}
 }

@@ -125,11 +125,3 @@ class FileSystem(object):
                         FileSystem.parse_document(document, system)
             cache[identifier] = system
         return system
-
-    @staticmethod
-    def find_files(path, glob='*.qdl'):
-        """Find recursively all files given by glob parameter
-           in a give directory path"""
-        path = Path(path)
-        logging.debug('find_files path={0} glob={1}'.format(path, glob))
-        return list(path.walkfiles(glob))

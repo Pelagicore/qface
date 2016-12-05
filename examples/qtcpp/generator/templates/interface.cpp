@@ -5,17 +5,9 @@
 ** Do not edit! All changes made to it will be lost.
 ****************************************************************************/
 
-#include <{{interface|lower}}.h>
+#include "{{class|lower}}.h"
 
 #include <QtQml>
-
-{% set class = 'Qml{0}'.format(interface) %}
-
-QObject* {{interface|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
-{
-      return new {{class}}();
-}
-
 
 {{interface.comment}}
 {{class}}::{{class}}(QObject *parent)
@@ -30,7 +22,7 @@ QObject* {{interface|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 
 void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minorVersion)
 {
-    qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{interface}}", {{interface|lower}}_singletontype_provider);
+    qmlRegisterType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{interface}}");
 }
 
 {% for property in interface.properties %}
@@ -54,6 +46,6 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {{operation.comment}}
 {{operation|returnType}} {{class}}::{{operation}}({{operation.parameters|map('parameterType')|join(', ')}})
 {
-    qWarn() << "Not implemented: {{class}}::{{operation}}(...)";
+    qWarning() << "Not implemented: {{class}}::{{operation}}(...)";
 }
 {% endfor %}

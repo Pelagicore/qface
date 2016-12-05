@@ -11,8 +11,15 @@ TARGET = $$qtLibraryTarget({{module|lower}})
 
 uri = {{module}}
 
-include( {{module|lower}}.pri )
 
+HEADERS += \
+    plugin.h
+
+
+SOURCES += \
+    plugin.cpp
+
+include( _generated/{{module|lower}}.pri )
 
 DISTFILES = qmldir
 

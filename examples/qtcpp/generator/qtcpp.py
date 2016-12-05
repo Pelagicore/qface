@@ -28,7 +28,7 @@ def paramterType(symbol):
     elif symbol.type.is_model:
         return '{0}Model *{1}'.format(symbol.type.nested, symbol)
     else:
-        return 'const {0} &{1}'.format(symbol.type, symbol)
+        return 'const Qml{0} &{1}'.format(symbol.type, symbol)
 
 
 def returnType(symbol):
@@ -48,7 +48,7 @@ def returnType(symbol):
     elif symbol.type.is_model:
         return '{0}Model*'.format(symbol.type.nested)
     else:
-        return symbol.type
+        return 'Qml{0}'.format(symbol.type)
 
 
 def run_generation(input, output):
@@ -59,25 +59,25 @@ def run_generation(input, output):
     ctx = {'output': output}
     for module in system.modules:
         ctx.update({'module': module})
-        moduleOutput = generator.apply('{{output}}/{{module|lower}}', ctx)
-        ctx.update({'path': moduleOutput})
-        generator.write('{{path}}/qmldir', 'qmldir', ctx)
-        generator.write('{{path}}/plugin.cpp', 'plugin.cpp', ctx)
-        generator.write('{{path}}/plugin.h', 'plugin.h', ctx)
-        generator.write('{{path}}/{{module|lower}}.pri', 'project.pri', ctx)
-        generator.write('{{path}}/{{module|lower}}.pro', 'project.pro', ctx)
-        generator.write('{{path}}/qml{{module.module_name|lower}}module.h', 'module.h', ctx)
-        generator.write('{{path}}/qml{{module.module_name|lower}}module.cpp', 'module.cpp', ctx)
+        dst = generator.apply('{{output}}/{{module|lower}}', ctx)
+        ctx.update({'dst': dst})
+        generator.write('{{dst}}/qmldir', 'qmldir', ctx, overwrite=False)
+        generator.write('{{dst}}/plugin.cpp', 'plugin.cpp', ctx, overwrite=False)
+        generator.write('{{dst}}/plugin.h', 'plugin.h', ctx, overwrite=False)
+        generator.write('{{dst}}/{{module|lower}}.pro', 'plugin.pro', ctx, overwrite=False)
+        generator.write('{{dst}}/_generated/{{module|lower}}.pri', 'plugin.pri', ctx)
+        generator.write('{{dst}}/_generated/qml{{module.module_name|lower}}module.h', 'module.h', ctx)
+        generator.write('{{dst}}/_generated/qml{{module.module_name|lower}}module.cpp', 'module.cpp', ctx)
         for interface in module.interfaces:
             ctx.update({'interface': interface})
-            generator.write('{{path}}/qmlabstract{{interface|lower}}.h', 'interface.h', ctx)
-            generator.write('{{path}}/qmlabstract{{interface|lower}}.cpp', 'interface.cpp', ctx)
+            generator.write('{{dst}}/_generated/qmlabstract{{interface|lower}}.h', 'interface.h', ctx)
+            generator.write('{{dst}}/_generated/qmlabstract{{interface|lower}}.cpp', 'interface.cpp', ctx)
         for struct in module.structs:
             ctx.update({'struct': struct})
-            generator.write('{{path}}/{{struct|lower}}.h', 'struct.h', ctx)
-            generator.write('{{path}}/{{struct|lower}}.cpp', 'struct.cpp', ctx)
-            generator.write('{{path}}/{{struct|lower}}model.h', 'structmodel.h', ctx)
-            generator.write('{{path}}/{{struct|lower}}model.cpp', 'structmodel.cpp', ctx)
+            generator.write('{{dst}}/_generated/qml{{struct|lower}}.h', 'struct.h', ctx)
+            generator.write('{{dst}}/_generated/qml{{struct|lower}}.cpp', 'struct.cpp', ctx)
+            generator.write('{{dst}}/_generated/qml{{struct|lower}}model.h', 'structmodel.h', ctx)
+            generator.write('{{dst}}/_generated/qml{{struct|lower}}model.cpp', 'structmodel.cpp', ctx)
 
 
 @click.command()

@@ -44,7 +44,7 @@ class Generator(object):
         """Return the rendered text of a template instance"""
         return self.env.from_string(template).render(context)
 
-    def write(self, fileTemplate: str, template: str, context: dict):
+    def write(self, fileTemplate: str, template: str, context: dict, overwrite=True):
         """Using a templated file name it renders a template
            into a file given a context"""
         path = Path(self.apply(fileTemplate, context))
@@ -52,8 +52,11 @@ class Generator(object):
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
         if self.hasDifferentContent(data, path):
-            print('write file: {0}'.format(path))
-            path.open('w').write(data)
+            if not overwrite and path.exists():
+                print('skip changed file: {0}'.format(path))
+            else:
+                print('write changed file: {0}'.format(path))
+                path.open('w').write(data)
 
     def hasDifferentContent(self, data, path):
         if not path.exists():

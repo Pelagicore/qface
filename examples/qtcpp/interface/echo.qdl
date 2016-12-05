@@ -11,5 +11,9 @@ interface Echo {
     /*!
      * Returns the passed in message
      */
-    string echo(string message);
+    void echo(Message message);
+}
+
+struct Message {
+    string text;
 }

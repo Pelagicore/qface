@@ -1,6 +1,4 @@
 {# Copyright (c) Pelagicore AB 2016 #}
-{% from 'helper.tpl' import qualifiedModuleName %}
-{% set moduleName = qualifiedModuleName(module) %}
 #############################################################################
 ## This is an auto-generated file.
 ## Do not edit! All changes made to it will be lost.
@@ -9,25 +7,25 @@
 QT += qml quick
 CONFIG += c++11
 
-
 HEADERS += \
-    qml{{moduleName|lower}}.h \
+    $$PWD/qml{{module.module_name|lower}}module.h \
 {% for interface in module.interfaces %}
-    abstract{{interface|lower}}.h \
+    $$PWD/qmlabstract{{interface|lower}}.h \
 {% endfor %}
 {% for struct in module.structs %}
-    {{struct|lower}}.h \
-    {{struct|lower}}model.h \
+    $$PWD/qml{{struct|lower}}.h \
+    $$PWD/qml{{struct|lower}}model.h {% if not loop.last %}\{% endif %}
 {% endfor %}
-    plugin.h
+    
 
 SOURCES += \
-    qml{{moduleName|lower}}.cpp \
+    $$PWD/qml{{module.module_name|lower}}module.cpp \
 {% for interface in module.interfaces %}
-    abstract{{interface|lower}}.cpp \
+    $$PWD/qmlabstract{{interface|lower}}.cpp \
 {% endfor %}
 {% for struct in module.structs %}
-    {{struct|lower}}.cpp \
-    {{struct|lower}}model.cpp \
+    $$PWD/qml{{struct|lower}}.cpp \
+    $$PWD/qml{{struct|lower}}model.cpp {% if not loop.last %}\{% endif %}
 {% endfor %}
-    plugin.cpp
+
+

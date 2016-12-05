@@ -103,7 +103,7 @@ class RunScriptChangeHandler(FileSystemEventHandler):
 @click.argument('output', nargs=1, type=click.Path(exists=True))
 @click.option('--runner', type=click.File('r'), help="use the runner YAML file to configure the generation")
 @click.option('--reload/--no-reload', default=False, help="if enabled auto-reload the generator on input changes")
-@click.option('--generator', help="specifies the generator (either by name or path)")
+@click.option('--generator', help="specifies the generator (either by name or path)", required=True)
 @click.option('--clean/--no-clean', help="initially cleans the output directory")
 def generate(input, output, runner, generator, reload, clean):
     """generate from the list of input files or directories the source code
@@ -117,9 +117,6 @@ def generate(input, output, runner, generator, reload, clean):
         generator = config['generator']
         input = config['input']
         output = config['output']
-    if not generator or not input or not output:
-        click.echo('generator, input and output arguments are required')
-        sys.exit(-1)
     # look if generator points to an external generator
     if not generator.exists():
         click.echo('genertor does not exists: {0}'.format(generator))

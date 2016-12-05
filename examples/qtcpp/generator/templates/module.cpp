@@ -6,7 +6,7 @@
 {% set class = 'Qml{0}Module'.format(module.module_name) %}
 
 
-#include "qml{{ module|lower }}.h"
+#include "{{class|lower}}.h"
 
 #include <QtQml>
 
@@ -21,23 +21,23 @@ QObject* {{class|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 }
 
 {% for struct in module.structs %}
-{{struct}} {{class}}::create{{struct}}()
+Qml{{struct}} {{class}}::create{{struct}}()
 {
-    return {{struct}}();
+    return Qml{{struct}}();
 }
 {% endfor %}
 
 void {{class}}::registerTypes()
 {
     {% for struct in module.structs %}
-    qRegisterMetaType<{{struct}}>();
+    qRegisterMetaType<Qml{{struct}}>();
     {% endfor %}
 }
 
 void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minorVersion)
 {
     {% for struct in module.structs %}
-    qmlRegisterUncreatableType<{{struct}}Model>(uri.toLatin1(), majorVersion, minorVersion, "{{struct}}Model", "Model can not be instantiated from QML");
+    qmlRegisterUncreatableType<Qml{{struct}}Model>(uri.toLatin1(), majorVersion, minorVersion, "{{struct}}Model", "Model can not be instantiated from QML");
     {% endfor %}
     qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{module}}", {{class|lower}}_singletontype_provider);
 }

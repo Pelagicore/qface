@@ -1,4 +1,5 @@
 {# Copyright (c) Pelagicore AB 2016 #}
+{% set class = 'Qml{0}'.format(struct) %}
 /****************************************************************************
 ** This is an auto-generated file.
 ** Do not edit! All changes made to it will be lost.
@@ -8,7 +9,7 @@
 
 #include <QtCore>
 
-class {{struct}}
+class {{class}}
 {
     Q_GADGET
 {% for field in struct.fields %}
@@ -20,9 +21,9 @@ public:
     {{field|returnType}} m_{{field}};
 {% endfor %}
 
-    bool operator==(const {{struct}} &other) const;
+    bool operator==(const {{class}} &other) const;
 };
 
-Q_DECLARE_METATYPE({{struct}})
+Q_DECLARE_METATYPE({{class}})
 
 

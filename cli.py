@@ -10,9 +10,13 @@ import time
 import os
 import sys
 import yaml
+import logging
+import logging.config
 
+# logging.config.dictConfig(yaml.load(open('log.yaml')))
+logging.basicConfig()
+logger = logging.getLogger(__name__)
 
-CWD = Path(__file__).parent
 
 os.environ['PYTHONPATH'] = os.getcwd()
 
@@ -79,10 +83,9 @@ def test_monitor(ctx):
 
 
 class RunScriptChangeHandler(FileSystemEventHandler):
-    def __init__(self, script, cwd=None):
+    def __init__(self, script):
         super(RunTestChangeHandler).__init__()
         self.script = script
-        self.cwd = cwd
 
     def on_modified(self, event):
         if event.src_path.endswith('.cache'):
@@ -92,22 +95,22 @@ class RunScriptChangeHandler(FileSystemEventHandler):
         self.run()
 
     def run(self):
-        sh('python3 {0}'.format(self.script), cwd=self.cwd)
+        sh(self.script, cwd=Path.getcwd())
 
 
 @cli.command()
+@click.argument('input', nargs=-1, type=click.Path(exists=True))
+@click.argument('output', nargs=1, type=click.Path(exists=True))
 @click.option('--runner', type=click.File('r'), help="use the runner YAML file to configure the generation")
 @click.option('--reload/--no-reload', default=False, help="if enabled auto-reload the generator on input changes")
 @click.option('--generator', help="specifies the generator (either by name or path)")
-@click.option('--input', type=click.Path(exists=True), help="specifies the input folder")
-@click.option('--output', type=click.Path(exists=False), help="specified the output folder")
-@click.option('--list/--no-list', help="lists the available generators")
 @click.option('--clean/--no-clean', help="initially cleans the output directory")
-def generate(runner, generator, input, output, reload, list, clean):
-    if list:
-        entries = [str(x.name) for x in Path('generator').dirs()]
-        click.echo('generators: {0}'.format(entries))
-        sys.exit(0)
+def generate(input, output, runner, generator, reload, clean):
+    """generate from the list of input files or directories the source code
+    in the output folder using the given generator."""
+    generator = Path(generator).expand().abspath()
+    output = Path(output).expand().abspath()
+    input = input if isinstance(input, (list, tuple)) else [input]
     """run the named generator"""
     if runner:
         config = yaml.load(runner)
@@ -115,19 +118,12 @@ def generate(runner, generator, input, output, reload, list, clean):
         input = config['input']
         output = config['output']
     if not generator or not input or not output:
-        print('generator, input and output arguments are required')
+        click.echo('generator, input and output arguments are required')
         sys.exit(-1)
-    # check for embedded generator by name
-    generator = CWD / 'generator/{0}'.format(generator)
-    if not generator.exists():
-        generator = Path(generator).abspath()
     # look if generator points to an external generator
     if not generator.exists():
-        print('can not find the specified generator: ' + str(generator))
+        click.echo('genertor does not exists: {0}'.format(generator))
         sys.exit(-1)
-    input = Path(input).abspath()
-    output = Path(output).abspath()
-    generator = Path(generator).abspath()
     if clean:
         output.rmtree_p()
     output.makedirs_p()
@@ -138,20 +134,21 @@ def generate(runner, generator, input, output, reload, list, clean):
 
 
 def _generate_once(generator, input, output):
-    script = '{0}.py'.format(generator.name)
-    sh('python3 {0} --input {1} --output {2}'
-        .format(script, input, output),
-        cwd=generator)
+    in_option = ' '.join(input)
+    script = 'python3 {0} {1} {2}'.format(generator, in_option, output)
+    sh(script, Path.getcwd())
 
 
 def _generate_reload(generator, input, output):
     """run the named generator and monitor the input and generator folder"""
-    script = generator / '{0}.py --input {1} --output {2}'.format(generator.name, input, output)
-    event_handler = RunScriptChangeHandler(script, cwd=generator)
+    in_option = ' '.join(input)
+    script = 'python3 {0} {1} {2}'.format(generator, in_option, output)
+    event_handler = RunScriptChangeHandler(script)
     event_handler.run()  # run always once
     observer = Observer()
-    observer.schedule(event_handler, generator, recursive=True)
-    observer.schedule(event_handler, input, recursive=True)
+    observer.schedule(event_handler, generator.dirname().abspath(), recursive=True)
+    for entry in input:
+        observer.schedule(event_handler, Path(entry).abspath(), recursive=True)
     observer.schedule(event_handler, './qface', recursive=True)
     observer.start()
 

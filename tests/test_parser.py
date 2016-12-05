@@ -25,12 +25,7 @@ def loadTest():
 
 def test_parse():
     log.debug('test parse')
-    names = FileSystem.find_files(inputPath, '*.qdl')
-    # import pdb; pdb.set_trace()
-    system = System()
-    for name in names:
-        log.debug('name: {0}'.format(name))
-        FileSystem.parse_document(name, system)
+    system = FileSystem.parse(inputPath)
 
 
 def test_module():

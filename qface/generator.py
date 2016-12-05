@@ -102,7 +102,7 @@ class FileSystem(object):
         :param identifier: identifies the parse run. Used to name the cache
         :param clear_cache: clears the domain cache (defaults to true)
         """
-        inputs = input if not isinstance(input, str) else [input]
+        inputs = input if isinstance(input, (list, tuple)) else [input]
         logging.debug('parse input={0}'.format(inputs))
         CWD = Path.getcwd()
         if not identifier:
@@ -117,7 +117,7 @@ class FileSystem(object):
         else:
             # if domain model not cached generate it
             for input in inputs:
-                path = CWD / input
+                path = CWD / str(input)
                 if path.isfile():
                     FileSystem.parse_document(path, system)
                 else:

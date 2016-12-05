@@ -7,6 +7,7 @@ import logging.config
 import yaml
 from qface.generator import FileSystem, Generator
 import os
+from path import Path
 
 here = os.path.dirname(__file__)
 
@@ -50,7 +51,7 @@ def returnType(symbol):
         return symbol.type
 
 
-def generate(input, output):
+def run_generation(input, output):
     system = FileSystem.parse(input)
     generator = Generator(searchpath=os.path.join(here, 'templates'))
     generator.register_filter('returnType', returnType)
@@ -82,11 +83,11 @@ def generate(input, output):
 @click.command()
 @click.argument('input', nargs=-1, type=click.Path(exists=True))
 @click.argument('output', nargs=1, type=click.Path(exists=True))
-def main(input, output):
+def generate(input, output):
     """Takes several files or directories as input and generates the code
     in the given output directory."""
-    generate(input, output)
+    run_generation(input, output)
 
 
 if __name__ == '__main__':
-    main()
+    generate()

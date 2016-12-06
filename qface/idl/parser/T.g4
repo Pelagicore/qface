@@ -29,7 +29,7 @@ definitionSymbol
     ;
 
 interfaceSymbol
-    : comment=DOCCOMMENT? 'interface' name=IDENTIFIER '{' interfaceMemberSymbol* '}'
+    : comment=DOCCOMMENT? 'interface' name=IDENTIFIER '{' interfaceMemberSymbol* '}' ';'?
     ;
 
 interfaceMemberSymbol
@@ -77,7 +77,7 @@ modelTypeSymbol
     ;
 
 structSymbol
-    : comment=DOCCOMMENT? 'struct' name=IDENTIFIER '{' structFieldSymbol* '}'
+    : comment=DOCCOMMENT? 'struct' name=IDENTIFIER '{' structFieldSymbol* '}' ';'?
     ;
 
 structFieldSymbol
@@ -85,7 +85,7 @@ structFieldSymbol
     ;
 
 enumSymbol
-    : comment=DOCCOMMENT? enumTypeSymbol name=IDENTIFIER '{' enumMemberSymbol* '}'
+    : comment=DOCCOMMENT? enumTypeSymbol name=IDENTIFIER '{' enumMemberSymbol* '}' ';'?
     ;
 
 enumTypeSymbol

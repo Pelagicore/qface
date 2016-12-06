@@ -13,8 +13,9 @@ import yaml
 import logging
 import logging.config
 
-# logging.config.dictConfig(yaml.load(open('log.yaml')))
-logging.basicConfig()
+here = os.path.dirname(__file__)
+
+logging.config.dictConfig(yaml.load(open(os.path.join(here, 'log.yaml'))))
 logger = logging.getLogger(__name__)
 
 
@@ -143,15 +144,22 @@ def _generate_once(generator, input, output):
 
 def _generate_reload(generator, input, output):
     """run the named generator and monitor the input and generator folder"""
+    input = [Path(entry).expand().abspath() for entry in input]
+    output = Path(output).expand().abspath()
     in_option = ' '.join(input)
     script = 'python3 {0} {1} {2}'.format(generator, in_option, output)
     event_handler = RunScriptChangeHandler(script)
     event_handler.run()  # run always once
     observer = Observer()
-    observer.schedule(event_handler, generator.dirname().abspath(), recursive=True)
+    path = generator.dirname().expand().abspath()
+    print('watch:', path)
+    observer.schedule(event_handler, path, recursive=True)
     for entry in input:
-        observer.schedule(event_handler, Path(entry).abspath(), recursive=True)
-    observer.schedule(event_handler, './qface', recursive=True)
+        print('watch:', entry)
+        observer.schedule(event_handler, entry, recursive=True)
+    path = Path(__file__).parent / 'qface'
+    print('watch:', path)
+    observer.schedule(event_handler, path, recursive=True)
     observer.start()
 
     try:

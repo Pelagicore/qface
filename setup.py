@@ -18,7 +18,7 @@ except (IOError, ImportError):
 
 setup(
     name='qface',
-    version='1.0.0a4',
+    version='1.0.0a5',
     description='QFace - A Generator Framework',
     long_description=long_description,
     url='https://github.com/Pelagicore/qface',

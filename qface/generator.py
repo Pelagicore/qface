@@ -56,8 +56,8 @@ class Generator(object):
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
         if self.hasDifferentContent(data, path):
-            if not preserve and path.exists():
-                print('skip changed file: {0}'.format(path))
+            if path.exists() and preserve:
+                print('preserve changed file: {0}'.format(path))
             else:
                 print('write changed file: {0}'.format(path))
                 path.open('w').write(data)

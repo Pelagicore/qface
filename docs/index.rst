@@ -1,7 +1,7 @@
 QFace
 =====
 
-QFace is a flexible Qt API generator. It uses a common IDL format (called qdl) to define an API. QFace comes with a set of predefined generators to generate QML Plugins. QFace can be easily extended with your own generator.
+QFace is a flexible Qt API generator. It uses a common IDL format (called QDL) to define an API. QFace comes with a set of predefined generators to generate QML Plugins. QFace can be easily extended with your own generator.
 
 .. toctree::
    :maxdepth: 1
@@ -13,11 +13,4 @@ QFace is a flexible Qt API generator. It uses a common IDL format (called qdl) t
    builtin
    api
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 

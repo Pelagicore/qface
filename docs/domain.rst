@@ -24,6 +24,7 @@ The IDL is converted into an in memory domain model (see qface/idl/domain.py)
 The domain model is the base for the code generation. You traverse the domain tree and trigger your own code generation.
 
 .. code-block:: python
+
     from qface.generator import FileSystem
 
     system = FileSystem.parse_dir('interfaces')

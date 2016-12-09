@@ -1,6 +1,8 @@
-# Builtin Generators
+Builtin Generators
+==================
 
-## QtCPP Generator
+QtCPP Generator
+---------------
 
 This is one of the buit-in generators to generate a QtCPP API to be exported into QML. 
 The structs/enums/flags are defined in an own Module Qbject which acts as a namespace and can not be instantiated.
@@ -9,29 +11,31 @@ Each interface is generated into a QObject with proper properties, signals and i
 
 For example an QDL like this:
 
-```js
-module sample 1.0
+.. code-block:: js
 
-interface Heater {
-    real temperature;
-    Status status;
-    void increaseTemperature(qreal step);
-    void decreaseTemperature(qreal step);
-    event void error(string message);
-}
+    module sample 1.0
 
-enum Status {
-    Null,
-    Ready,
-    Error
-}
-```
+    interface Heater {
+        real temperature;
+        Status status;
+        void increaseTemperature(qreal step);
+        void decreaseTemperature(qreal step);
+        event void error(string message);
+    }
+
+    enum Status {
+        Null,
+        Ready,
+        Error
+    }
+
 
 The QTCPP generator will generate all CPP code including the plugin code and project files. Additional it will generate an empy simulation stub.
 
 In QML you would now be able to write the following code.
 
-```qml
+.. code-block:: qml
+
     import sample 1.0
 
     Item {
@@ -55,4 +59,3 @@ In QML you would now be able to write the following code.
             }
         }
     }
-```

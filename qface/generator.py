@@ -17,6 +17,10 @@ from .idl.listener import DomainListener
 logger = logging.getLogger(__name__)
 
 
+"""
+Provides an API for accessing the file system and controlling the generator
+"""
+
 def upper_first_filter(s):
     s = str(s)
     return s[0].upper() + s[1:]

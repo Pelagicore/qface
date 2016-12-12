@@ -34,7 +34,16 @@ class Generator(object):
             searchpath = Path(searchpath).expand()
             self.env = Environment(loader=FileSystemLoader(searchpath), trim_blocks=True, lstrip_blocks=True)
         self.env.filters['upperfirst'] = upper_first_filter
-        self.destination = Path()
+        self._destination = Path()
+
+    @property
+    def destination(self):
+        """destination prefix for generator write"""
+        return self._destination
+
+    @destination.setter
+    def destination(self, dst: str):
+        self._destination = Path(dst)
 
     def get_template(self, name: str):
         """Retrievs a single template file from the template loader"""
@@ -57,7 +66,7 @@ class Generator(object):
         path.parent.makedirs_p()
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
-        if self.hasDifferentContent(data, path):
+        if self._hasDifferentContent(data, path):
             if path.exists() and preserve:
                 print('preserve changed file: {0}'.format(path))
             else:

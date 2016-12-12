@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 Provides an API for accessing the file system and controlling the generator
 """
 
+
 def upper_first_filter(s):
     s = str(s)
     return s[0].upper() + s[1:]
@@ -33,6 +34,7 @@ class Generator(object):
             searchpath = Path(searchpath).expand()
             self.env = Environment(loader=FileSystemLoader(searchpath), trim_blocks=True, lstrip_blocks=True)
         self.env.filters['upperfirst'] = upper_first_filter
+        self.destination = Path()
 
     def get_template(self, name: str):
         """Retrievs a single template file from the template loader"""
@@ -51,7 +53,7 @@ class Generator(object):
     def write(self, fileTemplate: str, template: str, context: dict, preserve=False):
         """Using a templated file name it renders a template
            into a file given a context"""
-        path = Path(self.apply(fileTemplate, context))
+        path = self.destination / Path(self.apply(fileTemplate, context))
         path.parent.makedirs_p()
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
@@ -62,7 +64,7 @@ class Generator(object):
                 print('write changed file: {0}'.format(path))
                 path.open('w').write(data)
 
-    def hasDifferentContent(self, data, path):
+    def _hasDifferentContent(self, data, path):
         if not path.exists():
             return True
         dataHash = hashlib.new('md5', data.encode('utf-8')).digest()

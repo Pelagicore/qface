@@ -1,7 +1,7 @@
 from qface.generator import FileSystem, Generator
 import logging
 import logging.config
-from pathlib import Path
+from path import Path
 
 # logging.config.fileConfig('logging.ini')
 logging.basicConfig()
@@ -9,7 +9,7 @@ logging.basicConfig()
 log = logging.getLogger(__name__)
 
 inputPath = Path('tests/in')
-log.debug('input path folder: {0}'.format(inputPath.absolute()))
+log.debug('input path folder: {0}'.format(inputPath.abspath()))
 
 
 def loadSystem():
@@ -45,15 +45,32 @@ def test_parse_document():
 
 
 def test_parse_document_list():
-    input = [inputPath / 'com.pelagicore.ivi.tuner.qdl', inputPath / 'com.pelagicore.ivi.climate.qdl']
-    system = FileSystem.parse(input)
+    src = [inputPath / 'com.pelagicore.ivi.tuner.qdl', inputPath / 'com.pelagicore.ivi.climate.qdl']
+    system = FileSystem.parse(src)
     assert system.lookup('com.pelagicore.ivi.tuner')
     assert system.lookup('com.pelagicore.ivi.climate')
 
 
 def test_parse_document_mixed():
-    input = [inputPath, inputPath / 'com.pelagicore.ivi.climate.qdl']
-    system = FileSystem.parse(input)
+    src = [inputPath, inputPath / 'com.pelagicore.ivi.climate.qdl']
+    system = FileSystem.parse(src)
     assert system.lookup('com.pelagicore.ivi.tuner')
     assert system.lookup('com.pelagicore.ivi.climate')
     assert system.lookup('com.pelagicore.one')
+
+
+def test_destination_prefix():
+
+    system = FileSystem.parse(inputPath)
+    out = Path('tests/out')
+    out.rmtree_p()
+    out.makedirs_p()
+    generator = Generator(searchpath='tests/templates')
+    for module in system.modules:
+        dst_template = '{{out}}/{{module|lower}}.txt'
+        ctx = {'out': out.abspath(), 'module': module}
+        generator.write(dst_template, 'module.txt', ctx)
+        path = generator.apply(dst_template, ctx)
+        assert Path(path).exists()
+
+    # out.rmtree_p()

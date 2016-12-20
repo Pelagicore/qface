@@ -32,7 +32,11 @@ class Generator(object):
     def __init__(self, searchpath: str):
         if searchpath:
             searchpath = Path(searchpath).expand()
-            self.env = Environment(loader=FileSystemLoader(searchpath), trim_blocks=True, lstrip_blocks=True)
+            self.env = Environment(
+                loader=FileSystemLoader(searchpath),
+                trim_blocks=True,
+                lstrip_blocks=True
+            )
         self.env.filters['upperfirst'] = upper_first_filter
         self._destination = Path()
 

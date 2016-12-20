@@ -45,7 +45,8 @@ def test_parse_document():
 
 
 def test_parse_document_list():
-    src = [inputPath / 'com.pelagicore.ivi.tuner.qdl', inputPath / 'com.pelagicore.ivi.climate.qdl']
+    src = [inputPath / 'com.pelagicore.ivi.tuner.qdl',
+           inputPath / 'com.pelagicore.ivi.climate.qdl']
     system = FileSystem.parse(src)
     assert system.lookup('com.pelagicore.ivi.tuner')
     assert system.lookup('com.pelagicore.ivi.climate')
@@ -60,7 +61,6 @@ def test_parse_document_mixed():
 
 
 def test_destination_prefix():
-
     system = FileSystem.parse(inputPath)
     out = Path('tests/out')
     out.rmtree_p()
@@ -72,5 +72,4 @@ def test_destination_prefix():
         generator.write(dst_template, 'module.txt', ctx)
         path = generator.apply(dst_template, ctx)
         assert Path(path).exists()
-
-    # out.rmtree_p()
+    out.rmtree_p()

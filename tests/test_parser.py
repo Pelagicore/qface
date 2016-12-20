@@ -1,8 +1,8 @@
-from qface.idl.domain import System
-from qface.generator import FileSystem
 import logging
 import logging.config
 from pathlib import Path
+
+from qface.generator import FileSystem
 
 # logging.config.fileConfig('logging.ini')
 logging.basicConfig()
@@ -13,12 +13,12 @@ inputPath = Path('tests/in')
 log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
-def loadTuner():
+def load_tuner():
     path = inputPath / 'com.pelagicore.ivi.tuner.qdl'
     return FileSystem.parse_document(path)
 
 
-def loadTest():
+def load_test():
     path = inputPath / 'com.pelagicore.test.qdl'
     return FileSystem.parse_document(path)
 
@@ -26,17 +26,18 @@ def loadTest():
 def test_parse():
     log.debug('test parse')
     system = FileSystem.parse(inputPath)
+    assert system
 
 
 def test_module():
-    system = loadTuner()
+    system = load_tuner()
     assert len(system.modules) == 1
     module = system.lookup('com.pelagicore.ivi.tuner')
     assert module in system.modules
 
 
 def test_interface():
-    system = loadTuner()
+    system = load_tuner()
     module = system.lookup('com.pelagicore.ivi.tuner')
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
     assert interface in module.interfaces
@@ -44,7 +45,7 @@ def test_interface():
 
 
 def test_property():
-    system = loadTuner()
+    system = load_tuner()
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
     module = system.lookup('com.pelagicore.ivi.tuner')
     property = interface._propertyMap['currentStation']
@@ -56,7 +57,7 @@ def test_property():
 
 
 def test_struct():
-    system = loadTuner()
+    system = load_tuner()
     module = system.lookup('com.pelagicore.ivi.tuner')
     symbol = system.lookup('com.pelagicore.ivi.tuner.Station')
     assert symbol.name == 'Station'
@@ -66,7 +67,7 @@ def test_struct():
 
 
 def test_enum():
-    system = loadTuner()
+    system = load_tuner()
     definition = system.lookup('com.pelagicore.ivi.tuner.Waveband')
     module = system.lookup('com.pelagicore.ivi.tuner')
     symbol = system.lookup('com.pelagicore.ivi.tuner.Waveband')
@@ -79,15 +80,16 @@ def test_enum():
 
 
 def test_enum_counter():
-    system = loadTest()
+    system = load_test()
     enum = system.lookup('com.pelagicore.test.State')
     assert enum
     # import ipdb; ipdb.set_trace()
     assert enum._memberMap['Null'].value is 0
     assert enum._memberMap['Failure'].value is 3
 
+
 def test_flag_counter():
-    system = loadTest()
+    system = load_test()
     flag = system.lookup('com.pelagicore.test.Phase')
     assert flag
     # import ipdb; ipdb.set_trace()
@@ -95,14 +97,15 @@ def test_flag_counter():
     assert flag._memberMap['PhaseTwo'].value is 2
     assert flag._memberMap['PhaseThree'].value is 4
 
+
 def test_flag():
-    system = loadTuner()
+    system = load_tuner()
     symbol = system.lookup('com.pelagicore.ivi.tuner.Features')
     assert symbol.is_flag
 
 
 def test_list():
-    system = loadTuner()
+    system = load_tuner()
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
     property = interface._propertyMap['primitiveList']
     assert property.type.name == 'list'
@@ -118,7 +121,7 @@ def test_list():
 
 
 def test_model():
-    system = loadTuner()
+    system = load_tuner()
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
     property = interface._propertyMap['primitiveModel']
     assert property.type.name == 'model'
@@ -131,7 +134,3 @@ def test_model():
     assert property.type.is_model is True
     assert property.type.nested.is_complex
     assert property.type.nested.name == 'Station'
-
-
-
-

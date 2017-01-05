@@ -29,7 +29,7 @@ class Filters(object):
         return 'XXX'
 
     @staticmethod
-    def paramterType(symbol):
+    def parameterType(symbol):
         classPrefix = Filters.classPrefix
         module_name = symbol.module.module_name
         if symbol.type.is_enum:

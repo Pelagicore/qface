@@ -11,7 +11,7 @@ from path import Path
 
 here = os.path.dirname(__file__)
 
-def paramterType(symbol):
+def parameterType(symbol):
     module_name = symbol.module.module_name
     if symbol.type.is_enum:
         return 'Qml{0}Module::{1} {2}'.format(module_name, symbol.type, symbol)
@@ -55,7 +55,7 @@ def run_generation(input, output):
     system = FileSystem.parse(input)
     generator = Generator(searchpath=os.path.join(here, 'templates'))
     generator.register_filter('returnType', returnType)
-    generator.register_filter('parameterType', paramterType)
+    generator.register_filter('parameterType', parameterType)
     ctx = {'output': output}
     for module in system.modules:
         ctx.update({'module': module})

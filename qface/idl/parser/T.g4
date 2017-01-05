@@ -19,7 +19,7 @@ importSymbol
     ;
 
 moduleSymbol
-    : comment=DOCCOMMENT? 'module' name=IDENTIFIER version=VERSION ';'?
+    : comment=DOCCOMMENT? tagSymbol? 'module' name=IDENTIFIER version=VERSION ';'?
     ;
 
 definitionSymbol
@@ -29,7 +29,7 @@ definitionSymbol
     ;
 
 interfaceSymbol
-    : comment=DOCCOMMENT? 'interface' name=IDENTIFIER '{' interfaceMemberSymbol* '}' ';'?
+    : comment=DOCCOMMENT? tagSymbol? 'interface' name=IDENTIFIER '{' interfaceMemberSymbol* '}' ';'?
     ;
 
 interfaceMemberSymbol
@@ -38,16 +38,24 @@ interfaceMemberSymbol
     ;
 
 operationSymbol
-    : comment=DOCCOMMENT? isEvent='event'? (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
+    : comment=DOCCOMMENT?  tagSymbol? isEvent='event'? (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
     ;
 
 propertySymbol
-    : comment=DOCCOMMENT? isReadOnly='readonly'? typeSymbol name=IDENTIFIER ';'?
+    : comment=DOCCOMMENT? tagSymbol? isReadOnly='readonly'? typeSymbol name=IDENTIFIER ';'?
     ;
 
 operationParameterSymbol
     : typeSymbol name=IDENTIFIER ','?
     ;
+
+tagSymbol
+    : '@' name=IDENTIFIER '(' tagAttributeSymbol* ')'
+    ;
+
+tagAttributeSymbol
+    : name=IDENTIFIER ('=' value=IDENTIFIER)?
+    ;    
 
 typeSymbol
     : primitiveTypeSymbol
@@ -77,15 +85,15 @@ modelTypeSymbol
     ;
 
 structSymbol
-    : comment=DOCCOMMENT? 'struct' name=IDENTIFIER '{' structFieldSymbol* '}' ';'?
+    : comment=DOCCOMMENT? tagSymbol? 'struct' name=IDENTIFIER '{' structFieldSymbol* '}' ';'?
     ;
 
 structFieldSymbol
-    : comment=DOCCOMMENT? typeSymbol name=IDENTIFIER ';'?
+    : comment=DOCCOMMENT? tagSymbol? typeSymbol name=IDENTIFIER ';'?
     ;
 
 enumSymbol
-    : comment=DOCCOMMENT? enumTypeSymbol name=IDENTIFIER '{' enumMemberSymbol* '}' ';'?
+    : comment=DOCCOMMENT? tagSymbol? enumTypeSymbol name=IDENTIFIER '{' enumMemberSymbol* '}' ';'?
     ;
 
 enumTypeSymbol
@@ -94,7 +102,7 @@ enumTypeSymbol
     ;
 
 enumMemberSymbol
-    : comment=DOCCOMMENT? name=IDENTIFIER ('=' intSymbol)? ','?
+    : comment=DOCCOMMENT? tagSymbol? name=IDENTIFIER ('=' intSymbol)? ','?
     ;
 
 intSymbol

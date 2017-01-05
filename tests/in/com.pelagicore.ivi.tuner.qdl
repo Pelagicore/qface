@@ -1,6 +1,7 @@
 module com.pelagicore.ivi.tuner 1.0;
 
 /*! Service Tuner */
+@service()
 interface Tuner {
     /*! property currentStation */
     readonly Station currentStation;
@@ -30,6 +31,7 @@ enum State {
 }
 
 /*! enum Waveband */
+@default(value=FM)
 enum Waveband {
     /*! value Waveband.FM */
     FM=0,

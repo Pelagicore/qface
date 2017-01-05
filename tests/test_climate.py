@@ -21,4 +21,3 @@ def test_interface():
     system = load_system()
     interface = system.lookup('com.pelagicore.ivi.climate.ClimateControl')
     assert interface.name == 'ClimateControl'
-

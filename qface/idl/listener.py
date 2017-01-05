@@ -33,7 +33,6 @@ class DomainListener(TListener):
 
     def parse_type(self, ctx: ParserRuleContext, type: TypeSymbol):
         if not ctx.typeSymbol():
-            # import pdb; pdb.set_trace()
             type.is_void = True
             type.name = 'void'
         else:
@@ -60,10 +59,19 @@ class DomainListener(TListener):
         if not type.module.checkType(type):
             log.warn('Unknown type: {0}. Missing import?'.format(type.name))
 
-    def parse_comment(self, ctx, symbol):
+    def parse_annotations(self, ctx, symbol):
         if ctx.comment:
             comment = ctx.comment.text
             symbol.comment = comment
+        if ctx.tagSymbol():
+            tag_name = ctx.tagSymbol().name.text
+            attrs = ctx.tagSymbol().tagAttributeSymbol()
+            symbol.add_tag(tag_name)
+            print('found tag: ', tag_name)
+            for attr in attrs:
+                attr_name = attr.name.text
+                attr_value = attr.value.text
+                symbol.add_attribute(tag_name, attr_name, attr_value)
 
     def enterEveryRule(self, ctx):
         log.debug('enter ' + ctx.__class__.__name__)
@@ -86,7 +94,7 @@ class DomainListener(TListener):
         assert self.module
         name = ctx.name.text
         self.interface = Interface(name, self.module)
-        self.parse_comment(ctx, self.interface)
+        self.parse_annotations(ctx, self.interface)
         contextMap[ctx] = self.interface
 
     def exitInterfaceSymbol(self, ctx: TParser.InterfaceSymbolContext):
@@ -96,7 +104,7 @@ class DomainListener(TListener):
         assert self.module
         name = ctx.name.text
         self.struct = Struct(name, self.module)
-        self.parse_comment(ctx, self.struct)
+        self.parse_annotations(ctx, self.struct)
         contextMap[ctx] = self.struct
 
     def exitStructSymbol(self, ctx: TParser.StructSymbolContext):
@@ -107,7 +115,7 @@ class DomainListener(TListener):
         name = ctx.name.text
         # import ipdb; ipdb.set_trace()
         self.enum = Enum(name, self.module)
-        self.parse_comment(ctx, self.enum)
+        self.parse_annotations(ctx, self.enum)
         contextMap[ctx] = self.enum
 
     def exitEnumSymbol(self, ctx: TParser.EnumSymbolContext):
@@ -130,7 +138,7 @@ class DomainListener(TListener):
         name = ctx.name.text
         is_event = bool(ctx.isEvent)
         self.operation = Operation(name, self.interface, is_event)
-        self.parse_comment(ctx, self.operation)
+        self.parse_annotations(ctx, self.operation)
         self.parse_type(ctx, self.operation.type)
         contextMap[ctx] = self.operation
 
@@ -150,7 +158,7 @@ class DomainListener(TListener):
         name = ctx.name.text
         self.property = Property(name, self.interface)
         self.property.is_readonly = bool(ctx.isReadOnly)
-        self.parse_comment(ctx, self.property)
+        self.parse_annotations(ctx, self.property)
         self.parse_type(ctx, self.property.type)
         contextMap[ctx] = self.property
 

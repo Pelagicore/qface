@@ -86,7 +86,10 @@ class Symbol(object):
     @property
     def qualified_name(self):
         '''return the fully qualified name (`module + "." + name`)'''
-        return '{0}.{1}'.format(self.module.name, self.name)
+        if self.module == self:
+            return self.module.name
+        else:
+            return '{0}.{1}'.format(self.module.name, self.name)
 
     def __unicode__(self):
         return self.name

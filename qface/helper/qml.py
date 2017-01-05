@@ -21,7 +21,7 @@ class Filters(object):
             if t.name == 'bool':
                 return 'false'
             if t.name == 'string':
-                return ''
+                return "''"
         elif t.is_enum:
             name = t.reference.name
             value = next(iter(t.reference.members))

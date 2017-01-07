@@ -27,6 +27,7 @@ def test_tag():
     service = system.lookup('com.pelagicore.ivi.tuner.Tuner')
     assert service is module.lookup('Tuner')
     assert 'service' in service.tags
+    assert 'interface' in service.tags
 
     # lookup struct
     struct = system.lookup('com.pelagicore.ivi.tuner.Station')

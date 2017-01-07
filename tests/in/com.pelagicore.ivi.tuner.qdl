@@ -2,6 +2,7 @@ module com.pelagicore.ivi.tuner 1.0;
 
 /*! Service Tuner */
 @service()
+@interface()
 interface Tuner {
     /*! property currentStation */
     readonly Station currentStation;

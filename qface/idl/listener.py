@@ -64,14 +64,14 @@ class DomainListener(TListener):
             comment = ctx.comment.text
             symbol.comment = comment
         if ctx.tagSymbol():
-            tag_name = ctx.tagSymbol().name.text
-            attrs = ctx.tagSymbol().tagAttributeSymbol()
-            symbol.add_tag(tag_name)
-            print('found tag: ', tag_name)
-            for attr in attrs:
-                attr_name = attr.name.text
-                attr_value = attr.value.text
-                symbol.add_attribute(tag_name, attr_name, attr_value)
+            for tag in ctx.tagSymbol():
+                tag_name = tag.name.text[1:]
+                symbol.add_tag(tag_name)
+                attrs = tag.tagAttributeSymbol()
+                for attr in attrs:
+                    attr_name = attr.name.text
+                    attr_value = attr.value.text
+                    symbol.add_attribute(tag_name, attr_name, attr_value)
 
     def enterEveryRule(self, ctx):
         log.debug('enter ' + ctx.__class__.__name__)

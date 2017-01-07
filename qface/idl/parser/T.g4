@@ -19,7 +19,7 @@ importSymbol
     ;
 
 moduleSymbol
-    : comment=DOCCOMMENT? tagSymbol? 'module' name=IDENTIFIER version=VERSION ';'?
+    : comment=DOCCOMMENT? tagSymbol* 'module' name=IDENTIFIER version=VERSION ';'?
     ;
 
 definitionSymbol
@@ -29,7 +29,7 @@ definitionSymbol
     ;
 
 interfaceSymbol
-    : comment=DOCCOMMENT? tagSymbol? 'interface' name=IDENTIFIER '{' interfaceMemberSymbol* '}' ';'?
+    : comment=DOCCOMMENT? tagSymbol* 'interface' name=IDENTIFIER '{' interfaceMemberSymbol* '}' ';'?
     ;
 
 interfaceMemberSymbol
@@ -38,11 +38,11 @@ interfaceMemberSymbol
     ;
 
 operationSymbol
-    : comment=DOCCOMMENT?  tagSymbol? isEvent='event'? (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
+    : comment=DOCCOMMENT?  tagSymbol* isEvent='event'? (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
     ;
 
 propertySymbol
-    : comment=DOCCOMMENT? tagSymbol? isReadOnly='readonly'? typeSymbol name=IDENTIFIER ';'?
+    : comment=DOCCOMMENT? tagSymbol* isReadOnly='readonly'? typeSymbol name=IDENTIFIER ';'?
     ;
 
 operationParameterSymbol
@@ -50,7 +50,7 @@ operationParameterSymbol
     ;
 
 tagSymbol
-    : '@' name=IDENTIFIER '(' tagAttributeSymbol* ')'
+    : name=TAGIDENTIFIER '(' tagAttributeSymbol* ')'
     ;
 
 tagAttributeSymbol
@@ -85,15 +85,15 @@ modelTypeSymbol
     ;
 
 structSymbol
-    : comment=DOCCOMMENT? tagSymbol? 'struct' name=IDENTIFIER '{' structFieldSymbol* '}' ';'?
+    : comment=DOCCOMMENT? tagSymbol* 'struct' name=IDENTIFIER '{' structFieldSymbol* '}' ';'?
     ;
 
 structFieldSymbol
-    : comment=DOCCOMMENT? tagSymbol? typeSymbol name=IDENTIFIER ';'?
+    : comment=DOCCOMMENT? tagSymbol* typeSymbol name=IDENTIFIER ';'?
     ;
 
 enumSymbol
-    : comment=DOCCOMMENT? tagSymbol? enumTypeSymbol name=IDENTIFIER '{' enumMemberSymbol* '}' ';'?
+    : comment=DOCCOMMENT? tagSymbol* enumTypeSymbol name=IDENTIFIER '{' enumMemberSymbol* '}' ';'?
     ;
 
 enumTypeSymbol
@@ -102,7 +102,7 @@ enumTypeSymbol
     ;
 
 enumMemberSymbol
-    : comment=DOCCOMMENT? tagSymbol? name=IDENTIFIER ('=' intSymbol)? ','?
+    : comment=DOCCOMMENT? tagSymbol* name=IDENTIFIER ('=' intSymbol)? ','?
     ;
 
 intSymbol
@@ -112,9 +112,11 @@ intSymbol
 
 INTCONSTANT     : ('+' | '-')? '0'..'9'+;
 HEXCONSTANT     : '0x' ('0'..'9' | 'a'..'f' | 'A'..'F')+;
+TAGIDENTIFIER   : '@'[a-zA-Z_][a-zA-Z0-9_\.]*;
 IDENTIFIER      : [a-zA-Z_][a-zA-Z0-9_\.]*;
 VERSION         : [0-9]'.'[0-9];
 DOCCOMMENT      : '/*!' .*? '*/';
 WHITESPACE      : [ \t\r\n]+ -> skip;
 COMMENT         : '//' ~[\r\n]* -> skip;
 MULTICOMM       : '/*' .*? '*/' -> skip;
+

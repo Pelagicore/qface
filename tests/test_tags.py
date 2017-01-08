@@ -1,4 +1,3 @@
-from qface.idl.domain import System
 from qface.generator import FileSystem
 import logging
 import logging.config
@@ -14,7 +13,7 @@ log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def loadTuner():
-    path = inputPath / 'com.pelagicore.ivi.tuner.qdl'
+    path = inputPath / 'com.pelagicore.ivi.tuner.qface'
     return FileSystem.parse_document(path)
 
 
@@ -38,4 +37,3 @@ def test_tag():
     assert enum is module.lookup('Waveband')
     assert 'default' in enum.tags
     assert enum.attribute('default', 'value') == 'FM'
-

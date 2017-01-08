@@ -14,7 +14,7 @@ log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def load_one():
-    path = inputPath / 'com.pelagicore.one.qdl'
+    path = inputPath / 'com.pelagicore.one.qface'
     return FileSystem.parse_document(path)
 
 

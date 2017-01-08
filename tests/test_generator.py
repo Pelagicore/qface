@@ -13,7 +13,7 @@ log.debug('input path folder: {0}'.format(inputPath.abspath()))
 
 
 def loadSystem():
-    path = inputPath / 'com.pelagicore.ivi.tuner.qdl'
+    path = inputPath / 'com.pelagicore.ivi.tuner.qface'
     return FileSystem.parse_document(path)
 
 
@@ -40,20 +40,20 @@ def test_gen_interface():
 
 
 def test_parse_document():
-    system = FileSystem.parse(inputPath / 'com.pelagicore.ivi.tuner.qdl')
+    system = FileSystem.parse(inputPath / 'com.pelagicore.ivi.tuner.qface')
     assert system.lookup('com.pelagicore.ivi.tuner')
 
 
 def test_parse_document_list():
-    src = [inputPath / 'com.pelagicore.ivi.tuner.qdl',
-           inputPath / 'com.pelagicore.ivi.climate.qdl']
+    src = [inputPath / 'com.pelagicore.ivi.tuner.qface',
+           inputPath / 'com.pelagicore.ivi.climate.qface']
     system = FileSystem.parse(src)
     assert system.lookup('com.pelagicore.ivi.tuner')
     assert system.lookup('com.pelagicore.ivi.climate')
 
 
 def test_parse_document_mixed():
-    src = [inputPath, inputPath / 'com.pelagicore.ivi.climate.qdl']
+    src = [inputPath, inputPath / 'com.pelagicore.ivi.climate.qface']
     system = FileSystem.parse(src)
     assert system.lookup('com.pelagicore.ivi.tuner')
     assert system.lookup('com.pelagicore.ivi.climate')

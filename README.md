@@ -24,7 +24,7 @@ The source code in this repository is subject to the terms of the GPLv3 licence,
 
 
 ```js
-// echo.qdl
+// echo.qface
 module org.example 1.0;
 
 /**!
@@ -49,7 +49,7 @@ Now you write a small script using qface to generate your code
 from qface.generator import FileSystem, Generator
 
 # load the interface files
-system = FileSystem.parse_document('echo.qdl')
+system = FileSystem.parse('echo.qface')
 # prepare the generator
 generator = Generator(searchpath='.')
 

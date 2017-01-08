@@ -14,12 +14,12 @@ log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def load_tuner():
-    path = inputPath / 'com.pelagicore.ivi.tuner.qdl'
+    path = inputPath / 'com.pelagicore.ivi.tuner.qface'
     return FileSystem.parse_document(path)
 
 
 def load_test():
-    path = inputPath / 'com.pelagicore.test.qdl'
+    path = inputPath / 'com.pelagicore.test.qface'
     return FileSystem.parse_document(path)
 
 

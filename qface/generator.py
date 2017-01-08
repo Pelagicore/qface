@@ -115,7 +115,7 @@ class FileSystem(object):
         return system
 
     @staticmethod
-    def parse(input, identifier: str = None, use_cache=False, clear_cache=True):
+    def parse(input, identifier: str = None, use_cache=False, clear_cache=True, pattern="*.qface"):
         """Input can be either a file or directory or a list of files or directory.
         A directory will be parsed recursively. The function returns the resulting system.
         Stores the result of the run in the domain cache named after the identifier.
@@ -142,7 +142,7 @@ class FileSystem(object):
             if path.isfile():
                 FileSystem.parse_document(path, system)
             else:
-                for document in path.walkfiles('*.qdl'):
+                for document in path.walkfiles(pattern):
                     FileSystem.parse_document(document, system)
         if use_cache:
             cache[identifier] = system

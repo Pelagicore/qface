@@ -13,6 +13,7 @@ log = logging.getLogger(__name__)
 # associates parser context to domain objects
 contextMap = {}
 
+
 class DomainListener(TListener):
     """The domain listener is called by the parser to fill the
        domain data struture. As a result a system is passed
@@ -202,4 +203,3 @@ class DomainListener(TListener):
 
     def exitImportSymbol(self, ctx: TParser.ImportSymbolContext):
         pass
-

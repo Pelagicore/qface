@@ -26,6 +26,7 @@ public:
         {{ comma() }}
         {{member.name}} = {{member.value}}
         {%- endfor %}
+    
     };
     Q_ENUM({{enum}})
 {% endfor %}

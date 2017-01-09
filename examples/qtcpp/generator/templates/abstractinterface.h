@@ -21,26 +21,27 @@ class {{class}} : public QObject
 public:
     {{class}}(QObject *parent=0);
 
-{%- for operation in interface.operations %}    
-    virtual {{operation|returnType}} {{operation}}({{operation.parameters|map('parameterType')|join(', ')}}) = 0;
+public Q_SLOTS:
+{% for operation in interface.operations %}    
+    virtual {{operation|returnType}} {{operation}}({{operation.parameters|map('parameterType')|join(', ')}});
 {% endfor %}
 
-public Q_SLOTS:
+public:
 {% for property in interface.properties %}
     void set{{property|upperfirst}}({{ property|parameterType }});
 {% endfor %}
 
 public:
 {% for property in interface.properties %}
-    {{property|returnType}} {{property}}() const;
+    virtual {{property|returnType}} {{property}}() const;
 {% endfor %}
 
 Q_SIGNALS:
 {% for property in interface.properties %}
-    void {{property}}Changed({{property|parameterType}});
+    void {{property}}Changed();
 {% endfor %}
 
-private:
+protected:
 {% for property in interface.properties %}
     {{property|returnType}} m_{{property}};
 {% endfor %}

@@ -194,6 +194,10 @@ class TypeSymbol(Symbol):
             type = self.nested if self.nested else self
             type.__reference = self.module.lookup(type.name)
 
+    @property
+    def type(self):
+        return self
+
 
 class Module(Symbol):
     """Module is a namespace for types, e.g. interfaces, enums, structs"""

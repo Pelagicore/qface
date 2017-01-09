@@ -6,65 +6,28 @@ import logging
 import logging.config
 import yaml
 from qface.generator import FileSystem, Generator
+from qface.helper.qtcpp import Filters
 import os
 from path import Path
 
 here = os.path.dirname(__file__)
 
-def parameterType(symbol):
-    module_name = symbol.module.module_name
-    if symbol.type.is_enum:
-        return 'Qml{0}Module::{1} {2}'.format(module_name, symbol.type, symbol)
-    if symbol.type.is_void or symbol.type.is_primitive:
-        if symbol.type.name == 'string':
-            return 'const QString &{0}'.format(symbol)
-        if symbol.type.name == 'var':
-            return 'const QVariant &{0}'.format(symbol)
-        if symbol.type.name == 'real':
-            return 'float {0}'.format(symbol)
-        return '{0} {1}'.format(symbol.type, symbol)
-    elif symbol.type.is_list:
-        return 'const QList<{0}> &{1}'.format(symbol.type.nested, symbol)
-    elif symbol.type.is_model:
-        return '{0}Model *{1}'.format(symbol.type.nested, symbol)
-    else:
-        return 'const Qml{0} &{1}'.format(symbol.type, symbol)
-
-
-def returnType(symbol):
-    module_name = symbol.module.module_name
-    if symbol.type.is_enum:
-        return 'Qml{0}Module::{1}'.format(module_name, symbol.type)
-    if symbol.type.is_void or symbol.type.is_primitive:
-        if symbol.type.name == 'string':
-            return 'QString'
-        if symbol.type.name == 'var':
-            return 'QVariant'
-        if symbol.type.name == 'real':
-            return 'float'
-        return symbol.type
-    elif symbol.type.is_list:
-        return 'QList<{0}>'.format(symbol.type.nested)
-    elif symbol.type.is_model:
-        return '{0}Model*'.format(symbol.type.nested)
-    else:
-        return 'Qml{0}'.format(symbol.type)
-
 
 def run_generation(input, output):
     system = FileSystem.parse(input)
     generator = Generator(searchpath=os.path.join(here, 'templates'))
-    generator.register_filter('returnType', returnType)
-    generator.register_filter('parameterType', parameterType)
+    generator.register_filter('returnType', Filters.returnType)
+    generator.register_filter('parameterType', Filters.parameterType)
+    generator.register_filter('defaultValue', Filters.defaultValue)
     ctx = {'output': output}
     for module in system.modules:
         ctx.update({'module': module})
-        dst = generator.apply('{{output}}/{{module|lower}}', ctx)
+        dst = generator.apply('{{output}}/{{module|lower|replace(".", "-")}}', ctx)
         ctx.update({'dst': dst})
         generator.write('{{dst}}/qmldir', 'qmldir', ctx, preserve=True)
         generator.write('{{dst}}/plugin.cpp', 'plugin.cpp', ctx, preserve=True)
         generator.write('{{dst}}/plugin.h', 'plugin.h', ctx, preserve=True)
-        generator.write('{{dst}}/{{module|lower}}.pro', 'plugin.pro', ctx, preserve=True)
+        generator.write('{{dst}}/{{module|lower|replace(".", "-")}}.pro', 'plugin.pro', ctx, preserve=True)
         generator.write('{{dst}}/generated/generated.pri', 'generated.pri', ctx)
         generator.write('{{dst}}/generated/qml{{module.module_name|lower}}module.h', 'module.h', ctx)
         generator.write('{{dst}}/generated/qml{{module.module_name|lower}}module.cpp', 'module.cpp', ctx)

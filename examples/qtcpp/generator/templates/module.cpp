@@ -32,6 +32,9 @@ void {{class}}::registerTypes()
     {% for struct in module.structs %}
     qRegisterMetaType<Qml{{struct}}>();
     {% endfor %}
+    {% for enum in module.enums %}
+    qRegisterMetaType<{{class}}::{{enum}}>();
+    {% endfor %}
 }
 
 void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minorVersion)
@@ -39,5 +42,5 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
     {% for struct in module.structs %}
     qmlRegisterUncreatableType<Qml{{struct}}Model>(uri.toLatin1(), majorVersion, minorVersion, "{{struct}}Model", "Model can not be instantiated from QML");
     {% endfor %}
-    qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{module}}", {{class|lower}}_singletontype_provider);
+    qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{module.module_name}}Module", {{class|lower}}_singletontype_provider);
 }

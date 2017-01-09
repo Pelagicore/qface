@@ -21,11 +21,19 @@ class Filters(object):
             if t.name == 'bool':
                 return 'false'
             if t.name == 'string':
-                return ''
+                return 'QString()'
+        elif t.is_void:
+            return ''
         elif t.is_enum:
             name = t.reference.name
             value = next(iter(t.reference.members))
             return '{0}::{1}'.format(name, value)
+        elif symbol.type.is_list:
+            nested = Filters.returnType(symbol.type.nested)
+            return 'QVariantList()'.format(nested)
+        elif symbol.type.is_struct:
+            return 'Qml{0}()'.format(symbol.type)
+
         return 'XXX'
 
     @staticmethod
@@ -43,7 +51,8 @@ class Filters(object):
                 return 'float {0}'.format(symbol)
             return '{0} {1}'.format(symbol.type, symbol)
         elif symbol.type.is_list:
-            return 'const QList<{0}> &{1}'.format(symbol.type.nested, symbol)
+            nested = Filters.returnType(symbol.type.nested)
+            return 'const QVariantList &{1}'.format(nested, symbol)
         elif symbol.type.is_model:
             return '{0}Model *{1}'.format(symbol.type.nested, symbol)
         else:
@@ -64,7 +73,8 @@ class Filters(object):
                 return 'float'
             return symbol.type
         elif symbol.type.is_list:
-            return 'QList<{0}>'.format(symbol.type.nested)
+            nested = Filters.returnType(symbol.type.nested)
+            return 'QVariantList'.format(nested)
         elif symbol.type.is_model:
             return '{0}Model*'.format(symbol.type.nested)
         else:

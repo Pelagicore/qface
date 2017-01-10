@@ -20,9 +20,12 @@ public:
     {{class}}(QObject *parent=0);
     Q_INVOKABLE Qml{{struct}} get(int index);
     int count() const;
-    Q_INVOKABLE void insert{{struct}}(int row, const Qml{{struct}} &{{struct|lower}});
-    Q_INVOKABLE void update{{struct}}(int row, const Qml{{struct}} &{{struct|lower}});
-    Q_INVOKABLE void remove{{struct}}(int row);
+    Q_INVOKABLE void insert(int row, const Qml{{struct}} &{{struct|lower}});
+    Q_INVOKABLE void append(const Qml{{struct}} &{{struct|lower}});
+    Q_INVOKABLE void update(int row, const Qml{{struct}} &{{struct|lower}});
+    Q_INVOKABLE void remove(int row);
+    void reset(const QList<Qml{{struct}}> data);
+    Q_INVOKABLE void clear();
 public: // from QAbstractListModel    
     virtual int rowCount(const QModelIndex &parent) const;
     virtual QVariant data(const QModelIndex &index, int role) const;

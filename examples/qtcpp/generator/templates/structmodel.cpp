@@ -41,7 +41,6 @@ QVariant {{class}}::data(const QModelIndex &index, int role) const
     {% for field in struct.fields %}
     case Roles::{{field|upperfirst}}:
         return QVariant::fromValue({{struct|lower}}.m_{{field}});
-        break;
     {% endfor %}
     }
     return QVariant();
@@ -53,7 +52,7 @@ QHash<int, QByteArray> {{class}}::roleNames() const
 }
 
 
-void {{class}}::insert{{struct}}(int row, const Qml{{struct}} &{{struct|lower}})
+void {{class}}::insert(int row, const Qml{{struct}} &{{struct|lower}})
 {
     if (row < 0)
         row = 0;
@@ -66,7 +65,19 @@ void {{class}}::insert{{struct}}(int row, const Qml{{struct}} &{{struct|lower}})
     emit countChanged(count());
 }
 
-void {{class}}::update{{struct}}(int row, const Qml{{struct}} &{{struct|lower}})
+void {{class}}::reset(const QList<Qml{{struct}}> data)
+{
+    beginResetModel();
+    m_data = data;
+    endResetModel();
+}
+
+void {{class}}::append(const Qml{{struct}} &{{struct|lower}})
+{
+    insert(m_data.count(), {{struct|lower}});
+}
+
+void {{class}}::update(int row, const Qml{{struct}} &{{struct|lower}})
 {    
     if(row < 0 || row >= m_data.count()) {
         return;
@@ -76,7 +87,7 @@ void {{class}}::update{{struct}}(int row, const Qml{{struct}} &{{struct|lower}})
     emit dataChanged(index, index);
 }
 
-void {{class}}::remove{{struct}}(int row)
+void {{class}}::remove(int row)
 {
     if(row < 0 || row >= m_data.count()) {
         return;
@@ -84,5 +95,12 @@ void {{class}}::remove{{struct}}(int row)
     beginRemoveRows(QModelIndex(), row, row);
     m_data.removeAt(row);
     endRemoveRows();
+}
+
+void {{class}}::clear()
+{
+    beginResetModel();
+    m_data.clear();
+    endResetModel();
 }
 

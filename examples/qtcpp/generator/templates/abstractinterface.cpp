@@ -16,14 +16,14 @@
     , m_{{property}}({{property|defaultValue}})
 {% endfor %}
 {
-{% for property in interface.properties %}
-{% if property.type.is_model %}
-    m_{{property}} = new {{property.type.nested}}Model(this);
-{% endif %}
-{% endfor %}
+}
+
+{{class}}::~{{class}}() 
+{ 
 }
 
 {% for property in interface.properties %}
+{% if not property.is_readonly %}
 void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {
     if(m_{{property}} == {{property}}) {
@@ -32,6 +32,7 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
     m_{{property}} = {{property}};
     emit {{property}}Changed();
 }
+{% endif %}
 
 {{property|returnType}} {{class}}::{{property}}() const
 {

@@ -22,6 +22,8 @@ class Filters(object):
                 return 'false'
             if t.name == 'string':
                 return 'QString()'
+            if t.name == 'real':
+                return '0.0'
         elif t.is_void:
             return ''
         elif t.is_enum:
@@ -33,6 +35,9 @@ class Filters(object):
             return 'QVariantList()'.format(nested)
         elif symbol.type.is_struct:
             return 'Qml{0}()'.format(symbol.type)
+        elif symbol.type.is_model:
+            nested = Filters.returnType(symbol.type.nested)
+            return 'new {0}Model(this)'.format(nested)
 
         return 'XXX'
 
@@ -48,13 +53,13 @@ class Filters(object):
             if symbol.type.name == 'var':
                 return 'const QVariant &{0}'.format(symbol)
             if symbol.type.name == 'real':
-                return 'float {0}'.format(symbol)
+                return 'qreal {0}'.format(symbol)
             return '{0} {1}'.format(symbol.type, symbol)
         elif symbol.type.is_list:
             nested = Filters.returnType(symbol.type.nested)
             return 'const QVariantList &{1}'.format(nested, symbol)
         elif symbol.type.is_model:
-            return '{0}Model *{1}'.format(symbol.type.nested, symbol)
+            return 'Qml{0}Model *{1}'.format(symbol.type.nested, symbol)
         else:
             return 'const {0}{1} &{2}'.format(classPrefix, symbol.type, symbol)
 
@@ -70,12 +75,12 @@ class Filters(object):
             if symbol.type.name == 'var':
                 return 'QVariant'
             if symbol.type.name == 'real':
-                return 'float'
+                return 'qreal'
             return symbol.type
         elif symbol.type.is_list:
             nested = Filters.returnType(symbol.type.nested)
             return 'QVariantList'.format(nested)
         elif symbol.type.is_model:
-            return '{0}Model*'.format(symbol.type.nested)
+            return 'Qml{0}Model*'.format(symbol.type.nested)
         else:
             return '{0}{1}'.format(classPrefix, symbol.type)

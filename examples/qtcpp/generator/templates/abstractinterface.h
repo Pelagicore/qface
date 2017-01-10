@@ -20,15 +20,18 @@ class {{class}} : public QObject
 
 public:
     {{class}}(QObject *parent=0);
+    ~{{class}}();
 
 public Q_SLOTS:
-{% for operation in interface.operations %}    
+{% for operation in interface.operations %}
     virtual {{operation|returnType}} {{operation}}({{operation.parameters|map('parameterType')|join(', ')}});
 {% endfor %}
 
 public:
 {% for property in interface.properties %}
-    void set{{property|upperfirst}}({{ property|parameterType }});
+{% if not property.is_readonly %}
+    virtual void set{{property|upperfirst}}({{ property|parameterType }});
+{% endif %}
 {% endfor %}
 
 public:

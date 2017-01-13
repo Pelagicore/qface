@@ -78,6 +78,8 @@ class Symbol(object):
         """comment which appeared in QDL right before symbol"""
         self._tags = OrderedDict()
 
+        
+
     @property
     def system(self):
         '''returns reference to system'''

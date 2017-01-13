@@ -14,15 +14,15 @@ class Filters(object):
 
     @staticmethod
     def defaultValue(symbol):
-        t = symbol.type
+        t = symbol.type  # type: qface.domain.TypeSymbol
         if t.is_primitive:
-            if t.name == 'int':
+            if t.is_int:
                 return '0'
-            if t.name == 'bool':
+            if t.is_bool:
                 return 'false'
-            if t.name == 'string':
+            if t.is_string:
                 return 'QString()'
-            if t.name == 'real':
+            if t.is_real:
                 return '0.0'
         elif t.is_void:
             return ''

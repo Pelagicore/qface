@@ -39,6 +39,7 @@ class Generator(object):
             )
         self.env.filters['upperfirst'] = upper_first_filter
         self._destination = Path()
+        self.prefix = ''
 
     @property
     def destination(self):

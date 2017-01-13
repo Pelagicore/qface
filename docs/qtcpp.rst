@@ -19,8 +19,8 @@ For example an QFace document like this
     interface Heater {
         real temperature;
         Status status;
-        void increaseTemperature(qreal step);
-        void decreaseTemperature(qreal step);
+        void increaseTemperature(real step);
+        void decreaseTemperature(real step);
         event void error(string message);
     }
 

@@ -24,6 +24,8 @@ class Filters(object):
                 return 'QString()'
             if t.is_real:
                 return '0.0'
+            if t.is_variant:
+                return 'QVariant()'
         elif t.is_void:
             return ''
         elif t.is_enum:
@@ -76,7 +78,7 @@ class Filters(object):
                 return 'QVariant'
             if symbol.type.name == 'real':
                 return 'qreal'
-            return symbol.type
+            return symbol.type.name
         elif symbol.type.is_list:
             nested = Filters.returnType(symbol.type.nested)
             return 'QVariantList'.format(nested)

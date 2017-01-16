@@ -18,7 +18,7 @@ See template engine documentation:
 
     def generate(input, output):
         # parse the interface files
-        system = FileSystem.parse_dir(input)
+        system = FileSystem.parse(input)
         # setup the generator
         generator = Generator(searchpath='templates')
         # create a context object

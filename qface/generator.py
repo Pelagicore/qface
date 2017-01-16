@@ -101,18 +101,21 @@ class FileSystem(object):
         :param system: system to be used (optional)
         """
         logger.debug('parse document: {0}'.format(path))
+        stream = FileStream(str(path), encoding='utf-8')
+        return FileSystem._parse_stream(stream, system)
 
+    @staticmethod
+    def _parse_stream(stream, system: System = None):
+        logger.debug('parse stream')
         system = system or System()
 
-        data = FileStream(str(path), encoding='utf-8')
-        lexer = TLexer(data)
+        lexer = TLexer(stream)
         stream = CommonTokenStream(lexer)
         parser = TParser(stream)
         parser.addErrorListener(DiagnosticErrorListener.DiagnosticErrorListener())
         tree = parser.documentSymbol()
         walker = ParseTreeWalker()
         walker.walk(DomainListener(system), tree)
-
         return system
 
     @staticmethod

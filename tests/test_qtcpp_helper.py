@@ -2,8 +2,11 @@ import logging
 import logging.config
 from pathlib import Path
 
-from qface.idl.domain import *
 from qface.helper import qtcpp
+from qface.generator import FileSystem
+
+
+from antlr4 import InputStream
 
 logging.basicConfig()
 
@@ -12,124 +15,154 @@ log = logging.getLogger(__name__)
 
 src = Path('tests/in')
 
-system = System()
-module = Module('org.example', system)
-interface = Interface('Test', module)
-operation = Operation('echo', interface)
-parameter = Parameter('message', operation)
-parameter.type.name = 'string'
-parameter.type.is_primitive = True
+document = """
+// org.example.qface
+module org.example 1.0
+
+interface Test {
+    void echo(string message);
+    Message message;
+    Status status;
+    list<int> list001;
+    list<Message> list002;
+
+}
+
+struct Message {
+    string body
+}
+
+enum Status {
+    ON,
+    OFF
+}
+"""
+
+
+def parse_document():
+    stream = InputStream(document)
+    return FileSystem._parse_stream(stream)
 
 
 def test_return_type():
+    system = parse_document()
     interface = system.lookup('org.example.Test')
     assert interface
     operation = interface._operationMap['echo']
     assert operation
     parameter = operation._parameterMap['message']
 
-    # bool
-    parameter.type.name = 'bool'
-    assert parameter.type.is_bool
-    answer = qtcpp.Filters.returnType(parameter)
-    assert answer == 'bool'
+    types = {
+        'bool': 'bool',
+        'int': 'int',
+        'real': 'qreal',
+        'string': 'QString',
+        'var': 'QVariant'
+    }
 
-    # int
-    parameter.type.name = 'int'
-    assert parameter.type.is_int
-    answer = qtcpp.Filters.returnType(parameter)
-    assert answer == 'int'
+    for key, value in types.items():
+        parameter.type.name = key
+        answer = qtcpp.Filters.returnType(parameter)
+        assert answer == value
 
-    # real
-    parameter.type.name = 'real'
-    assert parameter.type.is_real
-    answer = qtcpp.Filters.returnType(parameter)
-    assert answer == 'qreal'
+    # check for struct
+    prop = interface._propertyMap['message']
+    answer = qtcpp.Filters.returnType(prop)
+    assert answer == 'QmlMessage'
+    # check for enum
+    prop = interface._propertyMap['status']
+    answer = qtcpp.Filters.returnType(prop)
+    assert answer == 'QmlExampleModule::Status'
 
-    # string
-    parameter.type.name = 'string'
-    assert parameter and parameter.type.is_string
-    answer = qtcpp.Filters.returnType(parameter)
-    assert answer == 'QString'
+    # check for list of primitive
+    prop = interface._propertyMap['list001']
+    answer = qtcpp.Filters.returnType(prop)
+    assert answer == 'QVariantList'
 
-    # var
-    parameter.type.name = 'var'
-    assert parameter and parameter.type.is_variant
-    answer = qtcpp.Filters.returnType(parameter)
-    assert answer == 'QVariant'
+    # check for list of structs
+    prop = interface._propertyMap['list002']
+    answer = qtcpp.Filters.returnType(prop)
+    assert answer == 'QVariantList'
 
 
 def test_default_value():
+    system = parse_document()
     interface = system.lookup('org.example.Test')
     assert interface
     operation = interface._operationMap['echo']
     assert operation
     parameter = operation._parameterMap['message']
 
-    # bool
-    parameter.type.name = 'bool'
-    assert parameter.type.is_bool
-    answer = qtcpp.Filters.defaultValue(parameter)
-    assert answer == 'false'
+    types = {
+        'bool': 'false',
+        'int': '0',
+        'real': '0.0',
+        'string': 'QString()',
+        'var': 'QVariant()'
+    }
 
-    # int
-    parameter.type.name = 'int'
-    assert parameter.type.is_int
-    answer = qtcpp.Filters.defaultValue(parameter)
-    assert answer == '0'
+    for key, value in types.items():
+        parameter.type.name = key
+        answer = qtcpp.Filters.defaultValue(parameter)
+        assert answer == value
 
-    # real
-    parameter.type.name = 'real'
-    assert parameter.type.is_real
-    answer = qtcpp.Filters.defaultValue(parameter)
-    assert answer == '0.0'
+    # check for struct
+    prop = interface._propertyMap['message']
+    answer = qtcpp.Filters.defaultValue(prop)
+    assert answer == 'QmlMessage()'
+    # check for enum
+    prop = interface._propertyMap['status']
+    answer = qtcpp.Filters.defaultValue(prop)
+    assert answer == 'Status::ON'
 
-    # string
-    parameter.type.name = 'string'
-    assert parameter and parameter.type.is_string
-    answer = qtcpp.Filters.defaultValue(parameter)
-    assert answer == 'QString()'
+    # check for list of primitive
+    prop = interface._propertyMap['list001']
+    answer = qtcpp.Filters.defaultValue(prop)
+    assert answer == 'QVariantList()'
 
-    # var
-    parameter.type.name = 'var'
-    assert parameter and parameter.type.is_variant
-    answer = qtcpp.Filters.defaultValue(parameter)
-    assert answer == 'QVariant()'
+    # check for list of structs
+    prop = interface._propertyMap['list002']
+    answer = qtcpp.Filters.defaultValue(prop)
+    assert answer == 'QVariantList()'
 
 
 def test_parameter_type():
+    system = parse_document()
     interface = system.lookup('org.example.Test')
     assert interface
     operation = interface._operationMap['echo']
     assert operation
     parameter = operation._parameterMap['message']
     name = parameter.name
-    # bool
-    parameter.type.name = 'bool'
-    assert parameter.type.is_bool
-    answer = qtcpp.Filters.parameterType(parameter)
-    assert answer == 'bool {0}'.format(name)
 
-    # int
-    parameter.type.name = 'int'
-    assert parameter.type.is_int
-    answer = qtcpp.Filters.parameterType(parameter)
-    assert answer == 'int {0}'.format(name)
+    types = {
+        'bool': 'bool {0}'.format(name),
+        'int': 'int {0}'.format(name),
+        'real': 'qreal {0}'.format(name),
+        'string': 'const QString &{0}'.format(name),
+        'var': 'const QVariant &{0}'.format(name)
+    }
 
-    # real
-    parameter.type.name = 'real'
-    assert parameter.type.is_real
-    answer = qtcpp.Filters.parameterType(parameter)
-    assert answer == 'qreal {0}'.format(name)
+    for key, value in types.items():
+        parameter.type.name = key
+        answer = qtcpp.Filters.parameterType(parameter)
+        assert answer == value
 
-    # string
-    parameter.type.name = 'string'
-    assert parameter and parameter.type.is_string
-    answer = qtcpp.Filters.parameterType(parameter)
-    assert answer == 'const QString &{0}'.format(name)
+    # check for struct
+    prop = interface._propertyMap['message']
+    answer = qtcpp.Filters.parameterType(prop)
+    assert answer == 'const QmlMessage &{0}'.format(prop.name)
+    # check for enum
+    prop = interface._propertyMap['status']
+    answer = qtcpp.Filters.parameterType(prop)
+    assert answer == 'QmlExampleModule::Status {0}'.format(prop.name)
 
-    # var
-    parameter.type.name = 'var'
-    assert parameter and parameter.type.is_variant
-    answer = qtcpp.Filters.parameterType(parameter)
-    assert answer == 'const QVariant &{0}'.format(name)
+    # check for list of primitive
+    prop = interface._propertyMap['list001']
+    answer = qtcpp.Filters.parameterType(prop)
+    assert answer == 'const QVariantList &{0}'.format(prop.name)
+
+    # check for list of structs
+    prop = interface._propertyMap['list002']
+    answer = qtcpp.Filters.parameterType(prop)
+    assert answer == 'const QVariantList &{0}'.format(prop.name)

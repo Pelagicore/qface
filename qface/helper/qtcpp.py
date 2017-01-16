@@ -19,6 +19,7 @@ class Filters(object):
 
     @staticmethod
     def defaultValue(symbol):
+        prefix = Filters.classPrefix
         t = symbol.type  # type: qface.domain.TypeSymbol
         if t.is_primitive:
             if t.is_int:
@@ -41,21 +42,21 @@ class Filters(object):
             nested = Filters.returnType(symbol.type.nested)
             return 'QVariantList()'.format(nested)
         elif symbol.type.is_struct:
-            return 'Qml{0}()'.format(symbol.type)
+            return '{0}{1}()'.format(prefix, symbol.type)
         elif symbol.type.is_model:
             nested = symbol.type.nested
             if nested.is_primitive:
-                return 'new QmlVariantModel(this)'
+                return 'new {0}VariantModel(this)'.format(prefix)
             elif nested.is_complex:
-                return 'new Qml{0}Model(this)'.format(nested)
+                return 'new {0}{1}Model(this)'.format(prefix, nested)
         return 'XXX'
 
     @staticmethod
     def parameterType(symbol):
-        classPrefix = Filters.classPrefix
+        prefix = Filters.classPrefix
         module_name = symbol.module.module_name
         if symbol.type.is_enum:
-            return '{0}{1}Module::{2} {3}'.format(classPrefix, module_name, symbol.type, symbol)
+            return '{0}{1}Module::{2} {3}'.format(prefix, module_name, symbol.type, symbol)
         if symbol.type.is_void or symbol.type.is_primitive:
             if symbol.type.name == 'string':
                 return 'const QString &{0}'.format(symbol)
@@ -70,19 +71,19 @@ class Filters(object):
         elif symbol.type.is_model:
             nested = symbol.type.nested
             if nested.is_primitive:
-                return 'QmlVariantModel *{0}'.format(symbol)
+                return '{0}VariantModel *{1}'.format(prefix, symbol)
             elif nested.is_complex:
-                return 'Qml{0}Model *{1}'.format(nested, symbol)
+                return '{0}{1}Model *{2}'.format(prefix, nested, symbol)
         else:
-            return 'const {0}{1} &{2}'.format(classPrefix, symbol.type, symbol)
+            return 'const {0}{1} &{2}'.format(prefix, symbol.type, symbol)
         return 'XXX'
 
     @staticmethod
     def returnType(symbol):
-        classPrefix = Filters.classPrefix
+        prefix = Filters.classPrefix
         module_name = symbol.module.module_name
         if symbol.type.is_enum:
-            return '{0}{1}Module::{2}'.format(classPrefix, module_name, symbol.type)
+            return '{0}{1}Module::{2}'.format(prefix, module_name, symbol.type)
         if symbol.type.is_void or symbol.type.is_primitive:
             if symbol.type.name == 'string':
                 return 'QString'
@@ -97,10 +98,10 @@ class Filters(object):
         elif symbol.type.is_model:
             nested = symbol.type.nested
             if nested.is_primitive:
-                return 'QmlVariantModel *'
+                return '{0}VariantModel *'.format(prefix)
             elif nested.is_complex:
-                return 'Qml{0}Model *'.format(nested)
+                return '{0}{1}Model *'.format(prefix, nested)
         else:
-            return '{0}{1}'.format(classPrefix, symbol.type)
+            return '{0}{1}'.format(prefix, symbol.type)
         return 'XXX'
 

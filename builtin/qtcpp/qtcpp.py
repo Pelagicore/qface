@@ -52,6 +52,8 @@ def run(src, dst):
             generator.write('generated/qml{{struct|lower}}.cpp', 'struct.cpp', ctx)
             generator.write('generated/qml{{struct|lower}}model.h', 'structmodel.h', ctx)
             generator.write('generated/qml{{struct|lower}}model.cpp', 'structmodel.cpp', ctx)
+            generator.write('generated/qmlvariantmodel.h', 'variantmodel.h', ctx)
+            generator.write('generated/qmlvariantmodel.cpp', 'variantmodel.cpp', ctx)
 
 
 @click.command()

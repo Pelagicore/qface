@@ -9,6 +9,7 @@
 
 #include <QtCore>
 
+#include "qmlvariantmodel.h"
 {% for struct in module.structs %}
 #include "qml{{struct|lower}}.h"
 #include "qml{{struct|lower}}model.h"
@@ -21,12 +22,12 @@ public:
 
 {% for enum in module.enums %}
     {% set comma = joiner(",") %}
-    enum {{enum}} { 
+    enum {{enum}} {
         {%- for member in enum.members -%}
         {{ comma() }}
         {{member.name}} = {{member.value}}
         {%- endfor %}
-    
+
     };
     Q_ENUM({{enum}})
 {% endfor %}

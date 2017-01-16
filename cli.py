@@ -92,8 +92,6 @@ class RunScriptChangeHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if event.src_path.endswith('.cache'):
             return
-        if event.is_directory:
-            return
         self.run()
 
     def run(self):

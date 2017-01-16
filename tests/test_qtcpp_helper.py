@@ -25,6 +25,8 @@ interface Test {
     Status status;
     list<int> list001;
     list<Message> list002;
+    model<int> model001;
+    model<Message> model002;
 
 }
 
@@ -84,6 +86,16 @@ def test_return_type():
     answer = qtcpp.Filters.returnType(prop)
     assert answer == 'QVariantList'
 
+    # check for model of primitive
+    prop = interface._propertyMap['model001']
+    answer = qtcpp.Filters.returnType(prop)
+    assert answer == 'QmlVariantModel *'
+
+    # check for model of structs
+    prop = interface._propertyMap['model002']
+    answer = qtcpp.Filters.returnType(prop)
+    assert answer == 'QmlMessageModel *'
+
 
 def test_default_value():
     system = parse_document()
@@ -124,6 +136,16 @@ def test_default_value():
     prop = interface._propertyMap['list002']
     answer = qtcpp.Filters.defaultValue(prop)
     assert answer == 'QVariantList()'
+
+    # check for model of primitive
+    prop = interface._propertyMap['model001']
+    answer = qtcpp.Filters.defaultValue(prop)
+    assert answer == 'new QmlVariantModel(this)'
+
+    # check for model of structs
+    prop = interface._propertyMap['model002']
+    answer = qtcpp.Filters.defaultValue(prop)
+    assert answer == 'new QmlMessageModel(this)'
 
 
 def test_parameter_type():
@@ -166,3 +188,15 @@ def test_parameter_type():
     prop = interface._propertyMap['list002']
     answer = qtcpp.Filters.parameterType(prop)
     assert answer == 'const QVariantList &{0}'.format(prop.name)
+
+    # check for model of primitive
+    prop = interface._propertyMap['model001']
+    answer = qtcpp.Filters.parameterType(prop)
+    assert answer == 'QmlVariantModel *{0}'.format(prop.name)
+
+    # check for model of structs
+    prop = interface._propertyMap['model002']
+    answer = qtcpp.Filters.parameterType(prop)
+    assert answer == 'QmlMessageModel *{0}'.format(prop.name)
+
+

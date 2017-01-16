@@ -3,6 +3,11 @@ Provides helper functionality specificially for Qt C++/QML code generators
 """
 
 
+def upper_first(s):
+    s = str(s)
+    return s[0].upper() + s[1:]
+
+
 class Filters(object):
     """provides a set of filters to be used with the template engine"""
     classPrefix = 'Qml'
@@ -38,9 +43,11 @@ class Filters(object):
         elif symbol.type.is_struct:
             return 'Qml{0}()'.format(symbol.type)
         elif symbol.type.is_model:
-            nested = Filters.returnType(symbol.type.nested)
-            return 'new {0}Model(this)'.format(nested)
-
+            nested = symbol.type.nested
+            if nested.is_primitive:
+                return 'new QmlVariantModel(this)'
+            elif nested.is_complex:
+                return 'new Qml{0}Model(this)'.format(nested)
         return 'XXX'
 
     @staticmethod
@@ -61,9 +68,14 @@ class Filters(object):
             nested = Filters.returnType(symbol.type.nested)
             return 'const QVariantList &{1}'.format(nested, symbol)
         elif symbol.type.is_model:
-            return 'Qml{0}Model *{1}'.format(symbol.type.nested, symbol)
+            nested = symbol.type.nested
+            if nested.is_primitive:
+                return 'QmlVariantModel *{0}'.format(symbol)
+            elif nested.is_complex:
+                return 'Qml{0}Model *{1}'.format(nested, symbol)
         else:
             return 'const {0}{1} &{2}'.format(classPrefix, symbol.type, symbol)
+        return 'XXX'
 
     @staticmethod
     def returnType(symbol):
@@ -83,6 +95,12 @@ class Filters(object):
             nested = Filters.returnType(symbol.type.nested)
             return 'QVariantList'.format(nested)
         elif symbol.type.is_model:
-            return 'Qml{0}Model*'.format(symbol.type.nested)
+            nested = symbol.type.nested
+            if nested.is_primitive:
+                return 'QmlVariantModel *'
+            elif nested.is_complex:
+                return 'Qml{0}Model *'.format(nested)
         else:
             return '{0}{1}'.format(classPrefix, symbol.type)
+        return 'XXX'
+

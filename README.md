@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/Pelagicore/qface.svg?branch=develop)](https://travis-ci.org/Pelagicore/qface)
 [![Documentation Status](https://readthedocs.org/projects/qface/badge/?version=latest)](http://qface.readthedocs.io/en/latest/?badge=latest)
 
-QFace is an generator framework based on a common modern IDL. It is not a generator a such but enforces a common IDL format and provides a library to write your own generator. It is actually very easy to create your own generator and generate your custom solution based on your needs from the same IDL.
+QFace is a generator framework based on a common modern IDL. It is not a generator as such but enforces a common IDL format and provides a library to write your own generator. It is actually very easy to create your own generator and generate your custom solution based on your needs from the same IDL.
 
 The IDL is designed after the Qt/QML interface and as such is optimized to generate source code used with Qt C++ or Qt QML, but it is not limited to this use case.
 

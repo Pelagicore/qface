@@ -98,6 +98,24 @@ class TListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by TParser#tagSymbol.
+    def enterTagSymbol(self, ctx:TParser.TagSymbolContext):
+        pass
+
+    # Exit a parse tree produced by TParser#tagSymbol.
+    def exitTagSymbol(self, ctx:TParser.TagSymbolContext):
+        pass
+
+
+    # Enter a parse tree produced by TParser#tagAttributeSymbol.
+    def enterTagAttributeSymbol(self, ctx:TParser.TagAttributeSymbolContext):
+        pass
+
+    # Exit a parse tree produced by TParser#tagAttributeSymbol.
+    def exitTagAttributeSymbol(self, ctx:TParser.TagAttributeSymbolContext):
+        pass
+
+
     # Enter a parse tree produced by TParser#typeSymbol.
     def enterTypeSymbol(self, ctx:TParser.TypeSymbolContext):
         pass

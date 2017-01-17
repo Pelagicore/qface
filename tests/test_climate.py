@@ -13,7 +13,7 @@ log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def load_system():
-    path = inputPath / 'com.pelagicore.ivi.climate.qdl'
+    path = inputPath / 'com.pelagicore.ivi.climate.qface'
     return FileSystem.parse_document(path)
 
 
@@ -21,4 +21,3 @@ def test_interface():
     system = load_system()
     interface = system.lookup('com.pelagicore.ivi.climate.ClimateControl')
     assert interface.name == 'ClimateControl'
-

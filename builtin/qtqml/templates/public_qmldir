@@ -1,0 +1,4 @@
+{{module_name}}Module 1.0 private/{{module_name}}Module.js
+{% for interface in module.interfaces %}
+{{interface}} 1.0 {{interface}}.qml
+{% endfor %}

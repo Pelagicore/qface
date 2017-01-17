@@ -1,8 +1,8 @@
-from qface.idl.domain import System
-from qface.generator import FileSystem
 import logging
 import logging.config
 from pathlib import Path
+
+from qface.generator import FileSystem
 
 # logging.config.fileConfig('logging.ini')
 logging.basicConfig()
@@ -13,13 +13,13 @@ inputPath = Path('tests/in')
 log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
-def loadOne():
-    path = inputPath / 'com.pelagicore.one.qdl'
+def load_one():
+    path = inputPath / 'com.pelagicore.one.qface'
     return FileSystem.parse_document(path)
 
 
 def test_resolve():
-    system = loadOne()
+    system = load_one()
     module = system.lookup('com.pelagicore.one')
     assert module
     service = module.lookup('OneService')
@@ -41,7 +41,7 @@ def test_resolve():
 
 
 def test_resolve_nested():
-    system = loadOne()
+    system = load_one()
     module = system.lookup('com.pelagicore.one')
     assert module
     struct = module.lookup('com.pelagicore.one.StringStruct')
@@ -53,12 +53,10 @@ def test_resolve_nested():
 
     service = module.lookup('com.pelagicore.one.OneService')
     assert service
-    listProperty = service._propertyMap['messageList']
-    assert listProperty
-    assert listProperty.type.nested.reference is struct
+    list_property = service._propertyMap['messageList']
+    assert list_property
+    assert list_property.type.nested.reference is struct
 
-    modelProperty = service._propertyMap['messageModel']
-    assert modelProperty
-    assert modelProperty.type.nested.reference is struct
-
-
+    model_property = service._propertyMap['messageModel']
+    assert model_property
+    assert model_property.type.nested.reference is struct

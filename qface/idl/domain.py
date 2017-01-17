@@ -27,7 +27,6 @@ import logging
 log = logging.getLogger(__name__)
 
 
-
 class System(object):
     """The root entity which consist of modules"""
     def __init__(self):
@@ -48,7 +47,6 @@ class System(object):
     def lookup(self, name: str):
         '''lookup a symbol by fully qualified name.'''
         # <module>
-        print('lookup: ' + name)
         if name in self._moduleMap:
             return self._moduleMap[name]
         # <module>.<Symbol>
@@ -69,7 +67,6 @@ class System(object):
         return ('', '')
 
 
-
 class Symbol(object):
     """A symbol represents a base class for names elements"""
     def __init__(self, name: str, module: 'Module'):
@@ -79,6 +76,9 @@ class Symbol(object):
         """module the symbol belongs to"""
         self.comment = ''
         """comment which appeared in QDL right before symbol"""
+        self._tags = OrderedDict()
+
+        
 
     @property
     def system(self):
@@ -88,7 +88,10 @@ class Symbol(object):
     @property
     def qualified_name(self):
         '''return the fully qualified name (`module + "." + name`)'''
-        return '{0}.{1}'.format(self.module.name, self.name)
+        if self.module == self:
+            return self.module.name
+        else:
+            return '{0}.{1}'.format(self.module.name, self.name)
 
     def __unicode__(self):
         return self.name
@@ -99,12 +102,31 @@ class Symbol(object):
     def __repr__(self):
         return '<{0} name={1}>'.format(type(self), self.name)
 
+    @property
+    def tags(self):
+        return self._tags
+
+    def add_tag(self, tag):
+        if tag not in self._tags:
+            self._tags[tag] = OrderedDict()
+
+    def add_attribute(self, tag, name, value):
+        self.add_tag(tag)
+        d = self._tags[tag]
+        d[name] = value
+
+    def tag(self, name):
+        return self._tags[name]
+
+    def attribute(self, tag, name):
+        if tag in self._tags:
+            return self._tags[tag][name]
 
 
 class TypedSymbol(Symbol):
     """A symbol which has a type, like an operation or property."""
     def __init__(self, name: str, module: 'Module'):
-        super().__init__(name, module)        
+        super().__init__(name, module)
         self.type = TypeSymbol("", self)
         """type object of the symbol"""
 
@@ -173,6 +195,10 @@ class TypeSymbol(Symbol):
         if self.is_complex:
             type = self.nested if self.nested else self
             type.__reference = self.module.lookup(type.name)
+
+    @property
+    def type(self):
+        return self
 
 
 class Module(Symbol):

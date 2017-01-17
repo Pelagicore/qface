@@ -1,6 +1,7 @@
 # Qt Interface Builder (QFace)
 
-[![Build Status](https://travis-ci.org/travis-ci/travis-web.svg?branch=master)](https://travis-ci.org/travis-ci/travis-web)
+[![Build Status](https://travis-ci.org/Pelagicore/qface.svg?branch=develop)](https://travis-ci.org/Pelagicore/qface)
+[![Documentation Status](https://readthedocs.org/projects/qface/badge/?version=latest)](http://qface.readthedocs.io/en/latest/?badge=latest)
 
 QFace is an generator framework based on a common modern IDL. It is not a generator a such but enforces a common IDL format and provides a library to write your own generator. It is actually very easy to create your own generator and generate your custom solution based on your needs from the same IDL.
 
@@ -23,7 +24,7 @@ The source code in this repository is subject to the terms of the GPLv3 licence,
 
 
 ```js
-// echo.qdl
+// echo.qface
 module org.example 1.0;
 
 /**!
@@ -48,7 +49,7 @@ Now you write a small script using qface to generate your code
 from qface.generator import FileSystem, Generator
 
 # load the interface files
-system = FileSystem.parse_document('echo.qdl')
+system = FileSystem.parse('echo.qface')
 # prepare the generator
 generator = Generator(searchpath='.')
 

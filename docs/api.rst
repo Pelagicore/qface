@@ -22,10 +22,11 @@ FileSystem Class
 
 .. autoclass:: qface.generator.FileSystem
     :members:
-
+    :show-inheritance:
 
 .. autoclass:: qface.generator.Generator
     :members:
+    :show-inheritance:
 
 
 Template Domain API
@@ -42,6 +43,7 @@ High Level Classes
 
 .. autoclass:: qface.idl.domain.System
     :members:
+    :show-inheritance:
 
 .. autoclass:: qface.idl.domain.Module
     :members:
@@ -53,16 +55,20 @@ Interface Related Classes
 
 .. autoclass:: qface.idl.domain.Interface
     :members:
+    :show-inheritance:
 
 
 .. autoclass:: qface.idl.domain.Operation
     :members:
+    :show-inheritance:
 
 .. autoclass:: qface.idl.domain.Parameter
     :members:
+    :show-inheritance:
 
 .. autoclass:: qface.idl.domain.Property
     :members:
+    :show-inheritance:
 
 
 Struct Related Classes

@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 Provides an API for accessing the file system and controlling the generator
 """
 
+
 def upper_first_filter(s):
     s = str(s)
     return s[0].upper() + s[1:]
@@ -31,8 +32,23 @@ class Generator(object):
     def __init__(self, searchpath: str):
         if searchpath:
             searchpath = Path(searchpath).expand()
-            self.env = Environment(loader=FileSystemLoader(searchpath), trim_blocks=True, lstrip_blocks=True)
+            self.env = Environment(
+                loader=FileSystemLoader(searchpath),
+                trim_blocks=True,
+                lstrip_blocks=True
+            )
         self.env.filters['upperfirst'] = upper_first_filter
+        self._destination = Path()
+        self.prefix = ''
+
+    @property
+    def destination(self):
+        """destination prefix for generator write"""
+        return self._destination
+
+    @destination.setter
+    def destination(self, dst: str):
+        self._destination = Path(dst)
 
     def get_template(self, name: str):
         """Retrievs a single template file from the template loader"""
@@ -51,18 +67,18 @@ class Generator(object):
     def write(self, fileTemplate: str, template: str, context: dict, preserve=False):
         """Using a templated file name it renders a template
            into a file given a context"""
-        path = Path(self.apply(fileTemplate, context))
+        path = self.destination / Path(self.apply(fileTemplate, context))
         path.parent.makedirs_p()
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
-        if self.hasDifferentContent(data, path):
-            if not preserve and path.exists():
-                print('skip changed file: {0}'.format(path))
+        if self._hasDifferentContent(data, path):
+            if path.exists() and preserve:
+                print('preserve changed file: {0}'.format(path))
             else:
                 print('write changed file: {0}'.format(path))
                 path.open('w').write(data)
 
-    def hasDifferentContent(self, data, path):
+    def _hasDifferentContent(self, data, path):
         if not path.exists():
             return True
         dataHash = hashlib.new('md5', data.encode('utf-8')).digest()
@@ -85,22 +101,25 @@ class FileSystem(object):
         :param system: system to be used (optional)
         """
         logger.debug('parse document: {0}'.format(path))
+        stream = FileStream(str(path), encoding='utf-8')
+        return FileSystem._parse_stream(stream, system)
 
+    @staticmethod
+    def _parse_stream(stream, system: System = None):
+        logger.debug('parse stream')
         system = system or System()
 
-        data = FileStream(str(path), encoding='utf-8')
-        lexer = TLexer(data)
+        lexer = TLexer(stream)
         stream = CommonTokenStream(lexer)
         parser = TParser(stream)
         parser.addErrorListener(DiagnosticErrorListener.DiagnosticErrorListener())
         tree = parser.documentSymbol()
         walker = ParseTreeWalker()
         walker.walk(DomainListener(system), tree)
-
         return system
 
     @staticmethod
-    def parse(input, identifier: str = None, use_cache=False, clear_cache=True):
+    def parse(input, identifier: str = None, use_cache=False, clear_cache=True, pattern="*.qface"):
         """Input can be either a file or directory or a list of files or directory.
         A directory will be parsed recursively. The function returns the resulting system.
         Stores the result of the run in the domain cache named after the identifier.
@@ -127,7 +146,7 @@ class FileSystem(object):
             if path.isfile():
                 FileSystem.parse_document(path, system)
             else:
-                for document in path.walkfiles('*.qdl'):
+                for document in path.walkfiles(pattern):
                     FileSystem.parse_document(document, system)
         if use_cache:
             cache[identifier] = system

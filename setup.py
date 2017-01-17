@@ -16,13 +16,20 @@ except (IOError, ImportError):
         long_description = f.read()
 
 
+__title__ = ''
+__version__ = ''
+__summary__ = ''
+__uri__ = ''
+__author__ = ''
+exec(open('./qface/__about__.py').read())
+
 setup(
-    name='qface',
-    version='1.0.0a5',
-    description='QFace - A Generator Framework',
+    name=__title__,
+    version=__version__,
+    description=__summary__,
     long_description=long_description,
-    url='https://github.com/Pelagicore/qface',
-    author='JRyannel',
+    url=__uri__,
+    author=__author__,
     license='GPLV3',
     classifiers=[
         'Development Status :: 3 - Alpha',

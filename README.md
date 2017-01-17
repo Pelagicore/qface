@@ -13,6 +13,22 @@ QFace is written out of the learnings of using IDLs in other large projects. Oft
 
 Please see the INSTALL and USAGE guides for more information.
 
+## Install
+
+To install the qface library you need to have python3 and pip installed.
+
+```sh
+pip3 install qface
+```
+
+## Download
+
+If you are looking for the examples and the builtin generators you need to download the code.
+
+```sh
+git clone git@github.com:Pelagicore/qface.git
+```
+
 ## Copyright and license
 
 Copyright (C) 2016 Pelagicore AG

@@ -1,5 +1,10 @@
 # Installation
 
+Typical installation as a library
+
+    pip3 install qface
+    
+# Install for Development
 Installing as python executable using pip3 (python3)
 
     git clone git@github.com:Pelagicore/qface.git

@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-    org.example
+    org-example

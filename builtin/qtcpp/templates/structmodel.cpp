@@ -40,7 +40,7 @@ QVariant {{class}}::data(const QModelIndex &index, int role) const
     switch(role) {
     {% for field in struct.fields %}
     case Roles::{{field|upperfirst}}:
-        return QVariant::fromValue({{struct|lower}}.m_{{field}});
+        return QVariant::fromValue({{struct|lower}}.{{field}}());
     {% endfor %}
     }
     return QVariant();
@@ -58,7 +58,7 @@ void {{class}}::insert(int row, const Qml{{struct}} &{{struct|lower}})
         row = 0;
     if (row >= m_data.count())
         row = m_data.count();
-    
+
     beginInsertRows(QModelIndex(), row, row);
     m_data.insert(row, {{struct|lower}});
     endInsertRows();
@@ -78,7 +78,7 @@ void {{class}}::append(const Qml{{struct}} &{{struct|lower}})
 }
 
 void {{class}}::update(int row, const Qml{{struct}} &{{struct|lower}})
-{    
+{
     if(row < 0 || row >= m_data.count()) {
         return;
     }

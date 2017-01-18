@@ -153,6 +153,7 @@ def _generate_reload(generator, input, output):
     print('watch:', path)
     observer.schedule(event_handler, path, recursive=True)
     for entry in input:
+        entry = entry.dirname().expand().abspath()
         print('watch:', entry)
         observer.schedule(event_handler, entry, recursive=True)
     path = Path(__file__).parent / 'qface'

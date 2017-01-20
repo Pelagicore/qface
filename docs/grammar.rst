@@ -1,8 +1,8 @@
 ===========
-QDL Grammar
+QFace Grammar
 ===========
 
-QDL (Qt definition language) is an IDL to define an interface. In general it is modeled to define an interface between Qt QML and C++. The QDL syntax is flexible enough also to be used in other context.
+QFace (Qt interface language) is an IDL to define an interface. In general it is modeled to define an interface between Qt QML and C++. The QFace syntax is flexible enough also to be used in other context.
 
 .. code-block:: html
 
@@ -27,13 +27,13 @@ QDL (Qt definition language) is an IDL to define an interface. In general it is 
         <name> = <value>,
     }
 
-A QDL document always describes one module. Each document can contain one or more interfaces, structs, flags or enums. Each document can import other modules using the import statement.
+A QFace document always describes one module. Each document can contain one or more interfaces, structs, flags or enums. Each document can import other modules using the import statement.
 
 
 Module
 ======
 
-A module is identified name. A module should be normally a URI where all parts are lowercase (e.g. `entertainment.tuner`). A module can import other modules. This is used to ensure that dependencies are declared inside the QDL file. 
+A module is identified name. A module should be normally a URI where all parts are lowercase (e.g. `entertainment.tuner`). A module can import other modules. This is used to ensure that dependencies are declared inside the QFace file.
 
 Types
 -----
@@ -42,9 +42,9 @@ Types are either local and can be references simply by its name, or they are fro
 
 A module consist of either one or more interfaces, structs and enums/flags. They can come in any number or combination. The interface is the only type which can contain operations and events. The struct is merely a container to transport structured data. An enum/flag allows the user to encode information used inside the struct or interface as datatype.
 
-The QDL does not allow to extend interfaces. It is by design kept simple.
+The QFace does not allow to extend interfaces. It is by design kept simple.
 
-Below is an example of a QDL file.
+Below is an example of a QFace file.
 
 .. code-block:: js
 
@@ -61,7 +61,7 @@ Below is an example of a QDL file.
         /*! operation previousStation */
         void previousStation();
         /*! operation updateCurrentStation */
-        void updateCurrentStation(int stationId);   
+        void updateCurrentStation(int stationId);
 
         list<int> primitiveList;
         list<Station> complexList;
@@ -102,7 +102,7 @@ Below is an example of a QDL file.
         string name;
         /*! last time modified */
         common.TimeStamp modified;
-    } 
+    }
 
 
 

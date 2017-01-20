@@ -5,7 +5,7 @@ Usage
 Concept
 =======
 
-QFace requires one or more IDL files as input file and a generator to produce output files. The IDL files are named QDL (Qt definition language).
+QFace requires one or more IDL files as input file and a generator to produce output files. The IDL files are named QFace interface documents.
 
 .. image:: qface_concept.png
 

@@ -6,11 +6,12 @@ QFace is a flexible Qt API generator. It uses a common IDL format (called QDL) t
 .. toctree::
    :maxdepth: 1
 
+   motivation
    usage
+   builtin
    grammar
    domain
    extending
-   builtin
    api
 
 

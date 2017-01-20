@@ -18,12 +18,11 @@
 {
 }
 
-{{class}}::~{{class}}() 
-{ 
+{{class}}::~{{class}}()
+{
 }
 
 {% for property in interface.properties %}
-{% if not property.is_readonly %}
 void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {
     if(m_{{property}} == {{property}}) {
@@ -32,7 +31,6 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
     m_{{property}} = {{property}};
     emit {{property}}Changed();
 }
-{% endif %}
 
 {{property|returnType}} {{class}}::{{property}}() const
 {
@@ -40,7 +38,7 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 }
 {% endfor %}
 
-{%- for operation in interface.operations %}    
+{%- for operation in interface.operations %}
 {{operation|returnType}} {{class}}::{{operation}}({{operation.parameters|map('parameterType')|join(', ')}})
 {
     {% for parameter in operation.parameters %}

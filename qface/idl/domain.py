@@ -1,7 +1,7 @@
 # Copyright (c) Pelagicore AB 2016
 
 '''The domian module contains an object hierachy which resembles the
-QDL grammar as a domain model. It is created from the QDL and the main 
+QFace grammar as a domain model. It is created from the QFace and the main
 input for the code generation templates.
 
 .. note:: Changes on this API will result into broken templates
@@ -18,7 +18,10 @@ input for the code generation templates.
        +- Struct (has attributes)
        +- Enum (has values)
 
-.. note:: When the API talks about an order list, the order is by appearance in the QDL file.
+.. note::
+
+    When the API talks about an order list, the order is by appearance
+    in the QFace file.
 '''
 
 from collections import OrderedDict, ChainMap
@@ -75,10 +78,10 @@ class Symbol(object):
         self.module = module
         """module the symbol belongs to"""
         self.comment = ''
-        """comment which appeared in QDL right before symbol"""
+        """comment which appeared in QFace right before symbol"""
         self._tags = OrderedDict()
 
-        
+
 
     @property
     def system(self):

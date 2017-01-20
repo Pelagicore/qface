@@ -55,7 +55,7 @@ tagSymbol
 
 tagAttributeSymbol
     : name=IDENTIFIER ('=' value=IDENTIFIER)?
-    ;    
+    ;
 
 typeSymbol
     : primitiveTypeSymbol
@@ -112,8 +112,8 @@ intSymbol
 
 INTCONSTANT     : ('+' | '-')? '0'..'9'+;
 HEXCONSTANT     : '0x' ('0'..'9' | 'a'..'f' | 'A'..'F')+;
-TAGIDENTIFIER   : '@'[a-zA-Z_][a-zA-Z0-9_\.]*;
-IDENTIFIER      : [a-zA-Z_][a-zA-Z0-9_\.]*;
+TAGIDENTIFIER   : '@'[a-zA-Z_][a-zA-Z0-9_.]*;
+IDENTIFIER      : [a-zA-Z_][a-zA-Z0-9_.]*;
 VERSION         : [0-9]'.'[0-9];
 DOCCOMMENT      : '/*!' .*? '*/';
 WHITESPACE      : [ \t\r\n]+ -> skip;

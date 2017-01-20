@@ -27,7 +27,7 @@ The domain model is the base for the code generation. You traverse the domain tr
 
     from qface.generator import FileSystem
 
-    system = FileSystem.parse_dir('interfaces')
+    system = FileSystem.parse('./interfaces')
 
     for module in sytem.modules:
         print(module.name)

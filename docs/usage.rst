@@ -5,7 +5,7 @@ Usage
 Concept
 =======
 
-QFace requires one or more IDL files as input file and a generator to produce output files. The IDL files are named QDL (Qt definition language).
+QFace requires one or more IDL files as input file and a generator to produce output files. The IDL files are named QFace interface documents.
 
 .. image:: qface_concept.png
 
@@ -77,7 +77,7 @@ The code generation is driven by a small script which iterates over the domain m
     from qface.generator import FileSystem, Generator
 
     def generate(input, output):
-        system = FileSystem.parse_dir(input)
+        system = FileSystem.parse(input)
         generator = Generator(searchpath='templates')
         ctx = {'output': output, 'system': system}
         generator.write('{{output}}/modules.csv', 'modules.csv', ctx)

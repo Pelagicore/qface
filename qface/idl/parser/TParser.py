@@ -1,4 +1,4 @@
-# Generated from T.g4 by ANTLR 4.5.3
+# Generated from T.g4 by ANTLR 4.6
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
@@ -235,7 +235,7 @@ class TParser ( Parser ):
 
     def __init__(self, input:TokenStream):
         super().__init__(input)
-        self.checkVersion("4.5.3")
+        self.checkVersion("4.6")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
@@ -417,6 +417,7 @@ class TParser ( Parser ):
             self.state = 62
             localctx.version = self.match(TParser.VERSION)
             self.state = 64
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__1:
                 self.state = 63
@@ -484,6 +485,7 @@ class TParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 67
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.DOCCOMMENT:
                 self.state = 66
@@ -507,6 +509,7 @@ class TParser ( Parser ):
             self.state = 77
             localctx.version = self.match(TParser.VERSION)
             self.state = 79
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__1:
                 self.state = 78
@@ -565,7 +568,7 @@ class TParser ( Parser ):
         self.enterRule(localctx, 8, self.RULE_definitionSymbol)
         try:
             self.state = 84
-            self._errHandler.sync(self);
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,6,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
@@ -650,6 +653,7 @@ class TParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 87
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.DOCCOMMENT:
                 self.state = 86
@@ -685,6 +689,7 @@ class TParser ( Parser ):
             self.state = 104
             self.match(TParser.T__5)
             self.state = 106
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__1:
                 self.state = 105
@@ -739,7 +744,7 @@ class TParser ( Parser ):
         self.enterRule(localctx, 12, self.RULE_interfaceMemberSymbol)
         try:
             self.state = 110
-            self._errHandler.sync(self);
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,11,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
@@ -823,6 +828,7 @@ class TParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 113
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.DOCCOMMENT:
                 self.state = 112
@@ -840,6 +846,7 @@ class TParser ( Parser ):
                 _la = self._input.LA(1)
 
             self.state = 122
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__6:
                 self.state = 121
@@ -847,15 +854,16 @@ class TParser ( Parser ):
 
 
             self.state = 126
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [TParser.T__13, TParser.T__14, TParser.T__15, TParser.T__16, TParser.T__17, TParser.T__18, TParser.T__21, TParser.IDENTIFIER]:
                 self.state = 124
                 self.typeSymbol()
-
+                pass
             elif token in [TParser.T__7]:
                 self.state = 125
                 self.match(TParser.T__7)
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -876,6 +884,7 @@ class TParser ( Parser ):
             self.state = 136
             self.match(TParser.T__9)
             self.state = 138
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__1:
                 self.state = 137
@@ -944,6 +953,7 @@ class TParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 141
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.DOCCOMMENT:
                 self.state = 140
@@ -961,6 +971,7 @@ class TParser ( Parser ):
                 _la = self._input.LA(1)
 
             self.state = 150
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__10:
                 self.state = 149
@@ -972,6 +983,7 @@ class TParser ( Parser ):
             self.state = 153
             localctx.name = self.match(TParser.IDENTIFIER)
             self.state = 155
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__1:
                 self.state = 154
@@ -1032,6 +1044,7 @@ class TParser ( Parser ):
             self.state = 158
             localctx.name = self.match(TParser.IDENTIFIER)
             self.state = 160
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__11:
                 self.state = 159
@@ -1158,6 +1171,7 @@ class TParser ( Parser ):
             self.state = 172
             localctx.name = self.match(TParser.IDENTIFIER)
             self.state = 175
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__12:
                 self.state = 173
@@ -1222,27 +1236,28 @@ class TParser ( Parser ):
         self.enterRule(localctx, 24, self.RULE_typeSymbol)
         try:
             self.state = 181
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [TParser.T__13, TParser.T__14, TParser.T__15, TParser.T__16, TParser.T__17]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 177
                 self.primitiveTypeSymbol()
-
+                pass
             elif token in [TParser.IDENTIFIER]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 178
                 self.complexTypeSymbol()
-
+                pass
             elif token in [TParser.T__18]:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 179
                 self.listTypeSymbol()
-
+                pass
             elif token in [TParser.T__21]:
                 self.enterOuterAlt(localctx, 4)
                 self.state = 180
                 self.modelTypeSymbol()
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -1334,32 +1349,33 @@ class TParser ( Parser ):
         self.enterRule(localctx, 28, self.RULE_primitiveTypeSymbol)
         try:
             self.state = 190
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [TParser.T__13]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 185
                 localctx.name = self.match(TParser.T__13)
-
+                pass
             elif token in [TParser.T__14]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 186
                 localctx.name = self.match(TParser.T__14)
-
+                pass
             elif token in [TParser.T__15]:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 187
                 localctx.name = self.match(TParser.T__15)
-
+                pass
             elif token in [TParser.T__16]:
                 self.enterOuterAlt(localctx, 4)
                 self.state = 188
                 localctx.name = self.match(TParser.T__16)
-
+                pass
             elif token in [TParser.T__17]:
                 self.enterOuterAlt(localctx, 5)
                 self.state = 189
                 localctx.name = self.match(TParser.T__17)
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -1533,6 +1549,7 @@ class TParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 203
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.DOCCOMMENT:
                 self.state = 202
@@ -1568,6 +1585,7 @@ class TParser ( Parser ):
             self.state = 220
             self.match(TParser.T__5)
             self.state = 222
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__1:
                 self.state = 221
@@ -1635,6 +1653,7 @@ class TParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 225
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.DOCCOMMENT:
                 self.state = 224
@@ -1656,6 +1675,7 @@ class TParser ( Parser ):
             self.state = 234
             localctx.name = self.match(TParser.IDENTIFIER)
             self.state = 236
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__1:
                 self.state = 235
@@ -1730,6 +1750,7 @@ class TParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 239
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.DOCCOMMENT:
                 self.state = 238
@@ -1765,6 +1786,7 @@ class TParser ( Parser ):
             self.state = 256
             self.match(TParser.T__5)
             self.state = 258
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__1:
                 self.state = 257
@@ -1814,17 +1836,18 @@ class TParser ( Parser ):
         self.enterRule(localctx, 40, self.RULE_enumTypeSymbol)
         try:
             self.state = 262
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [TParser.T__23]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 260
                 localctx.isEnum = self.match(TParser.T__23)
-
+                pass
             elif token in [TParser.T__24]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 261
                 localctx.isFlag = self.match(TParser.T__24)
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -1889,6 +1912,7 @@ class TParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 265
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.DOCCOMMENT:
                 self.state = 264
@@ -1908,6 +1932,7 @@ class TParser ( Parser ):
             self.state = 273
             localctx.name = self.match(TParser.IDENTIFIER)
             self.state = 276
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__12:
                 self.state = 274
@@ -1917,6 +1942,7 @@ class TParser ( Parser ):
 
 
             self.state = 279
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==TParser.T__11:
                 self.state = 278
@@ -1970,17 +1996,18 @@ class TParser ( Parser ):
         self.enterRule(localctx, 44, self.RULE_intSymbol)
         try:
             self.state = 283
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [TParser.INTCONSTANT]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 281
                 localctx.value = self.match(TParser.INTCONSTANT)
-
+                pass
             elif token in [TParser.HEXCONSTANT]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 282
                 localctx.value = self.match(TParser.HEXCONSTANT)
-
+                pass
             else:
                 raise NoViableAltException(self)
 

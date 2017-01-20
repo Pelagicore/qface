@@ -9,20 +9,20 @@ QFace requires one or more IDL files as input file and a generator to produce ou
 
 .. image:: qface_concept.png
 
-There are several ways to call the generator. 
+There are several ways to call the generator.
 
 
-Invokation
+Invocation
 ==========
 
-Direct Invokation
+Direct Invocation
 -----------------
 
 You can call the generator directly by using the provided script. All generator should at minimum expect a series of inputs and one output path. This is normally recommended for production.
 
 .. code-block:: sh
 
-    ./csvgen.py input output
+    ./csv.py src dst
 
 Via qface invokation
 --------------------
@@ -34,9 +34,9 @@ To use an existing generator just provide the path to the generator script.
 .. code-block:: sh
 
     qface generate --generator ./csvgen.py input output
-   
 
-To suse live reloading on changes just use the reload option:
+
+To use live reloading on changes just use the reload option:
 
 
 .. code-block:: sh

@@ -7,7 +7,7 @@ from qface.generator import FileSystem, Generator
 
 def run(src, dst):
     system = FileSystem.parse(src)
-    generator = Generator(searchpath='templates')
+    generator = Generator(search_path='templates')
     ctx = {'dst': dst, 'system': system}
     generator.write('{{dst}}/modules.csv', 'modules.csv', ctx)
 

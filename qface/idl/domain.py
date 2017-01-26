@@ -55,7 +55,7 @@ class System(object):
         # <module>.<Symbol>
         (module_name, type_name) = self.split_typename(name)
         if not module_name and type_name:
-            print('not able to lookup symbol: {0}'.format(name))
+            click.secho('not able to lookup symbol: {0}'.format(name), fg='red')
             return None
         module = self._moduleMap[module_name]
         return module.lookup(type_name)

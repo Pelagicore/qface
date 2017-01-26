@@ -150,14 +150,14 @@ def _generate_reload(generator, input, output):
     event_handler.run()  # run always once
     observer = Observer()
     path = generator.dirname().expand().abspath()
-    print('watch:', path)
+    click.secho('watch: {0}'.format(path), fg='blue')
     observer.schedule(event_handler, path, recursive=True)
     for entry in input:
         entry = entry.dirname().expand().abspath()
-        print('watch:', entry)
+        click.secho('watch: {0}'.format(entry), fg='blue')
         observer.schedule(event_handler, entry, recursive=True)
     path = Path(__file__).parent / 'qface'
-    print('watch:', path)
+    click.secho('watch: {0}'.format(path), fg='blue')
     observer.schedule(event_handler, path, recursive=True)
     observer.start()
 
@@ -174,7 +174,7 @@ def _generate_reload(generator, input, output):
 def install(editable):
     """install the script onto the system using pip3"""
     script_dir = str(Path(__file__).parent.abspath())
-    print(script_dir)
+    click.secho(script_dir, fg='blue')
     if editable:
         sh('pip3 install --editable {0} --upgrade'.format(script_dir))
     else:

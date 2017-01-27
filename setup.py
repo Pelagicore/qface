@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
@@ -42,7 +42,7 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     keywords='qt code generator framework',
-    packages=['qface'],
+    packages=find_packages(),
     install_requires=[
         'jinja2',
         'path.py',
@@ -61,9 +61,5 @@ setup(
             'watchdog',
             'ipdb',
         ],
-    },
-    entry_points='''
-        [console_scripts]
-        qface=cli:cli
-    '''
+    }
 )

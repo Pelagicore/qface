@@ -48,17 +48,16 @@ setup(
         'jinja2',
         'path.py',
         'pyyaml',
+        'antlr4-python3-runtime>=4.6',
+        'click',
     ],
     extras_require={
         'dev': [
-            'antlr4-python3-runtime',
-            'click',
             'watchdog',
             'pypandoc',
         ],
         'test': [
             'pytest',
-            'click',
             'watchdog',
             'ipdb',
         ],

@@ -103,61 +103,38 @@ class RunScriptChangeHandler(FileSystemEventHandler):
 
 
 @cli.command()
+@click.argument('script', nargs=1, type=click.Path(exists=True))
 @click.argument('input', nargs=-1, type=click.Path(exists=True))
 @click.argument('output', nargs=1, type=click.Path(exists=True))
-@click.option('--runner', type=click.File('r'), help="use the runner YAML file to configure the generation")
-@click.option('--reload/--no-reload', default=False, help="if enabled auto-reload the generator on input changes")
-@click.option('--generator', help="specifies the generator (either by name or path)", required=True)
-@click.option('--clean/--no-clean', help="initially cleans the output directory")
-def generate(input, output, runner, generator, reload, clean):
-    """generate from the list of input files or directories the source code
-    in the output folder using the given generator."""
-    generator = Path(generator).expand().abspath()
+def reload(script, input, output):
+    """
+    reloads the generator script when the script files
+    or the input files changes
+    """
+    script = Path(script).expand().abspath()
     output = Path(output).expand().abspath()
     input = input if isinstance(input, (list, tuple)) else [input]
-    """run the named generator"""
-    if runner:
-        config = yaml.load(runner)
-        generator = config['generator']
-        input = config['input']
-        output = config['output']
-    # look if generator points to an external generator
-    if not generator.exists():
-        click.echo('genertor does not exists: {0}'.format(generator))
-        sys.exit(-1)
-    if clean:
-        output.rmtree_p()
     output.makedirs_p()
-    if not reload:
-        _generate_once(generator, input, output)
-    else:
-        _generate_reload(generator, input, output)
+    _script_reload(script, input, output)
 
 
-def _generate_once(generator, input, output):
-    in_option = ' '.join(input)
-    script = 'python3 {0} {1} {2}'.format(generator, in_option, output)
-    sh(script, Path.getcwd())
-
-
-def _generate_reload(generator, input, output):
+def _script_reload(script, input, output):
     """run the named generator and monitor the input and generator folder"""
     input = [Path(entry).expand().abspath() for entry in input]
     output = Path(output).expand().abspath()
-    in_option = ' '.join(input)
-    script = 'python3 {0} {1} {2}'.format(generator, in_option, output)
-    event_handler = RunScriptChangeHandler(script)
+    cmd = 'python3 {0} {1} {2}'.format(script, ' '.join(input), output)
+    event_handler = RunScriptChangeHandler(cmd)
     event_handler.run()  # run always once
     observer = Observer()
-    path = generator.dirname().expand().abspath()
-    print('watch:', path)
+    path = script.dirname().expand().abspath()
+    click.secho('watch: {0}'.format(path), fg='blue')
     observer.schedule(event_handler, path, recursive=True)
     for entry in input:
         entry = entry.dirname().expand().abspath()
-        print('watch:', entry)
+        click.secho('watch: {0}'.format(entry), fg='blue')
         observer.schedule(event_handler, entry, recursive=True)
     path = Path(__file__).parent / 'qface'
-    print('watch:', path)
+    click.secho('watch: {0}'.format(path), fg='blue')
     observer.schedule(event_handler, path, recursive=True)
     observer.start()
 
@@ -174,7 +151,7 @@ def _generate_reload(generator, input, output):
 def install(editable):
     """install the script onto the system using pip3"""
     script_dir = str(Path(__file__).parent.abspath())
-    print(script_dir)
+    click.secho(script_dir, fg='blue')
     if editable:
         sh('pip3 install --editable {0} --upgrade'.format(script_dir))
     else:

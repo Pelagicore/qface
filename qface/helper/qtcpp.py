@@ -35,9 +35,9 @@ class Filters(object):
         elif t.is_void:
             return ''
         elif t.is_enum:
-            name = t.reference.name
+            module_name = t.reference.module.module_name
             value = next(iter(t.reference.members))
-            return '{0}::{1}'.format(name, value)
+            return '{0}{1}Module::{2}'.format(prefix, module_name, value)
         elif symbol.type.is_list:
             nested = Filters.returnType(symbol.type.nested)
             return 'QVariantList()'.format(nested)

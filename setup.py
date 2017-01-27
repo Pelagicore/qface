@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
@@ -32,7 +32,7 @@ setup(
     author=__author__,
     license='GPLV3',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Code Generators',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
@@ -42,7 +42,8 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     keywords='qt code generator framework',
-    packages=['qface'],
+    packages=find_packages(),
+    include_package_data=True,
     install_requires=[
         'jinja2',
         'path.py',
@@ -62,8 +63,10 @@ setup(
             'ipdb',
         ],
     },
-    entry_points='''
-        [console_scripts]
-        qface=cli:cli
-    '''
+    entry_points={
+        'console_scripts': [
+            'qface-qtcpp = qface.builtin.qtcpp.qtcpp:app',
+            'qface-qtqml = qface.builtin.qtqml.qtqml:app',
+        ],
+    },
 )

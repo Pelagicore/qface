@@ -1,1 +1,5 @@
 include LICENSE.GPLV3
+include qface/builtin/qtcpp/templates/*
+include qface/builtin/qtcpp/log.yaml
+include qface/builtin/qtqml/templates/*
+include qface/builtin/qtqml/log.yaml

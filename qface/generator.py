@@ -14,6 +14,8 @@ from .idl.parser.TListener import TListener
 from .idl.domain import System
 from .idl.listener import DomainListener
 
+import click
+
 logger = logging.getLogger(__name__)
 
 
@@ -29,17 +31,16 @@ def upper_first_filter(s):
 
 class Generator(object):
     """Manages the templates and applies your context data"""
-    def __init__(self, searchpath: str):
-        if searchpath:
-            searchpath = Path(searchpath).expand()
+    def __init__(self, search_path: str):
+        if search_path:
+            search_path = Path(search_path).expand()
             self.env = Environment(
-                loader=FileSystemLoader(searchpath),
+                loader=FileSystemLoader(search_path),
                 trim_blocks=True,
                 lstrip_blocks=True
             )
         self.env.filters['upperfirst'] = upper_first_filter
         self._destination = Path()
-        self.prefix = ''
 
     @property
     def destination(self):
@@ -51,7 +52,7 @@ class Generator(object):
         self._destination = Path(dst)
 
     def get_template(self, name: str):
-        """Retrievs a single template file from the template loader"""
+        """Retrieves a single template file from the template loader"""
         return self.env.get_template(name)
 
     def render(self, name: str, context: dict):
@@ -60,25 +61,26 @@ class Generator(object):
         template = self.get_template(name)
         return template.render(context)
 
-    def apply(self, template: Template, context: dict):
+    def apply(self, template: str, context: dict):
         """Return the rendered text of a template instance"""
         return self.env.from_string(template).render(context)
 
-    def write(self, fileTemplate: str, template: str, context: dict, preserve=False):
-        """Using a templated file name it renders a template
-           into a file given a context"""
-        path = self.destination / Path(self.apply(fileTemplate, context))
+    def write(self, file_path: str, template: str, context: dict, preserve=False):
+        """Using a template file name it renders a template
+           into a file given a context
+        """
+        path = self.destination / Path(self.apply(file_path, context))
         path.parent.makedirs_p()
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
-        if self._hasDifferentContent(data, path):
+        if self._has_different_content(data, path):
             if path.exists() and preserve:
-                print('preserve changed file: {0}'.format(path))
+                click.secho('preserve changed file: {0}'.format(path), fg='blue')
             else:
-                print('write changed file: {0}'.format(path))
+                click.secho('write changed file: {0}'.format(path), fg='blue')
                 path.open('w').write(data)
 
-    def _hasDifferentContent(self, data, path):
+    def _has_different_content(self, data, path):
         if not path.exists():
             return True
         dataHash = hashlib.new('md5', data.encode('utf-8')).digest()
@@ -91,7 +93,7 @@ class Generator(object):
 
 
 class FileSystem(object):
-    """QFace helper function to work with the file system"""
+    """QFace helper functions to work with the file system"""
 
     @staticmethod
     def parse_document(path: str, system: System = None):

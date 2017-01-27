@@ -23,7 +23,6 @@ import sys
 here = os.path.dirname(__file__)
 
 sys.path.insert(0, os.path.join(here, '..'))
-print('path: ', sys.path)
 
 # -- General configuration ------------------------------------------------
 

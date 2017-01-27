@@ -21,7 +21,7 @@ log = logging.getLogger(__file__)
 def run(src, dst):
     log.debug('run {0} {1}'.format(src, dst))
     system = FileSystem.parse(src)
-    generator = Generator(searchpath=here / 'templates')
+    generator = Generator(search_path=here / 'templates')
     generator.register_filter('returnType', Filters.returnType)
     generator.register_filter('parameterType', Filters.parameterType)
     generator.register_filter('defaultValue', Filters.defaultValue)

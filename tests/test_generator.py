@@ -19,7 +19,7 @@ def loadSystem():
 
 def test_gen_module():
     system = loadSystem()
-    gen = Generator(searchpath='tests/templates')
+    gen = Generator(search_path='tests/templates')
     template = "{{module}}"
     module = system.lookup('com.pelagicore.ivi.tuner')
     text = gen.apply(template, {"module": module})
@@ -28,7 +28,7 @@ def test_gen_module():
 
 def test_gen_interface():
     system = loadSystem()
-    gen = Generator(searchpath='tests/templates')
+    gen = Generator(search_path='tests/templates')
     template = """
         {%- for interface in module.interfaces -%}
             {{interface}}
@@ -65,7 +65,7 @@ def test_destination_prefix():
     out = Path('tests/out')
     out.rmtree_p()
     out.makedirs_p()
-    generator = Generator(searchpath='tests/templates')
+    generator = Generator(search_path='tests/templates')
     for module in system.modules:
         dst_template = '{{out}}/{{module|lower}}.txt'
         ctx = {'out': out.abspath(), 'module': module}

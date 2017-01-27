@@ -1,6 +1,6 @@
-===========
+=============
 QFace Grammar
-===========
+=============
 
 QFace (Qt interface language) is an IDL to define an interface. In general it is modeled to define an interface between Qt QML and C++. The QFace syntax is flexible enough also to be used in other context.
 

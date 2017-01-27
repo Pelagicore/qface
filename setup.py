@@ -32,7 +32,7 @@ setup(
     author=__author__,
     license='GPLV3',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Code Generators',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',

@@ -43,6 +43,7 @@ setup(
     ],
     keywords='qt code generator framework',
     packages=find_packages(),
+    include_package_data=True,
     install_requires=[
         'jinja2',
         'path.py',
@@ -61,5 +62,11 @@ setup(
             'watchdog',
             'ipdb',
         ],
-    }
+    },
+    entry_points={
+        'console_scripts': [
+            'qface-qtcpp = qface.builtin.qtcpp.qtcpp:app',
+            'qface-qtqml = qface.builtin.qtqml.qtqml:app',
+        ],
+    },
 )

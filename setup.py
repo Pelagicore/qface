@@ -21,6 +21,7 @@ __version__ = ''
 __summary__ = ''
 __uri__ = ''
 __author__ = ''
+__author_email__ = ''
 exec(open('./qface/__about__.py').read())
 
 setup(
@@ -30,6 +31,7 @@ setup(
     long_description=long_description,
     url=__uri__,
     author=__author__,
+    author_email=__author_email__,
     license='GPLV3',
     classifiers=[
         'Development Status :: 4 - Beta',

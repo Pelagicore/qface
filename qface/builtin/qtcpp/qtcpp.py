@@ -38,6 +38,8 @@ def run(src, dst):
         generator.write('generated/generated.pri', 'generated.pri', ctx)
         generator.write('generated/qml{{module.module_name|lower}}module.h', 'module.h', ctx)
         generator.write('generated/qml{{module.module_name|lower}}module.cpp', 'module.cpp', ctx)
+        generator.write('generated/qmlvariantmodel.h', 'variantmodel.h', ctx)
+        generator.write('generated/qmlvariantmodel.cpp', 'variantmodel.cpp', ctx)
         for interface in module.interfaces:
             log.debug('generate code for interface %s', interface)
             ctx.update({'interface': interface})
@@ -52,8 +54,6 @@ def run(src, dst):
             generator.write('generated/qml{{struct|lower}}.cpp', 'struct.cpp', ctx)
             generator.write('generated/qml{{struct|lower}}model.h', 'structmodel.h', ctx)
             generator.write('generated/qml{{struct|lower}}model.cpp', 'structmodel.cpp', ctx)
-            generator.write('generated/qmlvariantmodel.h', 'variantmodel.h', ctx)
-            generator.write('generated/qmlvariantmodel.cpp', 'variantmodel.cpp', ctx)
 
 
 @click.command()

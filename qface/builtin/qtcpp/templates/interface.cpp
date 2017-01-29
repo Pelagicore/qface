@@ -1,9 +1,9 @@
 {# Copyright (c) Pelagicore AB 2016 #}
 {% set class = 'Qml{0}'.format(interface) %}
-/****************************************************************************
-** This is an auto-generated file.
-** Do not edit! All changes made to it will be lost.
-****************************************************************************/
+/*
+ * This is a preserved file and can be edited.
+ * All changes will not be override.
+ */
 
 #include "{{class|lower}}.h"
 
@@ -21,8 +21,8 @@ QObject* {{class|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 {
 }
 
-{{class}}::~{{class}}() 
-{ 
+{{class}}::~{{class}}()
+{
 }
 
 void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minorVersion)

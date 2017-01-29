@@ -12,7 +12,7 @@
 
 QObject* {{class|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 {
-      return new {{class}}();
+    return new {{class}}();
 }
 
 {{class}}::{{class}}(QObject *parent)

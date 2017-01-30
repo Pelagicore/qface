@@ -105,7 +105,36 @@ Below is an example of a QFace file.
     }
 
 
+Tags / Annotations
+==================
 
+Tags allows an interface author to extend the existing grammar with additional meta information, called tags, aka annotations. One or several annotations can stand in from of a module, interface, struct or enum. They are also allowed before an operation, property or event. Everywhere where a documentation comment is allowed you can also add annotations.
+
+An annotation looks like this::
+
+    @service(port=12345)
+    interface Tuner {
+    }
+
+A annotation format is very similar to an operation signature prefixed with an `@` sign and no return value.
+
+The annotation are available later when navigating the domain model.
+
+.. note:: QFace does not specify specific annotations, but defines just the annotation format. The set of annotations supported must be defined and documented by the generator.
+
+.. rubric:: Annotation Documents
+
+QFace allows also to specify these annotations in external documents using the `YAML` syntax. For this you need to create a document with the same name as the QFace document but with the extension `.yaml`. It should have roughly the following format
+
+.. code-block:: yaml
+
+    com.pelagicore.ivi.Tuner:
+        service:
+            port: 12345
+
+On the root level should be a fully qualified name of a symbol. The symbol will be looked up and the following annotation information merged with the existing annotations form the QFace document.
+
+.. warning:: External annotation with the same name will override the QFace document annotation with the same name on the specified symbol.
 
 
 

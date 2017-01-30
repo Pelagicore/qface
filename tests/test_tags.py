@@ -37,3 +37,10 @@ def test_tag():
     assert enum is module.lookup('Waveband')
     assert 'default' in enum.tags
     assert enum.attribute('default', 'value') == 'FM'
+
+
+def test_meta_tags():
+    system = loadTuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    assert interface
+    assert 'port' in interface.tags

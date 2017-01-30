@@ -46,7 +46,6 @@ def run(src, dst):
             })
             generator.write('private/Abstract{{interface}}.qml', 'AbstractInterface.qml', ctx)
             generator.write('{{interface}}.qml', 'Interface.qml', ctx, preserve=True)
-            generator.write('private/{{interface}}Provider.qml', 'InterfaceProvider.qml', ctx)
 
 
 @click.command()

@@ -106,7 +106,7 @@ class FileSystem(object):
         logger.debug('parse document: {0}'.format(document))
         stream = FileStream(str(document), encoding='utf-8')
         system = FileSystem._parse_stream(stream, system)
-        FileSystem._merge_meta_information(system, document)
+        FileSystem.merge_annoations(system, document.stripext() + '.yaml')
         return system
 
     @staticmethod
@@ -124,18 +124,22 @@ class FileSystem(object):
         return system
 
     @staticmethod
-    def _merge_meta_information(system, document):
-        """Tries to find a YAML document named after the qface document and
-        for each root symbol identifier updated the tag information of that symbol
+    def merge_annoations(system: System, document: Path):
+        """Read a YAML document and for each root symbol identifier
+        updates the tag information of that symbol
         """
-        path = document.stripext() + '.yaml'
-        if path.exists():
-            click.secho('merge tags from {0}'.format(path), fg='blue')
-            meta = yaml.load(path.text())
-            for identifier, data in meta.items():
-                symbol = system.lookup(identifier)
-                if symbol:
-                    symbol.tags.update(data)
+        if not document.exists():
+            return
+        meta = {}
+        try:
+            meta = yaml.load(document.text())
+        except yaml.YAMLError as exc:
+            click.echo(exc)
+        click.secho('merge tags from {0}'.format(document), fg='blue')
+        for identifier, data in meta.items():
+            symbol = system.lookup(identifier)
+            if symbol:
+                symbol.tags.update(data)
 
     @staticmethod
     def parse(input, identifier: str = None, use_cache=False, clear_cache=True, pattern="*.qface"):

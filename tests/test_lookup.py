@@ -1,6 +1,6 @@
 import logging
 import logging.config
-from pathlib import Path
+from path import Path
 
 from qface.generator import FileSystem
 
@@ -10,7 +10,7 @@ logging.basicConfig()
 log = logging.getLogger(__name__)
 
 inputPath = Path('tests/in')
-log.debug('input path folder: {0}'.format(inputPath.absolute()))
+log.debug('input path folder: {0}'.format(inputPath.abspath()))
 
 
 def load_tuner():

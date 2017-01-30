@@ -1,6 +1,6 @@
 import logging
 import logging.config
-from pathlib import Path
+from path import Path
 
 from qface.helper import qtcpp
 from qface.generator import FileSystem

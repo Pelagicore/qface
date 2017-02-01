@@ -25,6 +25,7 @@ input for the code generation templates.
 '''
 
 from collections import OrderedDict, ChainMap
+import click
 import logging
 
 log = logging.getLogger(__name__)
@@ -53,21 +54,29 @@ class System(object):
         if name in self._moduleMap:
             return self._moduleMap[name]
         # <module>.<Symbol>
-        (module_name, type_name) = self.split_typename(name)
+        (module_name, type_name, fragment_name) = self.split_typename(name)
         if not module_name and type_name:
             click.secho('not able to lookup symbol: {0}'.format(name), fg='red')
             return None
         module = self._moduleMap[module_name]
-        return module.lookup(type_name)
+        return module.lookup(type_name, fragment_name)
 
     @staticmethod
     def split_typename(name):
+        parts = name.rsplit('#', 1)
+        fragment_name = None
+        module_name = None
+        type_name = None
+        if len(parts) == 2:
+            fragment_name = parts[1]
+        name = parts[0]
         parts = name.rsplit('.', 1)
         if len(parts) == 1:
-            return ('', parts[0])
-        if len(parts) == 2:
-            return parts
-        return ('', '')
+            type_name = parts[0]
+        elif len(parts) == 2:
+            module_name = parts[0]
+            type_name = parts[1]
+        return (module_name, type_name, fragment_name)
 
 
 class Symbol(object):
@@ -80,7 +89,7 @@ class Symbol(object):
         self.comment = ''
         """comment which appeared in QFace right before symbol"""
         self._tags = OrderedDict()
-
+        self._definitionMap = ChainMap()
 
 
     @property
@@ -242,7 +251,7 @@ class Module(Symbol):
     def checkType(self, type: str):
         if type.is_primitive:
             return True
-        (module_name, type_name) = System.split_typename(type.name)
+        (module_name, type_name, fragment_name) = System.split_typename(type.name)
         if module_name and module_name not in self._importMap:
             return False
         return True
@@ -256,11 +265,14 @@ class Module(Symbol):
     def module_name(self):
         return self.name.split('.')[-1].capitalize()
 
-    def lookup(self, name: str):
+    def lookup(self, name: str, fragment: str = None):
         '''lookup a symbol by name. If symbol is not local
         it will be looked up system wide'''
         if name in self._definitionMap:
-            return self._definitionMap[name]
+            symbol = self._definitionMap[name]
+            if fragment:
+                return symbol._definitionMap[fragment]
+            return symbol
         return self.system.lookup(name)
 
 
@@ -273,6 +285,7 @@ class Interface(Symbol):
         self._propertyMap = OrderedDict()  # type: dict[str, Property]
         self._operationMap = OrderedDict()  # type: dict[str, Operation]
         self._eventMap = OrderedDict()  # type: dict[str, Operation]
+        self._definitionMap = ChainMap(self._propertyMap, self._operationMap, self._eventMap)
 
     @property
     def properties(self):

@@ -18,6 +18,15 @@
 {
 }
 
+{% with doc = interface.comment|parse_doc %}
+/**
+ * \class {{class}}
+ * \brief {{doc.brief}}
+ *
+ * {{doc.description|wordwrap(width=64, wrapstring='\n * ')}}
+ */
+{% endwith %}
+
 {{class}}::~{{class}}()
 {
 }

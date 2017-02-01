@@ -41,7 +41,7 @@ def test_interface():
     module = system.lookup('com.pelagicore.ivi.tuner')
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
     assert interface in module.interfaces
-    assert interface.comment == '/*! Service Tuner */'
+    assert interface.comment == '/** Service Tuner */'
 
 
 def test_property():
@@ -53,7 +53,7 @@ def test_property():
     assert property.module == module
     assert property.type.qualified_name == 'com.pelagicore.ivi.tuner.Station'
     assert property.is_readonly
-    assert property.comment == '/*! property currentStation */'
+    assert property.comment == '/** property currentStation */'
 
 
 def test_struct():
@@ -63,7 +63,7 @@ def test_struct():
     assert symbol.name == 'Station'
     assert symbol.module == module
     assert symbol.qualified_name == 'com.pelagicore.ivi.tuner.Station'
-    assert symbol.comment == '/*! struct Station */'
+    assert symbol.comment == '/** struct Station */'
 
 
 def test_enum():
@@ -75,7 +75,7 @@ def test_enum():
     assert symbol.name == 'Waveband'
     assert symbol.module == module
     assert symbol.qualified_name == 'com.pelagicore.ivi.tuner.Waveband'
-    assert symbol.comment == '/*! enum Waveband */'
+    assert symbol.comment == '/** enum Waveband */'
     assert symbol.is_enum
 
 

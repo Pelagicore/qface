@@ -87,6 +87,8 @@ class DomainListener(TListener):
         self.module = Module(name, self.system)
         self.module.version = version
         contextMap[ctx] = self.module
+        self.parse_annotations(ctx, self.module)
+
 
     def exitModuleSymbol(self, ctx: TParser.ModuleSymbolContext):
         pass

@@ -1,0 +1,21 @@
+/** module */
+module org.example.echo 1.0
+
+/**
+ * @brief the brief
+ * @description The description
+ * continues on another line which can be very long, indeed. Still not long enough
+ * @deprecated
+ */
+interface Echo {
+    /**
+     * @brief brief message
+     * @details long message
+     *
+     * @param msg the messsage
+     * @return the echo
+     */
+    string echo(string msg);
+
+}
+

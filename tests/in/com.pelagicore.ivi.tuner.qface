@@ -1,17 +1,17 @@
 module com.pelagicore.ivi.tuner 1.0;
 
-/*! Service Tuner */
+/** Service Tuner */
 @service()
 @interface()
 interface Tuner {
-    /*! property currentStation */
+    /** property currentStation */
     readonly Station currentStation;
-    /*! operation nextStation */
+    /** operation nextStation */
     void nextStation();
-    /*! operation previousStation */
+    /** operation previousStation */
     void previousStation();
-    /*! operation updateCurrentStation */
-    void updateCurrentStation(int stationId);   
+    /** operation updateCurrentStation */
+    void updateCurrentStation(int stationId);
 
     list<int> primitiveList;
     list<Station> complexList;
@@ -19,24 +19,24 @@ interface Tuner {
     model<Station> complexModel;
 }
 
-/*! enum State */
+/** enum State */
 enum State {
-    /*! value State.Null */
+    /** value State.Null */
     Null=0,
-    /*! value State.Loading */
+    /** value State.Loading */
     Loading=1,
-    /*! value State.Ready */
+    /** value State.Ready */
     Ready=2,
-    /*! value State.Error */
+    /** value State.Error */
     Error=3
 }
 
-/*! enum Waveband */
+/** enum Waveband */
 @default(value=FM)
 enum Waveband {
-    /*! value Waveband.FM */
+    /** value Waveband.FM */
     FM=0,
-    /*! value Waveband.AM */
+    /** value Waveband.AM */
     AM=1
 }
 
@@ -45,13 +45,13 @@ flag Features {
     Stereo = 0x2,
 }
 
-/*! struct Station */
+/** struct Station */
 struct Station {
-    /*! member stationId */
+    /** member stationId */
     int stationId;
-    /*! member name */
+    /** member name */
     string name;
-} 
+}
 
 
 

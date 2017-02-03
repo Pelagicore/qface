@@ -277,15 +277,15 @@ class Module(Symbol):
 
 
 class Interface(Symbol):
-    """A interface is an object with operations, properties and events"""
+    """A interface is an object with operations, properties and signals"""
     def __init__(self, name: str, module: Module):
         super().__init__(name, module)
         log.debug('Interface()')
         self.module._interfaceMap[name] = self
         self._propertyMap = OrderedDict()  # type: dict[str, Property]
         self._operationMap = OrderedDict()  # type: dict[str, Operation]
-        self._eventMap = OrderedDict()  # type: dict[str, Operation]
-        self._definitionMap = ChainMap(self._propertyMap, self._operationMap, self._eventMap)
+        self._signalMap = OrderedDict()  # type: dict[str, Signal]
+        self._definitionMap = ChainMap(self._propertyMap, self._operationMap, self._signalMap)
 
     @property
     def properties(self):
@@ -298,22 +298,33 @@ class Interface(Symbol):
         return self._operationMap.values()
 
     @property
-    def events(self):
-        '''returns ordered list of events'''
-        return self._eventMap.values()
+    def signals(self):
+        '''returns ordered list of signals'''
+        return self._signalMap.values()
 
 
 class Operation(TypedSymbol):
     """An operation inside a interface"""
-    def __init__(self, name: str, interface: Interface, is_event=False):
+    def __init__(self, name: str, interface: Interface):
         super().__init__(name, interface.module)
         log.debug('Operation()')
         self.interface = interface
-        self.is_event = is_event
-        if is_event:
-            self.interface._eventMap[name] = self
-        else:
-            self.interface._operationMap[name] = self
+        self.interface._operationMap[name] = self
+        self._parameterMap = OrderedDict()  # type: dict[Parameter]
+
+    @property
+    def parameters(self):
+        '''returns ordered list of parameters'''
+        return self._parameterMap.values()
+
+
+class Signal(Symbol):
+    """A signal inside an interface"""
+    def __init__(self, name: str, interface: Interface):
+        super().__init__(name, interface.module)
+        log.debug('Signal()')
+        self.interface = interface
+        self.interface._signalMap[name] = self
         self._parameterMap = OrderedDict()  # type: dict[Parameter]
 
     @property

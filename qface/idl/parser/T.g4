@@ -35,11 +35,17 @@ interfaceSymbol
 interfaceMemberSymbol
     : operationSymbol
     | propertySymbol
+    | signalSymbol
     ;
 
 operationSymbol
-    : comment=DOCCOMMENT?  tagSymbol* isEvent='event'? (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
+    : comment=DOCCOMMENT?  tagSymbol* (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
     ;
+
+signalSymbol
+    : comment=DOCCOMMENT?  tagSymbol* 'signal' name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
+    ;
+
 
 propertySymbol
     : comment=DOCCOMMENT? tagSymbol* isReadOnly='readonly'? typeSymbol name=IDENTIFIER ';'?

@@ -17,6 +17,9 @@ interface Tuner {
     list<Station> complexList;
     model<int> primitiveModel;
     model<Station> complexModel;
+
+    signal scanFinished();
+    signal broadcastMessage(string message);
 }
 
 /** enum State */

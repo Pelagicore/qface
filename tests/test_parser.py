@@ -56,6 +56,22 @@ def test_property():
     assert property.comment == '/** property currentStation */'
 
 
+def test_operation():
+    system = load_tuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    operation = interface._operationMap['nextStation']
+    assert operation
+    operation = interface._definitionMap['previousStation']
+    assert operation
+
+
+def test_signals():
+    system = load_tuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    signal = interface._signalMap['scanFinished']
+    assert signal
+
+
 def test_struct():
     system = load_tuner()
     module = system.lookup('com.pelagicore.ivi.tuner')

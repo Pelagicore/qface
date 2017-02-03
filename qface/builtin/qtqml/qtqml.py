@@ -9,6 +9,7 @@ from path import Path
 
 from qface.generator import FileSystem, Generator
 from qface.helper.qtqml import Filters
+from qface.watch import monitor
 
 
 here = Path(__file__).dirname()
@@ -49,12 +50,17 @@ def run(src, dst):
 
 
 @click.command()
+@click.option('--reload/--no-reload', default=False)
 @click.argument('src', nargs=-1, type=click.Path(exists=True))
 @click.argument('dst', nargs=1, type=click.Path(exists=True))
-def app(src, dst):
+def app(src, dst, reload):
     """Takes several files or directories as src and generates the code
     in the given dst directory."""
-    run(src, dst)
+    if reload:
+        script = '{0} {1} {2}'.format(Path(__file__).abspath(), ' '.join(src), dst)
+        monitor(src, script)
+    else:
+        run(src, dst)
 
 
 if __name__ == '__main__':

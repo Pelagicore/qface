@@ -15,9 +15,9 @@ QtObject {
     property var {{operation}} : function({{operation.parameters|join(', ')}}) {}
 {% endfor %}
 
-{% for event in interface.events %}
-    signal {{event}}(
-        {%- for parameter in event.parameters %}
+{% for signal in interface.signals %}
+    signal {{signal}}(
+        {%- for parameter in signal.parameters %}
             {{- parameter.type|propertyType }} {{ parameter.name -}}
             {% if not loop.last %}, {% endif %}
         {% endfor -%}

@@ -34,7 +34,7 @@ The IDL grammar is described in the grammar file (see qface/parser/idl/T.g4)
     interface <identifier> {
         (readonly) <type> <property>;
         <type> <operation>([type name]);
-        event <type> <operation>([type name]);
+        signal <signal>([type name]);
         list<type> <property>;
         model<type> <property>;
     }

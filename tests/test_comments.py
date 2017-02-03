@@ -3,7 +3,6 @@ from qface.helper import doc
 import logging
 import logging.config
 from path import Path
-import re
 
 
 # logging.config.fileConfig('logging.ini')
@@ -28,6 +27,6 @@ def test_comment():
     assert interface
     o = doc.parse_doc(interface.comment)
     assert o.brief == 'the brief'
-    assert o.description == 'the description\ncontinued'
+    assert o.description == 'the description continues'
     assert o.deprecated is None
 

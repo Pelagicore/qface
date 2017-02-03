@@ -3,8 +3,8 @@ module org.example.echo 1.0
 
 /**
  * @brief the brief
- * @description The description
- * continues on another line which can be very long, indeed. Still not long enough
+ * @description the description
+ * continues
  * @deprecated
  */
 interface Echo {

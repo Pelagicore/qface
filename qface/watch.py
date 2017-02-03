@@ -4,6 +4,7 @@ import click
 from subprocess import call
 from path import Path
 import time
+import sys
 
 
 def sh(cmd, all=False, **kwargs):
@@ -24,7 +25,8 @@ class RunScriptChangeHandler(FileSystemEventHandler):
         if self.is_running:
             return
         self.is_running = True
-        sh(self.script, cwd=Path.getcwd())
+        cmd = '{0} {1}'.format(sys.executable, self.script)
+        sh(cmd, cwd=Path.getcwd())
         self.is_running = False
 
 

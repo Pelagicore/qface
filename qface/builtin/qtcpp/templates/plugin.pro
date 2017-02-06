@@ -26,6 +26,7 @@ SOURCES += \
 
 
 include( generated/generated.pri )
+include( docs/docs.pri )
 
 DISTFILES = qmldir
 

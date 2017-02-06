@@ -43,6 +43,10 @@ def run(src, dst):
         generator.write('generated/qml{{module.module_name|lower}}module.cpp', 'module.cpp', ctx)
         generator.write('generated/qmlvariantmodel.h', 'variantmodel.h', ctx)
         generator.write('generated/qmlvariantmodel.cpp', 'variantmodel.cpp', ctx)
+        generator.write('docs/plugin.qdocconf', 'plugin.qdocconf', ctx)
+        generator.write('docs/plugin-project.qdocconf', 'plugin-project.qdocconf', ctx)
+        generator.write('docs/docs.pri', 'docs.pri', ctx)
+        generator.write('.qmake.conf', 'qmake.conf', ctx)
         for interface in module.interfaces:
             log.debug('generate code for interface %s', interface)
             ctx.update({'interface': interface})

@@ -9,7 +9,15 @@
 
 #include <QtQml>
 
-{{interface.comment}}
+/*!
+   \qmltype {{interface}}
+   \inqmlmodule {{module}}
+{% with doc = interface.comment|parse_doc %}
+   \brief {{doc.brief}}
+
+   {{doc.description}}
+{% endwith %}
+*/
 {{class}}::{{class}}(QObject *parent)
     : QObject(parent)
 {% for property in interface.properties %}
@@ -24,6 +32,15 @@
 }
 
 {% for property in interface.properties %}
+/*!
+   \qmlproperty {{property.type}} {{interface}}::{{property}}
+{% with doc = property.comment|parse_doc %}
+   \brief {{doc.brief}}
+
+   {{doc.description}}
+{% endwith %}
+*/
+
 void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {
     if(m_{{property}} == {{property}}) {
@@ -40,6 +57,13 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {% endfor %}
 
 {%- for operation in interface.operations %}
+/*!
+   \qmlmethod {{operation.type}} {{interface}}::{{operation}}({{operation.parameters|map('parameterType')|join(', ')}})
+{% with doc = operation.comment|parse_doc %}
+   \brief {{doc.brief}}
+   {{doc.description}}
+{% endwith %}
+*/
 {{operation|returnType}} {{class}}::{{operation}}({{operation.parameters|map('parameterType')|join(', ')}})
 {
     {% for parameter in operation.parameters %}
@@ -49,4 +73,5 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
     return {{operation|defaultValue}};
 }
 {% endfor %}
+
 

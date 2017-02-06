@@ -7,6 +7,9 @@ class DocObject(object):
 
 def parse_doc(s):
     o = DocObject()
+    print('parse_doc:', s)
+    if not s:
+        return
     tag = None
     for line in s.splitlines():
         if re.match(r'\/\*\*', line):

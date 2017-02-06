@@ -8,7 +8,6 @@ from watchdog.observers import Observer
 from path import Path
 import time
 import os
-import sys
 import yaml
 import logging
 import logging.config

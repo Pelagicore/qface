@@ -61,7 +61,7 @@ def test_operation():
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
     operation = interface._operationMap['nextStation']
     assert operation
-    operation = interface._definitionMap['previousStation']
+    operation = interface._contentMap['previousStation']
     assert operation
 
 

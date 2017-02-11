@@ -79,31 +79,12 @@ class System(object):
         return (module_name, type_name, fragment_name)
 
 
-class Symbol(object):
-    """A symbol represents a base class for names elements"""
-    def __init__(self, name: str, module: 'Module'):
+class NamedElement(object):
+    def __init__(self, name, module: 'Module'):
         self.name = name
         """symbol name"""
         self.module = module
         """module the symbol belongs to"""
-        self.comment = ''
-        """comment which appeared in QFace right before symbol"""
-        self._tags = OrderedDict()
-        self._definitionMap = ChainMap()
-
-
-    @property
-    def system(self):
-        '''returns reference to system'''
-        return self.module._system
-
-    @property
-    def qualified_name(self):
-        '''return the fully qualified name (`module + "." + name`)'''
-        if self.module == self:
-            return self.module.name
-        else:
-            return '{0}.{1}'.format(self.module.name, self.name)
 
     def __unicode__(self):
         return self.name
@@ -113,6 +94,31 @@ class Symbol(object):
 
     def __repr__(self):
         return '<{0} name={1}>'.format(type(self), self.name)
+
+    @property
+    def qualified_name(self):
+        '''return the fully qualified name (`module + "." + name`)'''
+        if self.module == self:
+            return self.module.name
+        else:
+            return '{0}.{1}'.format(self.module.name, self.name)
+
+
+class Symbol(NamedElement):
+    """A symbol represents a base class for names elements"""
+    def __init__(self, name: str, module: 'Module'):
+        super().__init__(name, module)
+        self.comment = ''
+        """comment which appeared in QFace right before symbol"""
+        self._tags = OrderedDict()
+
+        self._contentMap = ChainMap()
+        self.type = TypeSymbol('', self)
+
+    @property
+    def system(self):
+        '''returns reference to system'''
+        return self.module._system
 
     @property
     def tags(self):
@@ -134,18 +140,15 @@ class Symbol(object):
         if tag in self._tags:
             return self._tags[tag][name]
 
-
-class TypedSymbol(Symbol):
-    """A symbol which has a type, like an operation or property."""
-    def __init__(self, name: str, module: 'Module'):
-        super().__init__(name, module)
-        self.type = TypeSymbol("", self)
-        """type object of the symbol"""
+    @property
+    def contents(self):
+        return self._contentMap.values()
 
 
-class TypeSymbol(Symbol):
+
+class TypeSymbol(NamedElement):
     """Defines a type in the system"""
-    def __init__(self, name: str, parent: Symbol):
+    def __init__(self, name: str, parent: NamedElement):
         super().__init__(name, parent.module)
         log.debug('TypeSymbol()')
         self.parent = parent
@@ -158,6 +161,11 @@ class TypeSymbol(Symbol):
         """nested type if symbol is list or model"""
         self.__reference = None
         self.__is_resolved = False
+
+    @property
+    def is_valid(self):
+        '''checks if type is a valid type'''
+        return self.is_primitive or self.is_complex
 
     @property
     def is_bool(self):
@@ -225,7 +233,7 @@ class Module(Symbol):
         self._interfaceMap = OrderedDict()  # type: dict[str, Interface]
         self._structMap = OrderedDict()  # type: dict[str, Struct]
         self._enumMap = OrderedDict()  # type: dict[str, Enum]
-        self._definitionMap = ChainMap(self._interfaceMap, self._structMap, self._enumMap)
+        self._contentMap = ChainMap(self._interfaceMap, self._structMap, self._enumMap)
         self._importMap = OrderedDict()  # type: dict[str, Module]
 
     @property
@@ -268,10 +276,10 @@ class Module(Symbol):
     def lookup(self, name: str, fragment: str = None):
         '''lookup a symbol by name. If symbol is not local
         it will be looked up system wide'''
-        if name in self._definitionMap:
-            symbol = self._definitionMap[name]
+        if name in self._contentMap:
+            symbol = self._contentMap[name]
             if fragment:
-                return symbol._definitionMap[fragment]
+                return symbol._contentMap[fragment]
             return symbol
         return self.system.lookup(name)
 
@@ -285,7 +293,7 @@ class Interface(Symbol):
         self._propertyMap = OrderedDict()  # type: dict[str, Property]
         self._operationMap = OrderedDict()  # type: dict[str, Operation]
         self._signalMap = OrderedDict()  # type: dict[str, Signal]
-        self._definitionMap = ChainMap(self._propertyMap, self._operationMap, self._signalMap)
+        self._contentMap = ChainMap(self._propertyMap, self._operationMap, self._signalMap)
 
     @property
     def properties(self):
@@ -303,14 +311,14 @@ class Interface(Symbol):
         return self._signalMap.values()
 
 
-class Operation(TypedSymbol):
+class Operation(Symbol):
     """An operation inside a interface"""
     def __init__(self, name: str, interface: Interface):
         super().__init__(name, interface.module)
         log.debug('Operation()')
         self.interface = interface
         self.interface._operationMap[name] = self
-        self._parameterMap = OrderedDict()  # type: dict[Parameter]
+        self._parameterMap = self._contentMap = OrderedDict()  # type: dict[Parameter]
 
     @property
     def parameters(self):
@@ -325,7 +333,7 @@ class Signal(Symbol):
         log.debug('Signal()')
         self.interface = interface
         self.interface._signalMap[name] = self
-        self._parameterMap = OrderedDict()  # type: dict[Parameter]
+        self._parameterMap = self._contentMap = OrderedDict()  # type: dict[Parameter]
 
     @property
     def parameters(self):
@@ -333,7 +341,7 @@ class Signal(Symbol):
         return self._parameterMap.values()
 
 
-class Parameter(TypedSymbol):
+class Parameter(Symbol):
     """An operation parameter"""
     def __init__(self, name: str, operation: Operation):
         super().__init__(name, operation.module)
@@ -342,7 +350,7 @@ class Parameter(TypedSymbol):
         self.operation._parameterMap[name] = self
 
 
-class Property(TypedSymbol):
+class Property(Symbol):
     """A typed property inside a interface"""
     def __init__(self, name: str, interface: Interface):
         super().__init__(name, interface.module)
@@ -358,7 +366,7 @@ class Struct(Symbol):
         super().__init__(name, module)
         log.debug('Struct()')
         self.module._structMap[name] = self
-        self._fieldMap = OrderedDict()  # type: dict[str, Field]
+        self._fieldMap = self._contentMap = OrderedDict()  # type: dict[str, Field]
 
     @property
     def fields(self):
@@ -366,7 +374,7 @@ class Struct(Symbol):
         return self._fieldMap.values()
 
 
-class Field(TypedSymbol):
+class Field(Symbol):
     """A member in a struct"""
     def __init__(self, name: str, struct: Struct):
         super().__init__(name, struct.module)
@@ -383,7 +391,7 @@ class Enum(Symbol):
         self.is_enum = True
         self.is_flag = False
         self.module._enumMap[name] = self
-        self._memberMap = OrderedDict()  # type: dict[EnumMember]
+        self._memberMap = self._contentMap = OrderedDict()  # type: dict[EnumMember]
 
     @property
     def members(self):

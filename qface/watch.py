@@ -5,6 +5,9 @@ from path import Path
 import time
 from .shell import sh
 
+"""
+Provides an API to monitor the file system
+"""
 
 class RunScriptChangeHandler(FileSystemEventHandler):
     def __init__(self, argv):
@@ -26,7 +29,7 @@ class RunScriptChangeHandler(FileSystemEventHandler):
 
 def monitor(src, argv):
     """
-    reloads the script when src files changes
+    reloads the script given by argv when src files changes
     """
     script = Path(argv[0]).expand().abspath()
     src = src if isinstance(src, (list, tuple)) else [src]

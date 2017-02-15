@@ -97,14 +97,21 @@ Struct Related Classes
 Base Classes
 ------------
 
-.. autoclass:: qface.idl.domain.Symbol
+.. autoclass:: qface.idl.domain.NamedElement
     :members:
     :show-inheritance:
 
-.. autoclass:: qface.idl.domain.TypedSymbol
+.. autoclass:: qface.idl.domain.Symbol
     :members:
     :show-inheritance:
 
 .. autoclass:: qface.idl.domain.TypeSymbol
     :members:
     :show-inheritance:
+
+Utility Modules
+---------------
+
+.. autofunction:: qface.watch.monitor
+
+.. autofunction:: qface.shell.sh

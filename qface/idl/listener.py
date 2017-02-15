@@ -34,6 +34,7 @@ class DomainListener(TListener):
         self.field = None  # type:Field
 
     def parse_type(self, ctx: ParserRuleContext, type: TypeSymbol):
+        assert type
         if not ctx.typeSymbol():
             type.is_void = True
             type.name = 'void'

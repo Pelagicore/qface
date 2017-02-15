@@ -68,7 +68,7 @@ Code Generation
 
 For each module the generator creates the qmake project files, the plugin code to register the types. A module singleton which contains the enums and factory functions for creating the structures. The structure has no signals and the values are copied over.
 
-.. code-block:: yml
+.. code-block:: yaml
 
     for each module:
         - qmldir

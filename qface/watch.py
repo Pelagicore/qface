@@ -1,21 +1,18 @@
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 import click
-from subprocess import call
 from path import Path
 import time
-import sys
+from .shell import sh
 
-
-def sh(cmd, all=False, **kwargs):
-    click.secho('$ {0}'.format(cmd), fg='green')
-    return call(cmd, shell=True, **kwargs)
-
+"""
+Provides an API to monitor the file system
+"""
 
 class RunScriptChangeHandler(FileSystemEventHandler):
-    def __init__(self, script):
+    def __init__(self, argv):
         super().__init__()
-        self.script = script
+        self.argv = argv
         self.is_running = False
 
     def on_modified(self, event):
@@ -25,19 +22,19 @@ class RunScriptChangeHandler(FileSystemEventHandler):
         if self.is_running:
             return
         self.is_running = True
-        cmd = '{0} {1}'.format(sys.executable, self.script)
-        sh(cmd, cwd=Path.getcwd())
+        # cmd = '{0} {1}'.format(sys.executable, ' '.join(self.argv))
+        sh(' '.join(self.argv), cwd=Path.getcwd())
         self.is_running = False
 
 
-def monitor(src, script):
+def monitor(src, argv):
     """
-    reloads the script when src files changes
+    reloads the script given by argv when src files changes
     """
-    script = Path(script).expand().abspath()
+    script = Path(argv[0]).expand().abspath()
     src = src if isinstance(src, (list, tuple)) else [src]
     src = [Path(entry).expand().abspath() for entry in src]
-    event_handler = RunScriptChangeHandler(script)
+    event_handler = RunScriptChangeHandler(argv)
     observer = Observer()
     path = script.dirname().expand().abspath()
     click.secho('watch recursive: {0}'.format(path), fg='blue')

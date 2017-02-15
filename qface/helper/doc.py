@@ -1,31 +1,34 @@
-import re
-
-
-class DocObject(object):
-    pass
+from collections import OrderedDict
 
 
 def parse_doc(s):
-    o = DocObject()
-    print('parse_doc:', s)
     if not s:
         return
+    o = OrderedDict()
     tag = None
+    s = s[3:-2]  # remove '/**' and '*/'
     for line in s.splitlines():
-        if re.match(r'\/\*\*', line):
-            continue
-        if re.match(r'\s*\*/', line):
-            continue
-        res = re.match(r'^\s*\*?\s*@(\w+)\s*(.*$)', line)
-        if res:
-            tag = res.group(1)
-            value = res.group(2) if res.group(2) else None
-            setattr(o, tag, value)
-            continue
-        res = re.match(r'\s*\*\s*(.*$)', line)
-        if res and tag:
-            setattr(o, tag, '{0} {1}'.format(getattr(o, tag), res.group(1)))
+        line = line.lstrip(' *')  # strip a ' ' and '*' from start
+        if not line:
+            tag = None  # on empty line reset the tag information
+        elif line[0] == '@':
+            line = line[1:]
+            res = line.split(maxsplit=1)
+            if len(res) == 1:
+                tag = res[0]
+                o[tag] = True
+            elif len(res) == 2:
+                tag, value = res[0], res[1]
+                o[tag] = value
+        elif tag:  # append to previous matched tag
+            if type(o[tag]) != list:
+                o[tag] = [o[tag]]
+            o[tag].append(line)
     return o
+
+
+def replace_tags(s):
+    pass
 
 # {% with doc = parse_doc(symbol.commment) %}
 #   \brief {{doc.brief}}

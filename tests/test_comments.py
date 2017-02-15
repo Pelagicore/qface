@@ -26,7 +26,8 @@ def test_comment():
     interface = system.lookup('org.example.echo.Echo')
     assert interface
     o = doc.parse_doc(interface.comment)
-    assert o.brief == 'the brief'
-    assert o.description == 'the description continues'
-    assert o.deprecated is None
+    # import pdb; pdb.set_trace()
+    assert o['brief'] == 'the brief'
+    assert o['description'] == ['the description', 'continues']
+    assert o['deprecated'] is True
 

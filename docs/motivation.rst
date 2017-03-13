@@ -2,7 +2,7 @@
 Motivation
 ==========
 
-QFace is an attempt to establish one interface description language with an easy to use code generator framework. QFace as an interface description language is Qt friendly but not limited to Qt. The hope is that many projects can agree on this interface language and many interesting generators will be created and we all can learn from how other projects generate code from the same IDL.
+QFace is an attempt to establish one interface description language with an easy to use code generator framework. While QFace as an interface description language is Qt friendly, it is not limited to Qt. The hope is that many projects can agree on this interface language and many interesting generators will be created and we all can learn from how other projects generate code from the same IDL.
 
 The IDL
 =======
@@ -40,7 +40,7 @@ There are often discussions about if an interface shall be an object or better a
 Large Projects
 ==============
 
-In larger projects there is the need to interface a large set of operating services and make them available to QML. It is less about defining new visual items in C++ more about creating an abstraction of a service and make it available to the HMI developer inside QML.
+In larger projects there is the need to make available to QML a large set of operating services. It is less about defining new visual items in C++, more about creating an abstraction of a service and make it available to the HMI developer inside QML.
 
 This can be a challenge when you create many of these plugins and in the middle of the project you figure out you have issues with your current design. Or if the customer in the next project wants to use a different HMI technology. All the knowledge is inside these plugins.
 
@@ -49,18 +49,18 @@ With QFace these companies can be certain that QFace does not lock them into the
 Remote Services
 ===============
 
-Some projects use network communication to communicate from the HMI to the services, which might run on a different process or event networked device. QFace was not designed for remote services, as it does not define any storage types (e.g. int32, int16, int64) it knows only an int and does not define how large the int shall be. For this QFace need to rely on the author of the generators to have a defined protocol to exchange data.
+Some projects use network communication to communicate from the HMI to the services, which might run on a different process or event networked device. QFace was not designed for remote services as it does not define any storage types (e.g. int32, int16, int64), it  only knows an int and does not define how large the int shall be. For this QFace needs to rely on the author of the generators to have a defined protocol to exchange data.
 
 Complex APIs
 ============
 
-QFace is by design limited by its features. QFace shall be easy to use and the syntax easy to remember, so that also none experts can write their interface files.
+QFace is purposely designed to have limited features. The goal is to make QFace easy to use with an easy to remember syntax so that interface files can be written by none experts.
 
 QFace does not suppot unions or extending from other interfaces or that a struct extends other structs. If you look for these features than QFace is probably the wring choice.
 
 Limitations
 ===========
 
-As every code generation tool QFace is also limited to how much information you place inside your interface files. So there might be areas where code generation just do not make sense, than QFace will also not help.
+Like other code generation tools, QFace is limited by how much information you can place inside your interface files. In such cases code generation might not make sense and QFace will also help.
 
-QFace allows you to use annotation which can add meta information to the interface files. But the genertor needs to be designed to understand this meta information. Only the structure of these annotations are defined not the information they carry. Annotations might helpt to add information to an interface document to better control the code generation process.
+QFace allows you to use annotation which can add meta information to the interface files. But the generator needs to be designed to understand this meta information. Only the structure of these annotations are defined not the information they carry. Annotations might help to add information to an interface document to better control the code generation process.

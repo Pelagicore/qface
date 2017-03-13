@@ -31,7 +31,7 @@ For example an QFace document like this
     }
 
 
-The QTCPP generator will generate all CPP code including the plugin code and project files. Additional it will generate an empty simulation stub.
+The QTCPP generator will generate all CPP code including the plugin code and project files. Additionally it will generate an empty simulation stub.
 
 In QML you would now be able to write the following code.
 
@@ -66,7 +66,7 @@ Code Generation
 ===============
 
 
-For each module the generator creates the qmake project files, the plugin code to register the types. A module singleton which contains the enums and factory functions for creating the structures. The structure has no signals and the values are copied over.
+For each module the generator creates the qmake project files, the plugin code to register the types, a module singleton which contains the enums and factory functions for creating the structures. The structure has no signals and the values are copied over (copied from where?).
 
 .. code-block:: yml
 
@@ -86,7 +86,7 @@ For each module the generator creates the qmake project files, the plugin code t
             - private/struct.h
             - private/struct.cpp
 
-An base implementation of the interface is generated in the private folder. A stub implementation derived form the abstract interface is generated and registered with the plugin.
+A base implementation of the interface is generated in the private folder. A stub implementation derived form the abstract interface is generated and registered with the plugin.
 
 Each structure is generates as a Q_GADGET which behaves similar as a JS object on the QML side. The interface is by default registered as a normal QML type and contains the properties and methods as also signals as defined in the interface files.
 
@@ -117,7 +117,7 @@ To extend the implementation the user needs to modify the interface implementati
 
 In the interface document you are able to overwrite all setters and getters as also the operation methods. This is normally the only file you want to modify.
 
-Besides the interface files also the plugin and project files are preserved, as it is expected that these files might be required to change. This may change in the future.
+Besides the interface files also the plugin and project files are preserved, as it is expected that these files might be required to change. This may change in the future. (This sentence doesn't make sense - they are preseved because they are expected to change?)
 
 
 

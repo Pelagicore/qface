@@ -18,7 +18,7 @@ Invocation
 Direct Invocation
 -----------------
 
-You can call the generator directly by using the provided script. All generator should at minimum expect a series of inputs and one output path. This is normally recommended for production.
+You can call the generator directly by using the provided script. All generators should at minimum expect a series of inputs and one output path. This is normally recommended for production.
 
 .. code-block:: sh
 
@@ -70,7 +70,7 @@ And then call the client with:
 Code Generation Principle
 =========================
 
-The code generation is driven by a small script which iterates over the domain model and writes files using a template language (see http://jinja.pocoo.org) and espcially the template designer documentation (http://jinja.pocoo.org/docs/dev/templates/).
+The code generation is driven by a small script which iterates over the domain model and writes files using the Python Jinja template language. Refer to http://jinja.pocoo.org and particulalry the template designer documentation at http://jinja.pocoo.org/docs/dev/templates/.
 
 .. code-block:: python
 
@@ -99,4 +99,4 @@ This script reads the input directory returns a system object form the domain mo
         {% endfor -%}
     {% endfor %}
 
-The template iterates over the domain objects and generates text which is written into a file. The file name is also adjustable using the same template language.
+The template iterates over the domain objects and generates text which is written into a file. The output file name can also be specified in the template file (how?)

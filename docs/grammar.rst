@@ -2,7 +2,7 @@
 QFace Grammar
 =============
 
-QFace (Qt interface language) is an IDL to define an interface. In general it is modeled to define an interface between Qt QML and C++. The QFace syntax is flexible enough also to be used in other context.
+QFace (Qt interface language) is an Interface Description Languge (IDL). While it is primarily designed to define an interface between Qt, QML and C++, it is intended to be flexible enough also to be used in other contexts.
 
 .. code-block:: html
 
@@ -33,7 +33,7 @@ A QFace document always describes one module. Each document can contain one or m
 Module
 ======
 
-A module is identified name. A module should be normally a URI where all parts are lowercase (e.g. `entertainment.tuner`). A module can import other modules. This is used to ensure that dependencies are declared inside the QFace file.
+A module is identified name. A module should be normally a URI where all parts are lowercase (e.g. `entertainment.tuner`). A module may import other modules with the primary purpose being to ensure that dependencies are declared inside the QFace file.
 
 Types
 -----

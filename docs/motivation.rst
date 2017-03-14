@@ -54,7 +54,7 @@ Some projects use network communication to communicate from the HMI to the servi
 Complex APIs
 ============
 
-QFace is purposely designed to have limited features. The goal is to make QFace easy to use with an easy to remember syntax so that interface files can be written by none experts.
+QFace is purposely designed to have limited features. The goal is to make QFace easy to use with an easy to remember syntax so that people don't need to be experts to write interface files.
 
 QFace does not suppot unions or extending from other interfaces or that a struct extends other structs. If you look for these features than QFace is probably the wring choice.
 

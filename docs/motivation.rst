@@ -7,7 +7,7 @@ QFace is an attempt to establish one interface description language with an easy
 The IDL
 =======
 
-The IDL uses common API concept such as modules, interfaces, properties, structs and enums/flags. Additional it knows about lists and models. A list is an array of primitive or complex types. A model is an indicator for large data sets which are typical used vian a defined interface or via pagination.
+The IDL uses common API concept such as modules, interfaces, properties, structs and enums/flags. Additionally it knows about lists and models. A list is an array of primitive or complex types. A model is an indicator for large data sets which are typical used via a defined interface or via pagination.
 
 The data types provided by QFace can be divided into primitive and complex types:
 

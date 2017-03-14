@@ -99,4 +99,4 @@ This script reads the input directory returns a system object form the domain mo
         {% endfor -%}
     {% endfor %}
 
-The template iterates over the domain objects and generates text which is written into a file. The output file name can also be specified in the template file (how?)
+The template iterates over the domain objects and generates text which is written into a file. Using the generator write method ``generator.write(path, template, context)`` the output file path can also be specified using the template syntax . 

@@ -1,9 +1,10 @@
 {# Copyright (c) Pelagicore AB 2016 #}
 {% set class = 'Qml{0}'.format(interface) %}
-/****************************************************************************
-** This is an auto-generated file.
-** Do not edit! All changes made to it will be lost.
-****************************************************************************/
+/*
+ * This is a preserved file and can be edited.
+ * All changes will not be override.
+ */
+
 
 #pragma once
 

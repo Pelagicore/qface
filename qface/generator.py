@@ -7,6 +7,7 @@ from antlr4.error import DiagnosticErrorListener
 import shelve
 import logging
 import hashlib
+import yaml
 
 from .idl.parser.TLexer import TLexer
 from .idl.parser.TParser import TParser
@@ -96,15 +97,17 @@ class FileSystem(object):
     """QFace helper functions to work with the file system"""
 
     @staticmethod
-    def parse_document(path: str, system: System = None):
+    def parse_document(document: Path, system: System = None):
         """Parses a document and returns the resulting domain system
 
         :param path: document path to parse
         :param system: system to be used (optional)
         """
-        logger.debug('parse document: {0}'.format(path))
-        stream = FileStream(str(path), encoding='utf-8')
-        return FileSystem._parse_stream(stream, system)
+        logger.debug('parse document: {0}'.format(document))
+        stream = FileStream(str(document), encoding='utf-8')
+        system = FileSystem._parse_stream(stream, system)
+        FileSystem.merge_annoations(system, document.stripext() + '.yaml')
+        return system
 
     @staticmethod
     def _parse_stream(stream, system: System = None):
@@ -121,6 +124,24 @@ class FileSystem(object):
         return system
 
     @staticmethod
+    def merge_annoations(system: System, document: Path):
+        """Read a YAML document and for each root symbol identifier
+        updates the tag information of that symbol
+        """
+        if not document.exists():
+            return
+        meta = {}
+        try:
+            meta = yaml.load(document.text())
+        except yaml.YAMLError as exc:
+            click.echo(exc)
+        click.secho('merge tags from {0}'.format(document), fg='blue')
+        for identifier, data in meta.items():
+            symbol = system.lookup(identifier)
+            if symbol:
+                symbol.tags.update(data)
+
+    @staticmethod
     def parse(input, identifier: str = None, use_cache=False, clear_cache=True, pattern="*.qface"):
         """Input can be either a file or directory or a list of files or directory.
         A directory will be parsed recursively. The function returns the resulting system.
@@ -131,7 +152,7 @@ class FileSystem(object):
         :param clear_cache: clears the domain cache (defaults to true)
         """
         inputs = input if isinstance(input, (list, tuple)) else [input]
-        logging.debug('parse input={0}'.format(inputs))
+        logger.debug('parse input={0}'.format(inputs))
         identifier = 'system' if not identifier else identifier
         system = System()
         cache = None
@@ -150,6 +171,7 @@ class FileSystem(object):
             else:
                 for document in path.walkfiles(pattern):
                     FileSystem.parse_document(document, system)
+
         if use_cache:
             cache[identifier] = system
         return system

@@ -39,6 +39,9 @@ public:
 {% endfor %}
 
 Q_SIGNALS:
+{% for signal in interface.signals %}
+    void {{signal}}({{signal.parameters|map('parameterType')|join(', ')}});
+{% endfor %}
 {% for property in interface.properties %}
     void {{property}}Changed();
 {% endfor %}

@@ -5,7 +5,7 @@ interface OneService {
     list<StringStruct> messageList;
     model<StringStruct> messageModel;
     StringStruct echo(StringStruct message);
-    event void echoMessage(StringStruct mnessage);
+    signal echoMessage(StringStruct mnessage);
 
 }
 

@@ -50,7 +50,7 @@ on the other side
 interface Echo {
     readonly Message lastMessage;
     void echo(Message message);
-    event void callMe();
+    signal callMe();
 };
 
 struct Message {
@@ -76,6 +76,6 @@ for module in system:
         ctx = { 'interface': interface }
         # use header.h template with ctx to write to a file
         generator.write('{{interface|lower}}.h', 'header.h', ctx)
-``` 
+```
 
 Depending on the used generator it reads the input file and runs it through the generator. The output files are written relative to the given output directory. The input can be either a file or a folder.

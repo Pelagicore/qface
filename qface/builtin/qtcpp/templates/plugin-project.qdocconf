@@ -1,0 +1,27 @@
+{% set module_name = module|lower|replace(".", "_")%}
+project = {{module}}
+description = {{module|upper}} Reference Documentation
+version = 1.0
+
+sources.fileextensions = "*.cpp *.qdoc *.mm *.qml"
+headers.fileextensions = "*.h *.ch *.h++ *.hh *.hpp *.hxx"
+
+examples.fileextensions = "*.cpp *.h *.js *.xq *.svg *.xml *.ui *.qhp *.qhcp *.qml"
+examples.imageextensions = "*.png *.jpeg *.jpg *.gif *.mng"
+
+outputdir = html
+
+exampledirs = ../examples ../src
+
+headerdirs = \
+    .. \
+    ../generated
+
+sourcedirs = \
+    .. \
+    ../generated
+
+imagedirs = images
+
+navigation.landingpage = "{{module}}"
+buildversion = "{{module_name}} 1.0"

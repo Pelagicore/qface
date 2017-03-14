@@ -1,6 +1,6 @@
 import logging
 import logging.config
-from pathlib import Path
+from path import Path
 
 from qface.generator import FileSystem
 
@@ -10,7 +10,7 @@ logging.basicConfig()
 log = logging.getLogger(__name__)
 
 inputPath = Path('tests/in')
-log.debug('input path folder: {0}'.format(inputPath.absolute()))
+log.debug('input path folder: {0}'.format(inputPath.abspath()))
 
 
 def load_tuner():
@@ -41,7 +41,7 @@ def test_interface():
     module = system.lookup('com.pelagicore.ivi.tuner')
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
     assert interface in module.interfaces
-    assert interface.comment == '/*! Service Tuner */'
+    assert interface.comment == '/** Service Tuner */'
 
 
 def test_property():
@@ -53,7 +53,23 @@ def test_property():
     assert property.module == module
     assert property.type.qualified_name == 'com.pelagicore.ivi.tuner.Station'
     assert property.is_readonly
-    assert property.comment == '/*! property currentStation */'
+    assert property.comment == '/** property currentStation */'
+
+
+def test_operation():
+    system = load_tuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    operation = interface._operationMap['nextStation']
+    assert operation
+    operation = interface._contentMap['previousStation']
+    assert operation
+
+
+def test_signals():
+    system = load_tuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    signal = interface._signalMap['scanFinished']
+    assert signal
 
 
 def test_struct():
@@ -63,7 +79,7 @@ def test_struct():
     assert symbol.name == 'Station'
     assert symbol.module == module
     assert symbol.qualified_name == 'com.pelagicore.ivi.tuner.Station'
-    assert symbol.comment == '/*! struct Station */'
+    assert symbol.comment == '/** struct Station */'
 
 
 def test_enum():
@@ -75,7 +91,7 @@ def test_enum():
     assert symbol.name == 'Waveband'
     assert symbol.module == module
     assert symbol.qualified_name == 'com.pelagicore.ivi.tuner.Waveband'
-    assert symbol.comment == '/*! enum Waveband */'
+    assert symbol.comment == '/** enum Waveband */'
     assert symbol.is_enum
 
 

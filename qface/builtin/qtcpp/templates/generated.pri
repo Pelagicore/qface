@@ -12,11 +12,11 @@ HEADERS += \
 {% for interface in module.interfaces %}
     $$PWD/qmlabstract{{interface|lower}}.h \
 {% endfor %}
-    $$PWD/qmlvariantmodel.h \
 {% for struct in module.structs %}
     $$PWD/qml{{struct|lower}}.h \
-    $$PWD/qml{{struct|lower}}model.h {% if not loop.last %}\{% endif %}
+    $$PWD/qml{{struct|lower}}model.h \
 {% endfor %}
+    $$PWD/qmlvariantmodel.h
 
 
 SOURCES += \
@@ -24,10 +24,10 @@ SOURCES += \
 {% for interface in module.interfaces %}
     $$PWD/qmlabstract{{interface|lower}}.cpp \
 {% endfor %}
-    $$PWD/qmlvariantmodel.cpp \
 {% for struct in module.structs %}
     $$PWD/qml{{struct|lower}}.cpp \
-    $$PWD/qml{{struct|lower}}model.cpp {% if not loop.last %}\{% endif %}
+    $$PWD/qml{{struct|lower}}model.cpp \
 {% endfor %}
+    $$PWD/qmlvariantmodel.cpp
 
 

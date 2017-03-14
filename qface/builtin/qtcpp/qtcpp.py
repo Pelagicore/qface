@@ -9,6 +9,8 @@ from path import Path
 
 from qface.generator import FileSystem, Generator
 from qface.helper.qtcpp import Filters
+from qface.helper.doc import parse_doc
+from qface.watch import monitor
 
 
 here = Path(__file__).dirname()
@@ -25,6 +27,7 @@ def run(src, dst):
     generator.register_filter('returnType', Filters.returnType)
     generator.register_filter('parameterType', Filters.parameterType)
     generator.register_filter('defaultValue', Filters.defaultValue)
+    generator.register_filter('parse_doc', parse_doc)
     ctx = {'dst': dst}
     for module in system.modules:
         log.debug('generate code for module %s', module)
@@ -38,6 +41,12 @@ def run(src, dst):
         generator.write('generated/generated.pri', 'generated.pri', ctx)
         generator.write('generated/qml{{module.module_name|lower}}module.h', 'module.h', ctx)
         generator.write('generated/qml{{module.module_name|lower}}module.cpp', 'module.cpp', ctx)
+        generator.write('generated/qmlvariantmodel.h', 'variantmodel.h', ctx)
+        generator.write('generated/qmlvariantmodel.cpp', 'variantmodel.cpp', ctx)
+        generator.write('docs/plugin.qdocconf', 'plugin.qdocconf', ctx)
+        generator.write('docs/plugin-project.qdocconf', 'plugin-project.qdocconf', ctx)
+        generator.write('docs/docs.pri', 'docs.pri', ctx)
+        generator.write('.qmake.conf', 'qmake.conf', ctx)
         for interface in module.interfaces:
             log.debug('generate code for interface %s', interface)
             ctx.update({'interface': interface})
@@ -52,17 +61,20 @@ def run(src, dst):
             generator.write('generated/qml{{struct|lower}}.cpp', 'struct.cpp', ctx)
             generator.write('generated/qml{{struct|lower}}model.h', 'structmodel.h', ctx)
             generator.write('generated/qml{{struct|lower}}model.cpp', 'structmodel.cpp', ctx)
-            generator.write('generated/qmlvariantmodel.h', 'variantmodel.h', ctx)
-            generator.write('generated/qmlvariantmodel.cpp', 'variantmodel.cpp', ctx)
 
 
 @click.command()
+@click.option('--reload/--no-reload', default=False)
 @click.argument('src', nargs=-1, type=click.Path(exists=True))
 @click.argument('dst', nargs=1, type=click.Path(exists=True))
-def app(src, dst):
+def app(src, dst, reload):
     """Takes several files or directories as src and generates the code
     in the given dst directory."""
-    run(src, dst)
+    if reload:
+        script = '{0} {1} {2}'.format(Path(__file__).abspath(), ' '.join(src), dst)
+        monitor(src, script)
+    else:
+        run(src, dst)
 
 
 if __name__ == '__main__':

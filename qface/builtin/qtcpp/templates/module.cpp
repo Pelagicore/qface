@@ -10,9 +10,29 @@
 
 #include <QtQml>
 
+/*!
+   \qmlmodule {{module}} 1.0
+{% with doc = module.comment|parse_doc %}
+
+   {{doc.brief}}
+
+
+   {{doc.description}}
+{% endwith %}
+ */
+
+
+/*!
+   \qmltype {{module.module_name}}Module
+   \inqmlmodule {{module}}
+   \brief API to access module functionality
+
+   Provides the enumerations and data type factories for
+   this module.
+*/
 QObject* {{class|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 {
-      return new {{class}}();
+    return new {{class}}();
 }
 
 {{class}}::{{class}}(QObject *parent)
@@ -21,6 +41,10 @@ QObject* {{class|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 }
 
 {% for struct in module.structs %}
+/*!
+   \qmlmethod {{struct}} {{module.module_name}}Module::create{{struct}}()
+   \brief Creates a default constructed data object from type {{struct}}
+*/
 Qml{{struct}} {{class}}::create{{struct}}()
 {
     return Qml{{struct}}();

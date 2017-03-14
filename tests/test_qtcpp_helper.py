@@ -1,6 +1,6 @@
 import logging
 import logging.config
-from pathlib import Path
+from path import Path
 
 from qface.helper import qtcpp
 from qface.generator import FileSystem
@@ -125,7 +125,7 @@ def test_default_value():
     # check for enum
     prop = interface._propertyMap['status']
     answer = qtcpp.Filters.defaultValue(prop)
-    assert answer == 'Status::ON'
+    assert answer == 'QmlExampleModule::ON'
 
     # check for list of primitive
     prop = interface._propertyMap['list001']

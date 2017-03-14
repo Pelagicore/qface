@@ -21,7 +21,7 @@ For example an QFace document like this
         Status status;
         void increaseTemperature(real step);
         void decreaseTemperature(real step);
-        event void error(string message);
+        signal error(string message);
     }
 
     enum Status {
@@ -68,7 +68,7 @@ Code Generation
 
 For each module the generator creates the qmake project files, the plugin code to register the types. A module singleton which contains the enums and factory functions for creating the structures. The structure has no signals and the values are copied over.
 
-.. code-block:: yml
+.. code-block:: yaml
 
     for each module:
         - qmldir
@@ -79,7 +79,7 @@ For each module the generator creates the qmake project files, the plugin code t
         - private/module.cpp
         - for each interface:
             - private/abstractinterface.h
-            - private/abstractinterface.cpp 
+            - private/abstractinterface.cpp
             - interface.h - preserve
             - interface.cpp - preserve
         - for each struct:
@@ -98,11 +98,11 @@ Design Decisions
     Writable properties on service objects are a cause of errors and confusion. It is very easy in the HMI stack to overwrite a binding property which writes to a service. It is better to offer a dedicated operation which does some work and triggers an operation update.
 
 * All models generated are read only from QML
-  
+
     The data for a model is often stored inside another system (SQL DB, Remote, File System) and only a small subset of the data is actually in memory. Filtering, sorting or modifying the model data should be explicitly done using operations if supported by the user interface.
 
 * Data structures are exported as gadgets
-  
+
     A Q_GADGET allows us to define a data structure and modify its contents. A gadget does not support signals, which means others are not notified about changes. This is the same behavior as for JS objects. Gadgets are copied from C++ to QML so there is no issue with memory management. QML has no means to create a gadget class, for this the module object contains a factory method for each structure.
 
 * Enums are collected into one module object
@@ -122,4 +122,4 @@ Besides the interface files also the plugin and project files are preserved, as 
 
 
 
- 
+

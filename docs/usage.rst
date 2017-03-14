@@ -70,7 +70,7 @@ And then call the client with:
 Code Generation Principle
 =========================
 
-The code generation is driven by a small script which iterates over the domain model and writes files using the Python Jinja template language. Refer to http://jinja.pocoo.org and particulalry the template designer documentation at http://jinja.pocoo.org/docs/dev/templates/.
+The code generation is driven by a small script which iterates over the domain model and writes files using the Python Jinja template language. Refer to http://jinja.pocoo.org and particularly the template designer documentation at http://jinja.pocoo.org/docs/dev/templates/.
 
 .. code-block:: python
 

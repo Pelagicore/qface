@@ -1,10 +1,63 @@
-from collections import OrderedDict
+import re
+
+
+translate = None
+"""
+The translare function used for transalting inline tags. The
+function will be called with tag, value arguments.
+
+Example:
+
+    import qface.doc
+
+    def qdoc_translate(tag, value):
+        return '\\{0}{{{1}}}'.format(tag, value)
+
+    qface.doc.translate = qdoc_translate
+"""
+
+
+class DocObject:
+    """
+    The documentation object passed into the template engine
+    """
+    def __init__(self):
+        self.brief = str()
+        self.description = []
+        self.see = []
+        self.deprecated = False
+
+    def add_tag(self, name, value):
+        attr_type = type(getattr(self, name, None))
+        if type(value) == str:
+            value = self._replace_inline_tags(value)
+        if attr_type is bool:
+            setattr(self, name, bool(value))
+        elif attr_type is str:
+            setattr(self, name, str(value))
+        elif attr_type is list:
+            getattr(self, name).append(value)
+
+    @staticmethod
+    def _translate(name, value):
+        return '{{@{0} {1}}}'.format(name, value)
+
+    @staticmethod
+    def _call_translate(mo):
+        global translate
+        name, value = mo.group(1), mo.group(2)
+        translate = translate if translate else DocObject._translate
+        return translate(name, value)
+
+    @staticmethod
+    def _replace_inline_tags(line):
+        return re.sub(r'{@(\w+)\s+([^}]*)}', DocObject._call_translate, line)
 
 
 def parse_doc(s):
     if not s:
         return
-    o = OrderedDict()
+    doc = DocObject()
     tag = None
     s = s[3:-2]  # remove '/**' and '*/'
     for line in s.splitlines():
@@ -14,23 +67,15 @@ def parse_doc(s):
         elif line[0] == '@':
             line = line[1:]
             res = line.split(maxsplit=1)
+            if len(res) == 0:
+                continue
+            tag = res[0]
             if len(res) == 1:
-                tag = res[0]
-                o[tag] = True
+                doc.add_tag(tag, True)
             elif len(res) == 2:
-                tag, value = res[0], res[1]
-                o[tag] = value
+                value = res[1]
+                doc.add_tag(tag, value)
         elif tag:  # append to previous matched tag
-            if type(o[tag]) != list:
-                o[tag] = [o[tag]]
-            o[tag].append(line)
-    return o
+            doc.add_tag(tag, line)
+    return doc
 
-
-def replace_tags(s):
-    pass
-
-# {% with doc = parse_doc(symbol.commment) %}
-#   \brief {{doc.brief}}
-#   \description {{doc.description}}
-# {% endwith %}

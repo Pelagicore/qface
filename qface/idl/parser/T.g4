@@ -35,11 +35,17 @@ interfaceSymbol
 interfaceMemberSymbol
     : operationSymbol
     | propertySymbol
+    | signalSymbol
     ;
 
 operationSymbol
-    : comment=DOCCOMMENT?  tagSymbol* isEvent='event'? (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
+    : comment=DOCCOMMENT?  tagSymbol* (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
     ;
+
+signalSymbol
+    : comment=DOCCOMMENT?  tagSymbol* 'signal' name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
+    ;
+
 
 propertySymbol
     : comment=DOCCOMMENT? tagSymbol* isReadOnly='readonly'? typeSymbol name=IDENTIFIER ';'?
@@ -115,7 +121,7 @@ HEXCONSTANT     : '0x' ('0'..'9' | 'a'..'f' | 'A'..'F')+;
 TAGIDENTIFIER   : '@'[a-zA-Z_][a-zA-Z0-9_.]*;
 IDENTIFIER      : [a-zA-Z_][a-zA-Z0-9_.]*;
 VERSION         : [0-9]'.'[0-9];
-DOCCOMMENT      : '/*!' .*? '*/';
+DOCCOMMENT      : '/**' .*? '*/';
 WHITESPACE      : [ \t\r\n]+ -> skip;
 COMMENT         : '//' ~[\r\n]* -> skip;
 MULTICOMM       : '/*' .*? '*/' -> skip;

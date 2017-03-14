@@ -1,8 +1,7 @@
 {# Copyright (c) Pelagicore AB 2016 #}
-#############################################################################
-## This is an auto-generated file.
-## Do not edit! All changes made to it will be lost.
-#############################################################################
+
+## This is a preserved file and can be edited.
+## All changes will not be override.
 
 TEMPLATE = lib
 QT += qml quick
@@ -27,6 +26,7 @@ SOURCES += \
 
 
 include( generated/generated.pri )
+include( docs/docs.pri )
 
 DISTFILES = qmldir
 

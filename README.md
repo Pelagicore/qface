@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Pelagicore/qface.svg?branch=develop)](https://travis-ci.org/Pelagicore/qface)
 [![Documentation Status](https://readthedocs.org/projects/qface/badge/?version=latest)](http://qface.readthedocs.io/en/latest/?badge=latest)
+[![Chat at https://gitter.im/qmlbook/qface](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/qmlbook/qface?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 QFace is a generator framework based on a common modern IDL. It is not a generator as such but enforces a common IDL format and provides a library to write your own generator. It is actually very easy to create your own generator and generate your custom solution based on your needs from the same IDL.
 
@@ -50,7 +51,7 @@ on the other side
 interface Echo {
     readonly Message lastMessage;
     void echo(Message message);
-    event void callMe();
+    signal callMe();
 };
 
 struct Message {
@@ -76,6 +77,6 @@ for module in system:
         ctx = { 'interface': interface }
         # use header.h template with ctx to write to a file
         generator.write('{{interface|lower}}.h', 'header.h', ctx)
-``` 
+```
 
 Depending on the used generator it reads the input file and runs it through the generator. The output files are written relative to the given output directory. The input can be either a file or a folder.

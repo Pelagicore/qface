@@ -1,0 +1,25 @@
+/** module */
+module org.example.echo 1.0
+
+/**
+ * @brief the brief
+ * @description the description
+ * continues {@link http://qt.io}
+ * @deprecated
+ * @see org.example.echo.Echo
+ * @see org.example
+ * @see http://qt.io
+ * @anything hello
+ */
+interface Echo {
+    /**
+     * @brief brief message
+     * @details long message
+     *
+     * @param msg the messsage
+     * @return the echo
+     */
+    string echo(string msg);
+
+}
+

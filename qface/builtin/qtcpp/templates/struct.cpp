@@ -37,7 +37,16 @@ public:
 };
 
 // Class
-{{struct.comment}}
+
+/*!
+   \qmltype {{struct}}
+   \inqmlmodule {{module}}
+{% with doc = struct.comment|parse_doc %}
+   \brief {{doc.brief}}
+
+   {{doc.description}}
+{% endwith %}
+*/
 
 {{class}}::{{class}}()
     : d(new {{class}}Data)

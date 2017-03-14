@@ -8,7 +8,6 @@ from watchdog.observers import Observer
 from path import Path
 import time
 import os
-import sys
 import yaml
 import logging
 import logging.config
@@ -54,7 +53,7 @@ def test_ci():
 
 class RunTestChangeHandler(FileSystemEventHandler):
     def __init__(self, clickContext):
-        super(RunTestChangeHandler).__init__()
+        super().__init__()
         self.clickContext = clickContext
 
     def on_any_event(self, event):
@@ -85,7 +84,7 @@ def test_monitor(ctx):
 
 class RunScriptChangeHandler(FileSystemEventHandler):
     def __init__(self, script):
-        super(RunTestChangeHandler).__init__()
+        super().__init__()
         self.script = script
         self.is_running = False
 

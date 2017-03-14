@@ -9,6 +9,22 @@ The IDL
 
 The IDL uses common API concept such as modules, interfaces, properties, structs and enums/flags. Additionally it knows about lists and models. A list is an array of primitive or complex types. A model is an indicator for large data sets which are typical used via a defined interface or via pagination.
 
+.. code-block:: js
+
+    module org.example 1.0
+
+    interface Echo {
+        string message;
+        void echo(string message);
+        signal broadcast(string message);
+        Status status;
+    }
+
+    enum Status {
+        Null, Loading, Ready, Error
+    }
+
+
 The data types provided by QFace can be divided into primitive and complex types:
 
 Primitive Types
@@ -28,14 +44,20 @@ Complex Types
 * Array
 * Model
 
-The language as such does not provide any support for maps or dictionaries. The keys in dictionaries require a hash which can not always be guaranteed to be available.
+The language as such does not provide any support for maps or dictionaries. The reason for not providing a map container type is that keys in dictionaries requires a hash which can not always be guaranteed to be available in complex types.
+
+Why another IDL
+===============
+
+There exists many IDLs. Most of them are bound to a certain technology or library or are limited for a specific use. Only a few IDL exists which are independent from a technology. From these few which are known to the author none satisfied the requirement from the author to be Qt compatible and easy to use. Also the IDL should be easy to use and easy to be install and to be extendable. The unique mix of technologies used in QFace allows it to provide a solid stable IDL with a powerful generation framework.
+
 
 Defining APIs
 =============
 
-There are many opinions how to define APIs and what is the best way. The hope is if enough people use the same IDL there will be a large set of generators and at the end maybe one common way how to write your QML plugin and export the API.
+There are many opinions how to define APIs and what is the best way. The porposal of QFace is that is many project find QFace useful and use the same IDL there will be a large set of generators and at the end APIs can be compared and unified also if they will be used with different technologies.
 
-There are often discussions about if an interface shall be an object or better a singleton. Or if an array shall be exposed as a list or a variant list or even a QmlListProperty or always as a model. Structured data can be exposed using a QVariant or QJSValue or nowadays as a gadget or as a QObject if property notifications are required. Exposing structured data via QObject leads to memory management issues.
+Even inside on e technolgy there are often discussions about how an interface shall be coded. QFace allows the different parties to create their own generators based on the same API. Ideally at the end the knowledge how an interface shall be coded will reside in the provided generator.
 
 Large Projects
 ==============

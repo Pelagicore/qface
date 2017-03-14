@@ -28,11 +28,13 @@ class DomainListener(TListener):
         self.enum = None  # type:Enum
         self.enumCounter = 0  # int
         self.operation = None  # type:Operation
+        self.signal = None # type:Signal
         self.parameter = None  # type:Parameter
         self.property = None  # type:Property
         self.field = None  # type:Field
 
     def parse_type(self, ctx: ParserRuleContext, type: TypeSymbol):
+        assert type
         if not ctx.typeSymbol():
             type.is_void = True
             type.name = 'void'
@@ -87,6 +89,8 @@ class DomainListener(TListener):
         self.module = Module(name, self.system)
         self.module.version = version
         contextMap[ctx] = self.module
+        self.parse_annotations(ctx, self.module)
+
 
     def exitModuleSymbol(self, ctx: TParser.ModuleSymbolContext):
         pass
@@ -137,8 +141,7 @@ class DomainListener(TListener):
     def enterOperationSymbol(self, ctx: TParser.OperationSymbolContext):
         assert self.interface
         name = ctx.name.text
-        is_event = bool(ctx.isEvent)
-        self.operation = Operation(name, self.interface, is_event)
+        self.operation = Operation(name, self.interface)
         self.parse_annotations(ctx, self.operation)
         self.parse_type(ctx, self.operation.type)
         contextMap[ctx] = self.operation
@@ -146,9 +149,20 @@ class DomainListener(TListener):
     def exitOperationSymbol(self, ctx: TParser.OperationSymbolContext):
         self.operation = None
 
+    def enterSignalSymbol(self, ctx: TParser.SignalSymbolContext):
+        assert self.interface
+        name = ctx.name.text
+        self.signal = Signal(name, self.interface)
+        self.parse_annotations(ctx, self.operation)
+        contextMap[ctx] = self.signal
+
+    def exitSignalSymbol(self, ctx: TParser.SignalSymbolContext):
+        self.signal = None
+
     def enterOperationParameterSymbol(self, ctx: TParser.OperationParameterSymbolContext):
         name = ctx.name.text
-        self.parameter = Parameter(name, self.operation)
+        symbol = self.operation if self.operation else self.signal
+        self.parameter = Parameter(name, symbol)
         contextMap[ctx] = self.parameter
 
     def exitOperationParameterSymbol(self, ctx: TParser.OperationParameterSymbolContext):

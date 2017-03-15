@@ -66,7 +66,7 @@ Code Generation
 ===============
 
 
-For each module the generator creates the qmake project files, the plugin code to register the types, a module singleton which contains the enums and factory functions for creating the structures. The structure has no signals and the values are copied over (copied from where?).
+For each module the generator creates the qmake project files, the plugin code to register the types, a module singleton which contains the enums and factory functions for creating the structures. The structure has only properties and no operations or signals.
 
 .. code-block:: yml
 
@@ -117,7 +117,7 @@ To extend the implementation the user needs to modify the interface implementati
 
 In the interface document you are able to overwrite all setters and getters as also the operation methods. This is normally the only file you want to modify.
 
-Besides the interface files also the plugin and project files are preserved, as it is expected that these files might be required to change. This may change in the future. (This sentence doesn't make sense - they are preseved because they are expected to change?)
+Besides the interface files also the plugin and project files are marked to be preserved. The preserve-marker means the user can edit these files and the generator will never overwrite existing files. To trigger a re-generation the user needs to remove the files first and run the generator again.
 
 
 

@@ -35,11 +35,9 @@ def test_comment():
     interface = system.lookup('org.example.echo.Echo')
     assert interface
     o = doc.parse_doc(interface.comment)
-    # import pdb; pdb.set_trace()
     assert o.brief == 'the brief'
     assert o.description == ['the description', 'continues {@link http://qt.io}']
     assert o.deprecated is True
-    # import pdb; pdb.set_trace()
     assert o.see == ['org.example.echo.Echo', 'org.example', 'http://qt.io']
 
 

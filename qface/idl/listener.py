@@ -118,7 +118,6 @@ class DomainListener(TListener):
     def enterEnumSymbol(self, ctx: TParser.EnumSymbolContext):
         assert self.module
         name = ctx.name.text
-        # import ipdb; ipdb.set_trace()
         self.enum = Enum(name, self.module)
         self.parse_annotations(ctx, self.enum)
         contextMap[ctx] = self.enum
@@ -199,7 +198,6 @@ class DomainListener(TListener):
             value = int(ctx.intSymbol().value.text, 0)
         self.field.value = value
         contextMap[ctx] = self.field
-        # import ipdb; ipdb.set_trace()
         if self.enum.is_flag:
             self.enumCounter <<= 1
         else:
@@ -212,7 +210,6 @@ class DomainListener(TListener):
         assert self.module
         name = ctx.name.text
         version = ctx.version.text
-        # import ipdb; ipdb.set_trace()
         self.module._importMap[name] = '{0} {1}'.format(name, version)
 
     def exitImportSymbol(self, ctx: TParser.ImportSymbolContext):

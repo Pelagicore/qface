@@ -10,9 +10,9 @@ Provides an API to monitor the file system
 """
 
 class RunScriptChangeHandler(FileSystemEventHandler):
-    def __init__(self, argv):
+    def __init__(self, script):
         super().__init__()
-        self.argv = argv
+        self.script = script
         self.is_running = False
 
     def on_modified(self, event):
@@ -22,21 +22,20 @@ class RunScriptChangeHandler(FileSystemEventHandler):
         if self.is_running:
             return
         self.is_running = True
-        # cmd = '{0} {1}'.format(sys.executable, ' '.join(self.argv))
-        sh(' '.join(self.argv), cwd=Path.getcwd())
+        sh(self.script, cwd=Path.getcwd())
         self.is_running = False
 
 
-def monitor(src, argv):
+def monitor(script, src, dst):
     """
     reloads the script given by argv when src files changes
     """
-    script = Path(argv[0]).expand().abspath()
     src = src if isinstance(src, (list, tuple)) else [src]
+    script = '{0} {1} {2}'.format(script, ' '.join(src), dst)
     src = [Path(entry).expand().abspath() for entry in src]
-    event_handler = RunScriptChangeHandler(argv)
+    event_handler = RunScriptChangeHandler(script)
     observer = Observer()
-    path = script.dirname().expand().abspath()
+    path = Path(script).dirname().expand().abspath()
     click.secho('watch recursive: {0}'.format(path), fg='blue')
     observer.schedule(event_handler, path, recursive=True)
     for entry in src:

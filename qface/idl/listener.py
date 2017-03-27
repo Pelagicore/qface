@@ -73,7 +73,8 @@ class DomainListener(TListener):
                 attrs = tag.tagAttributeSymbol()
                 for attr in attrs:
                     attr_name = attr.name.text
-                    attr_value = attr.value.text
+                    # if no value, handle name as a flag
+                    attr_value = attr.value.text if attr.value else True
                     symbol.add_attribute(tag_name, attr_name, attr_value)
 
     def enterEveryRule(self, ctx):

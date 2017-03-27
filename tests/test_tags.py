@@ -44,3 +44,11 @@ def test_meta_tags():
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
     assert interface
     assert 'port' in interface.tags
+
+
+def test_flag():
+    system = loadTuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    assert interface
+    assert interface.attribute('config', 'private') is True
+

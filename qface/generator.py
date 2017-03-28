@@ -14,6 +14,7 @@ from .idl.parser.TParser import TParser
 from .idl.parser.TListener import TListener
 from .idl.domain import System
 from .idl.listener import DomainListener
+from .utils import merge
 
 import click
 
@@ -139,7 +140,7 @@ class FileSystem(object):
         for identifier, data in meta.items():
             symbol = system.lookup(identifier)
             if symbol:
-                symbol.tags.update(data)
+                merge(symbol.tags, data)
 
     @staticmethod
     def parse(input, identifier: str = None, use_cache=False, clear_cache=True, pattern="*.qface"):

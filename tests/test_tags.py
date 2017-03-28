@@ -51,4 +51,9 @@ def test_flag():
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
     assert interface
     assert interface.attribute('config', 'private') is True
+    assert interface.attribute('config', 'a') == 'a'  # use value from yaml
+    assert interface.attribute('config', 'b') == 'b'  # use value from yaml
+    assert interface.attribute('config', 'c') == 'C'  # use value from IDL
+
+
 

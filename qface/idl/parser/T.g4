@@ -60,7 +60,7 @@ tagSymbol
     ;
 
 tagAttributeSymbol
-    : name=IDENTIFIER ('=' value=IDENTIFIER)?
+    : name=IDENTIFIER ('=' value=IDENTIFIER)? ','?
     ;
 
 typeSymbol

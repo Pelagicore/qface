@@ -106,7 +106,7 @@ class FileSystem(object):
         logger.debug('parse document: {0}'.format(document))
         stream = FileStream(str(document), encoding='utf-8')
         system = FileSystem._parse_stream(stream, system)
-        FileSystem.merge_annoations(system, document.stripext() + '.yaml')
+        FileSystem.merge_annotations(system, document.stripext() + '.yaml')
         return system
 
     @staticmethod
@@ -124,7 +124,7 @@ class FileSystem(object):
         return system
 
     @staticmethod
-    def merge_annoations(system: System, document: Path):
+    def merge_annotations(system, document):
         """Read a YAML document and for each root symbol identifier
         updates the tag information of that symbol
         """

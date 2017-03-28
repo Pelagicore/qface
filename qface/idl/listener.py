@@ -63,6 +63,7 @@ class DomainListener(TListener):
             log.warn('Unknown type: {0}. Missing import?'.format(type.name))
 
     def parse_annotations(self, ctx, symbol):
+        assert ctx and symbol
         if ctx.comment:
             comment = ctx.comment.text
             symbol.comment = comment
@@ -153,7 +154,7 @@ class DomainListener(TListener):
         assert self.interface
         name = ctx.name.text
         self.signal = Signal(name, self.interface)
-        self.parse_annotations(ctx, self.operation)
+        self.parse_annotations(ctx, self.signal)
         contextMap[ctx] = self.signal
 
     def exitSignalSymbol(self, ctx: TParser.SignalSymbolContext):

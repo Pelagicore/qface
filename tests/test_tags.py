@@ -3,6 +3,7 @@ import logging
 import logging.config
 from path import Path
 
+
 # logging.config.fileConfig('logging.ini')
 logging.basicConfig()
 
@@ -54,6 +55,7 @@ def test_flag():
     assert interface.attribute('config', 'a') == 'a'  # use value from yaml
     assert interface.attribute('config', 'b') == 'b'  # use value from yaml
     assert interface.attribute('config', 'c') == 'C'  # use value from IDL
+    assert interface.tags['data'] == [1, 2, 3]  # array annotatiom
 
 
 

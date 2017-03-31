@@ -11,6 +11,8 @@ import os
 import yaml
 import logging
 import logging.config
+from livereload import Server, shell
+
 
 here = os.path.dirname(__file__)
 
@@ -171,6 +173,13 @@ def upload():
     dist.makedirs_p()
     sh('python3 setup.py bdist_wheel')
     sh('twine upload dist/*')
+
+
+@cli.command()
+def docs_serve():
+    server = Server()
+    server.watch('docs/*.rst', shell('make html', cwd='docs'))
+    server.serve(root='docs/_build/html', open_url=True)
 
 
 if __name__ == '__main__':

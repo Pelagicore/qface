@@ -20,7 +20,7 @@ WRITE set{{property|upperfirst}} {% endif %}NOTIFY {{property}}Changed)
 {% endfor %}
 
 public:
-    {{class}}(QObject *parent=0);
+    {{class}}(QObject *parent = nullptr);
     ~{{class}}();
 
 public Q_SLOTS:

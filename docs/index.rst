@@ -11,6 +11,8 @@ QFace is a flexible Qt API generator. It uses a common IDL format (called QFace 
    usage
    builtin
    grammar
+   annotations
+   yaml
    domain
    extending
    api

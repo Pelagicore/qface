@@ -6,6 +6,13 @@ from .parser.TListener import TListener
 from .parser.TParser import TParser
 from .domain import *
 from antlr4 import ParserRuleContext
+import yaml
+import click
+
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
 
 
 log = logging.getLogger(__name__)
@@ -18,6 +25,7 @@ class DomainListener(TListener):
     """The domain listener is called by the parser to fill the
        domain data struture. As a result a system is passed
        back"""
+
     def __init__(self, system):
         super(DomainListener, self).__init__()
         contextMap.clear()
@@ -28,7 +36,7 @@ class DomainListener(TListener):
         self.enum = None  # type:Enum
         self.enumCounter = 0  # int
         self.operation = None  # type:Operation
-        self.signal = None # type:Signal
+        self.signal = None  # type:Signal
         self.parameter = None  # type:Parameter
         self.property = None  # type:Property
         self.field = None  # type:Field
@@ -40,21 +48,25 @@ class DomainListener(TListener):
             type.name = 'void'
         else:
             if ctx.typeSymbol().primitiveTypeSymbol():
-                ctxSymbol = ctx.typeSymbol().primitiveTypeSymbol()  # type:TParser.PrimitiveTypeSymbolContext
+                # type:TParser.PrimitiveTypeSymbolContext
+                ctxSymbol = ctx.typeSymbol().primitiveTypeSymbol()
                 type.is_primitive = True
                 type.name = ctxSymbol.name.text
             elif ctx.typeSymbol().complexTypeSymbol():
-                ctxSymbol = ctx.typeSymbol().complexTypeSymbol()  # type:TParser.ComplexTypeSymbolContext
+                # type:TParser.ComplexTypeSymbolContext
+                ctxSymbol = ctx.typeSymbol().complexTypeSymbol()
                 type.is_complex = True
                 type.name = ctxSymbol.name.text
             elif ctx.typeSymbol().listTypeSymbol():
-                ctxSymbol = ctx.typeSymbol().listTypeSymbol()  # type:TParser.ListTypeSymbolContext
+                # type:TParser.ListTypeSymbolContext
+                ctxSymbol = ctx.typeSymbol().listTypeSymbol()
                 type.is_list = True
                 type.name = 'list'
                 type.nested = TypeSymbol("", type)
                 self.parse_type(ctxSymbol, type.nested)
             elif ctx.typeSymbol().modelTypeSymbol():
-                ctxSymbol = ctx.typeSymbol().modelTypeSymbol()  # type:TParser.ModelTypeSymbolContext
+                # type:TParser.ModelTypeSymbolContext
+                ctxSymbol = ctx.typeSymbol().modelTypeSymbol()
                 type.is_model = True
                 type.name = 'model'
                 type.nested = TypeSymbol("", type)
@@ -68,15 +80,12 @@ class DomainListener(TListener):
             comment = ctx.comment.text
             symbol.comment = comment
         if ctx.tagSymbol():
-            for tag in ctx.tagSymbol():
-                tag_name = tag.name.text[1:]
-                symbol.add_tag(tag_name)
-                attrs = tag.tagAttributeSymbol()
-                for attr in attrs:
-                    attr_name = attr.name.text
-                    # if no value, handle name as a flag
-                    attr_value = attr.value.text if attr.value else True
-                    symbol.add_attribute(tag_name, attr_name, attr_value)
+            lines = [tag.line.text[1:] for tag in ctx.tagSymbol()]
+            try:
+                data = yaml.load('\n'.join(lines), Loader=Loader)
+                symbol._tags = data
+            except yaml.YAMLError as exc:
+                click.secho(exc, fg='red')
 
     def enterEveryRule(self, ctx):
         log.debug('enter ' + ctx.__class__.__name__)
@@ -92,7 +101,6 @@ class DomainListener(TListener):
         self.module.version = version
         contextMap[ctx] = self.module
         self.parse_annotations(ctx, self.module)
-
 
     def exitModuleSymbol(self, ctx: TParser.ModuleSymbolContext):
         pass

@@ -8,6 +8,7 @@ import shelve
 import logging
 import hashlib
 import yaml
+import click
 
 from .idl.parser.TLexer import TLexer
 from .idl.parser.TParser import TParser
@@ -16,7 +17,11 @@ from .idl.domain import System
 from .idl.listener import DomainListener
 from .utils import merge
 
-import click
+
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
 
 logger = logging.getLogger(__name__)
 
@@ -133,9 +138,9 @@ class FileSystem(object):
             return
         meta = {}
         try:
-            meta = yaml.load(document.text())
+            meta = yaml.load(document.text(), Loader=Loader)
         except yaml.YAMLError as exc:
-            click.echo(exc)
+            click.secho(exc, fg='red')
         click.secho('merge tags from {0}'.format(document), fg='blue')
         for identifier, data in meta.items():
             symbol = system.lookup(identifier)

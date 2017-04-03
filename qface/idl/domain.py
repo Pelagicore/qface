@@ -110,7 +110,7 @@ class Symbol(NamedElement):
         super().__init__(name, module)
         self.comment = ''
         """comment which appeared in QFace right before symbol"""
-        self._tags = OrderedDict()
+        self._tags = dict()
 
         self._contentMap = ChainMap()
         self.type = TypeSymbol('', self)

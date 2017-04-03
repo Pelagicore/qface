@@ -2,7 +2,7 @@ module com.pelagicore.test 1.0;
 
 import common 1.0;
 
-@service(singleton=True)
+@service: { singleton: true}
 interface ContactService {
   State state;
   int intValue;

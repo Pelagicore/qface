@@ -1,8 +1,12 @@
-=============
-QFace Grammar
-=============
+=======
+Grammar
+=======
 
 QFace (Qt interface language) is an Interface Description Languge (IDL). While it is primarily designed to define an interface between Qt, QML and C++, it is intended to be flexible enough also to be used in other contexts.
+
+The grammar of QFace is well defined and is based on the concepts of modules as larger collection of information.
+
+A module can have several interfaces, structs and/or enums/flags.
 
 .. code-block:: html
 
@@ -34,6 +38,33 @@ Module
 ======
 
 A module is identified name. A module should be normally a URI where all parts are lowercase (e.g. `entertainment.tuner`). A module may import other modules with the primary purpose being to ensure that dependencies are declared inside the QFace file.
+
+.. code-block:: js
+
+    // org.example.qface
+    module org.example 1.0
+
+    import org.common 1.0
+
+
+Interface
+=========
+
+An interface is a collection of properties, operation and signals. Properties carry data, whereas the operations normally modify the data. Signals are used to notify the user of changes.
+
+.. code-block:: js
+
+    interface WeatherStation {
+        real temperature;
+        void reset();
+        signal error(string message);
+    }
+
+Struct
+======
+
+Enum/Flag
+=========
 
 Types
 -----
@@ -103,38 +134,4 @@ Below is an example of a QFace file.
         /*! last time modified */
         common.TimeStamp modified;
     }
-
-
-Tags / Annotations
-==================
-
-Tags allows an interface author to extend the existing grammar with additional meta information, called tags, aka annotations. One or several annotations can stand in from of a module, interface, struct or enum. They are also allowed before an operation, property or signal. Everywhere where a documentation comment is allowed you can also add annotations.
-
-An annotation looks like this::
-
-    @service(port=12345)
-    interface Tuner {
-    }
-
-A annotation format is very similar to an operation signature prefixed with an `@` sign and no return value.
-
-The annotation are available later when navigating the domain model.
-
-.. note:: QFace does not specify specific annotations, but defines just the annotation format. The set of annotations supported must be defined and documented by the generator.
-
-.. rubric:: Annotation Documents
-
-QFace allows also to specify these annotations in external documents using the `YAML` syntax. For this you need to create a document with the same name as the QFace document but with the extension `.yaml`. It should have roughly the following format
-
-.. code-block:: yaml
-
-    com.pelagicore.ivi.Tuner:
-        service:
-            port: 12345
-
-On the root level should be a fully qualified name of a symbol. The symbol will be looked up and the following annotation information merged with the existing annotations form the QFace document.
-
-.. warning:: External annotation with the same name will override the QFace document annotation with the same name on the specified symbol.
-
-
 

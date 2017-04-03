@@ -3,6 +3,7 @@ jinja2
 click
 path.py
 watchdog
+livereload
 pyyaml
 pytest
 coverage

@@ -15,7 +15,7 @@ class {{class}} : public QAbstractListModel
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
     enum Roles { ModelData = Qt::UserRole };
-    {{class}}(QObject *parent=0);
+    {{class}}(QObject *parent = nullptr);
     Q_INVOKABLE QVariant get(int index);
     int count() const;
     void insert(int row, const QVariant &entry);

@@ -56,11 +56,11 @@ operationParameterSymbol
     ;
 
 tagSymbol
-    : name=TAGIDENTIFIER '(' tagAttributeSymbol* ')'
+    : line=TAGLINE
     ;
 
 tagAttributeSymbol
-    : name=IDENTIFIER ('=' value=IDENTIFIER)?
+    : name=IDENTIFIER ('=' value=IDENTIFIER)? ','?
     ;
 
 typeSymbol
@@ -116,6 +116,7 @@ intSymbol
     | value=HEXCONSTANT
     ;
 
+TAGLINE         : '@' ~[\r\n]*;
 INTCONSTANT     : ('+' | '-')? '0'..'9'+;
 HEXCONSTANT     : '0x' ('0'..'9' | 'a'..'f' | 'A'..'F')+;
 TAGIDENTIFIER   : '@'[a-zA-Z_][a-zA-Z0-9_.]*;

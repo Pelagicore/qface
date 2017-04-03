@@ -17,7 +17,7 @@ class {{class}} : public QmlAbstract{{interface}}
 {
     Q_OBJECT
 public:
-    {{class}}(QObject *parent=0);
+    {{class}}(QObject *parent = nullptr);
     virtual ~{{class}}();
 
     static void registerQmlTypes(const QString& uri, int majorVersion=1, int minorVersion=0);

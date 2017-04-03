@@ -1,2 +1,6 @@
 com.pelagicore.ivi.tuner.Tuner:
-    port: 12345
+  port: 12345
+  config:
+    a: a
+    b: b
+

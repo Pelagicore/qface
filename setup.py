@@ -52,6 +52,7 @@ setup(
         'pyyaml',
         'antlr4-python3-runtime>=4.6',
         'click',
+        'watchdog',
     ],
     extras_require={
         'dev': [

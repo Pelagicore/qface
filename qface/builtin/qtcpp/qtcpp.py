@@ -71,8 +71,8 @@ def app(src, dst, reload):
     """Takes several files or directories as src and generates the code
     in the given dst directory."""
     if reload:
-        script = '{0} {1} {2}'.format(Path(__file__).abspath(), ' '.join(src), dst)
-        monitor(src, script)
+        script = Path(__file__).abspath()
+        monitor(script, src, dst)
     else:
         run(src, dst)
 

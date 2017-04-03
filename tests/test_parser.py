@@ -99,7 +99,6 @@ def test_enum_counter():
     system = load_test()
     enum = system.lookup('com.pelagicore.test.State')
     assert enum
-    # import ipdb; ipdb.set_trace()
     assert enum._memberMap['Null'].value is 0
     assert enum._memberMap['Failure'].value is 3
 
@@ -108,7 +107,6 @@ def test_flag_counter():
     system = load_test()
     flag = system.lookup('com.pelagicore.test.Phase')
     assert flag
-    # import ipdb; ipdb.set_trace()
     assert flag._memberMap['PhaseOne'].value is 1
     assert flag._memberMap['PhaseTwo'].value is 2
     assert flag._memberMap['PhaseThree'].value is 4

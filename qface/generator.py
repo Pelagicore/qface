@@ -8,14 +8,20 @@ import shelve
 import logging
 import hashlib
 import yaml
+import click
 
 from .idl.parser.TLexer import TLexer
 from .idl.parser.TParser import TParser
 from .idl.parser.TListener import TListener
 from .idl.domain import System
 from .idl.listener import DomainListener
+from .utils import merge
 
-import click
+
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +112,7 @@ class FileSystem(object):
         logger.debug('parse document: {0}'.format(document))
         stream = FileStream(str(document), encoding='utf-8')
         system = FileSystem._parse_stream(stream, system)
-        FileSystem.merge_annoations(system, document.stripext() + '.yaml')
+        FileSystem.merge_annotations(system, document.stripext() + '.yaml')
         return system
 
     @staticmethod
@@ -124,7 +130,7 @@ class FileSystem(object):
         return system
 
     @staticmethod
-    def merge_annoations(system: System, document: Path):
+    def merge_annotations(system, document):
         """Read a YAML document and for each root symbol identifier
         updates the tag information of that symbol
         """
@@ -132,14 +138,14 @@ class FileSystem(object):
             return
         meta = {}
         try:
-            meta = yaml.load(document.text())
+            meta = yaml.load(document.text(), Loader=Loader)
         except yaml.YAMLError as exc:
-            click.echo(exc)
+            click.secho(exc, fg='red')
         click.secho('merge tags from {0}'.format(document), fg='blue')
         for identifier, data in meta.items():
             symbol = system.lookup(identifier)
             if symbol:
-                symbol.tags.update(data)
+                merge(symbol.tags, data)
 
     @staticmethod
     def parse(input, identifier: str = None, use_cache=False, clear_cache=True, pattern="*.qface"):

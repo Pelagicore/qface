@@ -110,7 +110,7 @@ class Symbol(NamedElement):
         super().__init__(name, module)
         self.comment = ''
         """comment which appeared in QFace right before symbol"""
-        self._tags = OrderedDict()
+        self._tags = dict()
 
         self._contentMap = ChainMap()
         self.type = TypeSymbol('', self)
@@ -126,7 +126,7 @@ class Symbol(NamedElement):
 
     def add_tag(self, tag):
         if tag not in self._tags:
-            self._tags[tag] = OrderedDict()
+            self._tags[tag] = dict()
 
     def add_attribute(self, tag, name, value):
         self.add_tag(tag)
@@ -137,7 +137,7 @@ class Symbol(NamedElement):
         return self._tags[name]
 
     def attribute(self, tag, name):
-        if tag in self._tags:
+        if tag in self._tags and name in self._tags[tag]:
             return self._tags[tag][name]
 
     @property

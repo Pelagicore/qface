@@ -16,7 +16,9 @@ An annotation looks like this
     }
 
 
-An in code annotation precedes a symbol and it starts with an ``@`` sign. A symbol can have more than one one annotation line. The content is YAML content. All ``@`` signs preceding a symbol are collected and then evaluated using a YAML parser.
+An in code annotation precedes a symbol and it starts with an ``@`` sign. A symbol can have more than one one annotation line. Each line should be one individual annotation. The content is YAML content. All ``@`` signs preceding a symbol are collected and then evaluated using a YAML parser.
+
+For larger annotations you can use the external annotation document feature.
 
 .. code-block:: python
 

@@ -5,7 +5,7 @@ Annotations
 Annotations is a way to add meta information to your interface definition. It
 is available to each symbol in the interface.
 
-Annotations allows an interface author to extend the existing interface with additional meta information, called tags, aka annotations. One or several annotations can precede a module, interface, struct or enum. They are also allowed before an operation, property or signal. Everywhere where a documentation comment is allowed you can also add annotations.
+Annotations allows an interface author to extend the existing interface with additional meta information, called tags, aka annotations. One or several annotations can precede a module, ``interface``, ``struct`` or ``enum``. They are also allowed before an ``operation``, ``property`` or ``signal``. Everywhere where a documentation comment is allowed you can also add annotations.
 
 An annotation looks like this
 

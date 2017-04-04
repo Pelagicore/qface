@@ -105,3 +105,14 @@ class Filters(object):
             return '{0}{1}'.format(prefix, symbol.type)
         return 'XXX'
 
+    @staticmethod
+    def open_ns(symbol):
+        # 'namespace x { y {'
+        blocks = ['{0} {{'.format(x) for x in symbol.module.name_parts]
+        return 'namespace {0}'.format(str.join(' ', blocks))
+
+    @staticmethod
+    def close_ns(symbol):
+        # '} }'
+        return ' '.join(['}' for x in symbol.module.name_parts])
+

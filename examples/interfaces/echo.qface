@@ -7,7 +7,7 @@ interface Echo {
     /**
      * @brief The last echo message.
      */
-    string currentMessage;
+    readonly string currentMessage;
     /**
      * @brief Returns the passed in message
      */

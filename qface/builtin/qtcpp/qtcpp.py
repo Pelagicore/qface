@@ -34,6 +34,7 @@ def run(src, dst):
         ctx.update({'module': module})
         dst = generator.apply('{{dst}}/{{module|lower|replace(".", "-")}}', ctx)
         generator.destination = dst
+        generator.write('CMakeLists.txt', 'CMakeLists.txt', ctx)
         generator.write('qmldir', 'qmldir', ctx, preserve=True)
         generator.write('plugin.cpp', 'plugin.cpp', ctx, preserve=True)
         generator.write('plugin.h', 'plugin.h', ctx, preserve=True)

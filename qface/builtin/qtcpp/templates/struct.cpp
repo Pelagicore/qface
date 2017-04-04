@@ -9,9 +9,6 @@
 #include "{{class|lower}}.h"
 
 
-
-// Shared Data
-
 class {{class}}Data : public QSharedData
 {
 public:
@@ -44,6 +41,11 @@ public:
 {% with doc = struct.comment|parse_doc %}
    \brief {{doc.brief}}
 
+   \note This is a none creatable data object
+
+   Use the module factory method \l {{module.module_name}}Module::create{{struct}} to create
+   an instance.
+
    {{doc.description}}
 {% endwith %}
 */
@@ -63,6 +65,16 @@ public:
 }
 
 {% for field in struct.fields %}
+/*!
+   \qmlproperty {{field.type}} {{struct}}::{{field}} (field)
+{% with doc = field.comment|parse_doc %}
+   \brief {{doc.brief}}
+
+   \note A none notifiable property
+
+   {{doc.description}}
+{% endwith %}
+*/
 void {{class}}::set{{field|upperfirst}}({{field|parameterType}})
 {
     d->{{field}} = {{field}};

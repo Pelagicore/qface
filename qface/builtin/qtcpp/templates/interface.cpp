@@ -9,11 +9,26 @@
 
 #include <QtQml>
 
+
+/*!
+    \inqmlmodule {{module}} 1.0
+ */
+
 QObject* {{class|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 {
       return new {{class}}();
 }
 
+
+/*!
+   \qmltype {{interface}}
+   \inqmlmodule {{module}}
+{% with doc = interface.comment|parse_doc %}
+   \brief {{doc.brief}}
+
+   {{doc.description}}
+{% endwith %}
+*/
 
 {{interface.comment}}
 {{class}}::{{class}}(QObject *parent)

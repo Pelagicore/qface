@@ -209,3 +209,6 @@ def test_namespace():
 
     ns = qtcpp.Filters.close_ns(module)
     assert ns == '} }'
+
+    ns = qtcpp.Filters.using_ns(module)
+    assert ns == 'using namespace org::example'

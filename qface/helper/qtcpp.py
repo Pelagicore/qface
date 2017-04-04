@@ -107,12 +107,18 @@ class Filters(object):
 
     @staticmethod
     def open_ns(symbol):
-        # 'namespace x { y {'
+        ''' generates a open namespace from symbol namespace x { y { z {'''
         blocks = ['{0} {{'.format(x) for x in symbol.module.name_parts]
         return 'namespace {0}'.format(str.join(' ', blocks))
 
     @staticmethod
     def close_ns(symbol):
-        # '} }'
+        '''generates a closing names statement from a symbol'''
         return ' '.join(['}' for x in symbol.module.name_parts])
+
+    @staticmethod
+    def using_ns(symbol):
+        '''generates a using namespace x::y::z statement from a symbol'''
+        id = '::'.join(symbol.module.name_parts)
+        return 'using namespace {0}'.format(id)
 

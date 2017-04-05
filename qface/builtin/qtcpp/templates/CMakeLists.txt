@@ -1,9 +1,13 @@
-{% set plugin = module.name.lower().replace(".", "_") %}
-project({{plugin}})
+{% set module_name = module.name.lower().replace(".", "_") %}
+{% set module_path = module.name_parts|join('/') %}
+
+project({{module_name}})
 
 cmake_minimum_required(VERSION 3.1)
 
 set(CMAKE_CXX_STANDARD 11)
+
+set(INSTALL_PATH "${CMAKE_BINARY_DIR}/imports" CACHE STRING "Path where the plugins are deployed")
 
 find_package(Qt5Qml REQUIRED)
 
@@ -42,6 +46,21 @@ set (SOURCES
 
 qt5_wrap_cpp(MOC ${HEADERS})
 
-add_library({{plugin}}_plugin SHARED ${MOC} ${SOURCES})
+add_library({{module_name}}_plugin SHARED ${MOC} ${SOURCES})
 
-qt5_use_modules({{plugin}}_plugin Qml)
+set(OUTPUT_PATH ${INSTALL_PATH}/{{module_path}})
+
+set_target_properties({{module_name}}_plugin PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_PATH}
+    RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_PATH}
+)
+
+target_link_libraries({{module_name}}_plugin PUBLIC Qt5::Core Qt5::Qml)
+
+add_custom_target(qmldir ALL
+    COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_SOURCE_DIR}/qmldir
+            ${OUTPUT_PATH}/qmldir
+)
+
+

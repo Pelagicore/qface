@@ -52,13 +52,13 @@ def test_property():
     assert property.type.name == 'Station'
     assert property.module == module
     assert property.type.qualified_name == 'com.pelagicore.ivi.tuner.Station'
-    assert property.is_readonly
-    assert not property.is_const
+    assert property.readonly
+    assert not property.const
     assert property.comment == '/** property currentStation */'
 
     property = interface._propertyMap['defaultStation']
-    assert not property.is_readonly
-    assert property.is_const
+    assert not property.readonly
+    assert property.const
 
 
 def test_operation():

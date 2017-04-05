@@ -15,7 +15,7 @@ class {{class}} : public QObject
 {
     Q_OBJECT
 {% for property in interface.properties %}
-    Q_PROPERTY({{property|returnType}} {{property}} READ {{property}} {% if not property.is_readonly %}WRITE set{{property|upperfirst}} {% endif %}{% if not property.is_const %}NOTIFY {{property}}Changed{% endif %})
+    Q_PROPERTY({{property|returnType}} {{property}} READ {{property}} {% if not property.readonly %}WRITE set{{property|upperfirst}} {% endif %}{% if not property.const %}NOTIFY {{property}}Changed{% endif %})
 {% endfor %}
 
 public:

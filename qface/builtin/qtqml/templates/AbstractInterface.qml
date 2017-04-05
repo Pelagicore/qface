@@ -8,7 +8,7 @@ QtObject {
     id: root
 {% for property in interface.properties %}
     {{property.comment}}
-    {%+ if property.is_readonly %}readonly {% endif %}property {{property|propertyType}} {{property}} : {{property|defaultValue}}
+    {%+ if property.readonly %}readonly {% endif %}property {{property|propertyType}} {{property}} : {{property|defaultValue}}
 {% endfor %}
 {% for operation in interface.operations %}
     {{operation.comment}}

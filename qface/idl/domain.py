@@ -357,8 +357,8 @@ class Property(Symbol):
         log.debug('Property()')
         self.interface = interface
         self.interface._propertyMap[name] = self
-        self.is_readonly = False
-        self.is_const = False
+        self.readonly = False
+        self.const = False
 
 
 class Struct(Symbol):
@@ -367,7 +367,7 @@ class Struct(Symbol):
         super().__init__(name, module)
         log.debug('Struct()')
         self.module._structMap[name] = self
-        self._fieldMap = self._contentMap = OrderedDict()  # type: dict[str, Field]
+        self._fieldMap = self._contentMap = OrderedDict()
 
     @property
     def fields(self):

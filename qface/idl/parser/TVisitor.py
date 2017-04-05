@@ -59,6 +59,11 @@ class TVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by TParser#propertyModifierSymbol.
+    def visitPropertyModifierSymbol(self, ctx:TParser.PropertyModifierSymbolContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by TParser#operationParameterSymbol.
     def visitOperationParameterSymbol(self, ctx:TParser.OperationParameterSymbolContext):
         return self.visitChildren(ctx)

@@ -48,7 +48,12 @@ signalSymbol
 
 
 propertySymbol
-    : comment=DOCCOMMENT? tagSymbol* (isReadOnly='readonly'| isConstant='constant')? typeSymbol name=IDENTIFIER ';'?
+    : comment=DOCCOMMENT? tagSymbol* propertyModifierSymbol? typeSymbol name=IDENTIFIER ';'?
+    ;
+
+propertyModifierSymbol
+    : is_readonly='readonly'
+    | is_const='const'
     ;
 
 operationParameterSymbol

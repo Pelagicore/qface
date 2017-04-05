@@ -9,7 +9,7 @@ interface Tuner {
     /** property currentStation */
     readonly Station currentStation;
     /** the default station, which never changes */
-    constant Station defaultStation;
+    const Station defaultStation;
     /** operation nextStation */
     void nextStation();
     /** operation previousStation */

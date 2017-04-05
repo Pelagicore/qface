@@ -358,7 +358,7 @@ class Property(Symbol):
         self.interface = interface
         self.interface._propertyMap[name] = self
         self.is_readonly = False
-        self.is_constant = False
+        self.is_const = False
 
 
 class Struct(Symbol):

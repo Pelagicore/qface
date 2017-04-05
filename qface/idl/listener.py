@@ -181,8 +181,10 @@ class DomainListener(TListener):
         assert self.interface
         name = ctx.name.text
         self.property = Property(name, self.interface)
-        self.property.is_readonly = bool(ctx.isReadOnly)
-        self.property.is_constant = bool(ctx.isConstant)
+        modifier = ctx.propertyModifierSymbol()
+        if modifier:
+            self.property.is_readonly = bool(modifier.is_readonly)
+            self.property.is_const = bool(modifier.is_const)
         self.parse_annotations(ctx, self.property)
         self.parse_type(ctx, self.property.type)
         contextMap[ctx] = self.property

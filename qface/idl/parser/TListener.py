@@ -98,6 +98,15 @@ class TListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by TParser#propertyModifierSymbol.
+    def enterPropertyModifierSymbol(self, ctx:TParser.PropertyModifierSymbolContext):
+        pass
+
+    # Exit a parse tree produced by TParser#propertyModifierSymbol.
+    def exitPropertyModifierSymbol(self, ctx:TParser.PropertyModifierSymbolContext):
+        pass
+
+
     # Enter a parse tree produced by TParser#operationParameterSymbol.
     def enterOperationParameterSymbol(self, ctx:TParser.OperationParameterSymbolContext):
         pass

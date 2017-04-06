@@ -8,6 +8,8 @@ module com.pelagicore.ivi.tuner 1.0;
 interface Tuner {
     /** property currentStation */
     readonly Station currentStation;
+    /** the default station, which never changes */
+    const Station defaultStation;
     /** operation nextStation */
     void nextStation();
     /** operation previousStation */

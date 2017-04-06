@@ -6,27 +6,12 @@ project({{module_name}})
 cmake_minimum_required(VERSION 3.1)
 
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_AUTOMOC ON)
 
 set(INSTALL_PATH "${CMAKE_BINARY_DIR}/imports" CACHE STRING "Path where the plugins are deployed")
 
+find_package(Qt5Core REQUIRED)
 find_package(Qt5Qml REQUIRED)
-
-set (HEADERS
-    generated/qml{{module.module_name|lower}}module.h
-{% for interface in module.interfaces %}
-    generated/qmlabstract{{interface|lower}}.h
-{% endfor %}
-{% for struct in module.structs %}
-    generated/qml{{struct|lower}}.h
-    generated/qml{{struct|lower}}model.h
-{% endfor %}
-    generated/qmlvariantmodel.h
-{% for interface in module.interfaces %}
-    qml{{interface|lower}}.h
-{% endfor %}
-    plugin.h
-)
-
 
 set (SOURCES
     generated/qml{{module.module_name|lower}}module.cpp
@@ -44,9 +29,7 @@ set (SOURCES
     plugin.cpp
 )
 
-qt5_wrap_cpp(MOC ${HEADERS})
-
-add_library({{module_name}}_plugin SHARED ${MOC} ${SOURCES})
+add_library({{module_name}}_plugin SHARED ${SOURCES})
 
 set(OUTPUT_PATH ${INSTALL_PATH}/{{module_path}})
 
@@ -56,11 +39,4 @@ set_target_properties({{module_name}}_plugin PROPERTIES
 )
 
 target_link_libraries({{module_name}}_plugin PUBLIC Qt5::Core Qt5::Qml)
-
-add_custom_target(qmldir ALL
-    COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_SOURCE_DIR}/qmldir
-            ${OUTPUT_PATH}/qmldir
-)
-
-
+configure_file(${CMAKE_SOURCE_DIR}/qmldir ${OUTPUT_PATH}/qmldir COPYONLY)

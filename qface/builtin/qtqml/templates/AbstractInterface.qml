@@ -1,3 +1,8 @@
+/*
+ * This is an auto-generated file.
+ * Do not edit! All changes made to it will be lost.
+ */
+
 import QtQml 2.2
 import QtQml.Models 2.2
 

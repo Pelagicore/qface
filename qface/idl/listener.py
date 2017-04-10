@@ -1,6 +1,5 @@
 # Copyright (c) Pelagicore AB 2016
 import logging
-from _operator import concat
 
 from .parser.TListener import TListener
 from .parser.TParser import TParser

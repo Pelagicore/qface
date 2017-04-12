@@ -1,4 +1,5 @@
-{% include 'header.h' %}
+{% include 'copyright.h' %}
+
 
 /*
  * This is an auto-generated file.

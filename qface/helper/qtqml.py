@@ -19,6 +19,8 @@ class Filters(object):
         if t.is_primitive:
             if t.name == 'int':
                 return '0'
+            elif t.name == 'real':
+                return "0.0"
             elif t.name == 'bool':
                 return 'false'
             elif t.name == 'string':

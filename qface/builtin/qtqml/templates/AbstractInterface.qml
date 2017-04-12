@@ -12,23 +12,28 @@ import "."
 {{interface.comment}}
 QtObject {
     id: root
+
 {% for property in interface.properties %}
 {% if property.readonly %}
-    {{property.comment}}
+{% if property.comment %}
+    {{ property.comment }}
+{% endif %}
     readonly property {{property|propertyType}} {{property}} : _{{property}}
     property {{property|propertyType}} _{{property}} : {{property|defaultValue}}
 {% else %}
-    {{property.comment}}
-    property {{property|propertyType}} {{property}} : {{property|defaultValue}}
-{%- endif %}
+{% if property.comment %}
+    {{ property.comment }}
+{% endif %}
+    property {{property|propertyType}} {{property}} : {{property|defaultValue }}
+{% endif %}
 {% endfor %}
 
-
 {% for operation in interface.operations %}
-    {{operation.comment}}
+{% if operation.comment %}
+    {{ operation.comment }}
+{% endif %}
     property var {{operation}} : function({{operation.parameters|join(', ')}}) {}
-{%- endfor %}
-
+{% endfor %}
 
 {% for signal in interface.signals %}
     signal {{signal}}(

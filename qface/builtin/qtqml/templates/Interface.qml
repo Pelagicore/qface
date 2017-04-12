@@ -1,3 +1,5 @@
+{% include 'header.h' %}
+
 /*
  * This is a preserved file.
  * Changes will not be overriden by the generator.

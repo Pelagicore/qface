@@ -39,13 +39,11 @@ def upper_first_filter(s):
 class Generator(object):
     """Manages the templates and applies your context data"""
     def __init__(self, search_path: str):
-        if search_path:
-            search_path = Path(search_path).expand()
-            self.env = Environment(
-                loader=FileSystemLoader(search_path),
-                trim_blocks=True,
-                lstrip_blocks=True
-            )
+        self.env = Environment(
+            loader=FileSystemLoader(search_path),
+            trim_blocks=True,
+            lstrip_blocks=True
+        )
         self.env.filters['upperfirst'] = upper_first_filter
         self._destination = Path()
 

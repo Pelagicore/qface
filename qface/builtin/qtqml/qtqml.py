@@ -22,7 +22,11 @@ log = logging.getLogger(__file__)
 def run(src, dst):
     log.debug('run {0} {1}'.format(src, dst))
     system = FileSystem.parse(src)
-    generator = Generator(search_path=here / 'templates')
+    search_path = [
+        Path('_templates').abspath(),
+        Path(here / 'templates').abspath()
+    ]
+    generator = Generator(search_path=search_path)
     generator.register_filter('defaultValue', Filters.defaultValue)
     generator.register_filter('propertyType', Filters.propertyType)
     ctx = {'dst': dst}

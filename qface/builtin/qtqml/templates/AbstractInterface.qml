@@ -13,18 +13,22 @@ import "."
 QtObject {
     id: root
 {% for property in interface.properties %}
-    {{property.comment}}
 {% if property.readonly %}
+    {{property.comment}}
     readonly property {{property|propertyType}} {{property}} : _{{property}}
     property {{property|propertyType}} _{{property}} : {{property|defaultValue}}
 {% else %}
+    {{property.comment}}
     property {{property|propertyType}} {{property}} : {{property|defaultValue}}
-{% endif %}
+{%- endif %}
 {% endfor %}
+
+
 {% for operation in interface.operations %}
     {{operation.comment}}
     property var {{operation}} : function({{operation.parameters|join(', ')}}) {}
-{% endfor %}
+{%- endfor %}
+
 
 {% for signal in interface.signals %}
     signal {{signal}}(
@@ -34,5 +38,4 @@ QtObject {
         {% endfor -%}
     )
 {% endfor %}
-
 }

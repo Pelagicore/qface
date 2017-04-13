@@ -46,3 +46,4 @@ QtObject {
     )
 {% endfor %}
 }
+

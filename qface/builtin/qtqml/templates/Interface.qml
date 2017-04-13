@@ -18,3 +18,4 @@ import "private"
 Abstract{{interface}} {
     id: root
 }
+

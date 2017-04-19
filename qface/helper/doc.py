@@ -1,6 +1,5 @@
 import re
 
-
 translate = None
 """
 The translare function used for transalting inline tags. The
@@ -37,6 +36,8 @@ class DocObject:
             setattr(self, name, str(value))
         elif attr_type is list:
             getattr(self, name).append(value)
+        else:
+            print('documentation tag not supported')
 
     @staticmethod
     def _translate(name, value):
@@ -78,4 +79,3 @@ def parse_doc(s):
         elif tag:  # append to previous matched tag
             doc.add_tag(tag, line)
     return doc
-

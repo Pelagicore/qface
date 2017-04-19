@@ -43,9 +43,9 @@ MULTICOMM=36
 'void'=7
 '('=8
 ')'=9
-'signal'=10
-'readonly'=11
-'const'=12
+'const'=10
+'signal'=11
+'readonly'=12
 ','=13
 '='=14
 'bool'=15

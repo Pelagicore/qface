@@ -21,8 +21,8 @@ Then inside the template you can transform any symbol into a JSON string using t
 
     {{module|jsonify}}
 
-Depending on your need you might want to create a JSON document form the whole system or from each interface or you are just
-interested for example on a JSON representation of a enumeration.
+Depending on your need you might want to create a JSON document from the whole system or from each interface or you are just
+interested on a JSON representation of an enumeration. The portion of the domain model exported to JSON really depends on your custom code generator and on which doamin element you apply the ``jsonify`` filter.
 
 JSON Format
 ===========

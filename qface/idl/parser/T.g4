@@ -29,7 +29,7 @@ definitionSymbol
     ;
 
 interfaceSymbol
-    : comment=DOCCOMMENT? tagSymbol* 'interface' name=IDENTIFIER '{' interfaceMemberSymbol* '}' ';'?
+    : comment=DOCCOMMENT? tagSymbol* 'interface' name=IDENTIFIER ('extends' extends=IDENTIFIER)? '{' interfaceMemberSymbol* '}' ';'?
     ;
 
 interfaceMemberSymbol

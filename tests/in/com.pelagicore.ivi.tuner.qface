@@ -1,11 +1,17 @@
 module com.pelagicore.ivi.tuner 1.0;
 
+
+interface BaseTuner {
+    property int baseValue;
+}
+
+
 /** Service Tuner */
 @service: true
 @interface: true
 @config: {private: true, b: B, c: C}
 @data: [1,2,3]
-interface Tuner {
+interface Tuner extends BaseTuner {
     /** property currentStation */
     readonly Station currentStation;
     /** the default station, which never changes */

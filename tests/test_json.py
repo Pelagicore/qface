@@ -46,6 +46,9 @@ def test_tuner_json():
     text = json.dumps(data)
     data = json.loads(text)
     module = data['modules'][0]
+    assert len(module['interfaces']) == 2
     interface = module['interfaces'][0]
+    assert interface['name'] == 'BaseTuner'
+    interface = module['interfaces'][1]
     assert interface['name'] == 'Tuner'
 

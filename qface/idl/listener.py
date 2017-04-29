@@ -109,6 +109,8 @@ class DomainListener(TListener):
         name = ctx.name.text
         self.interface = Interface(name, self.module)
         self.parse_annotations(ctx, self.interface)
+        if ctx.extends:
+            self.interface._extends = ctx.extends.text
         contextMap[ctx] = self.interface
 
     def exitInterfaceSymbol(self, ctx: TParser.InterfaceSymbolContext):

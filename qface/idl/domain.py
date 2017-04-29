@@ -337,6 +337,7 @@ class Interface(Symbol):
         self._operationMap = OrderedDict()  # type: dict[str, Operation]
         self._signalMap = OrderedDict()  # type: dict[str, Signal]
         self._contentMap = ChainMap(self._propertyMap, self._operationMap, self._signalMap)
+        self._extends = None
 
     @property
     def properties(self):
@@ -352,6 +353,10 @@ class Interface(Symbol):
     def signals(self):
         '''returns ordered list of signals'''
         return self._signalMap.values()
+
+    @property
+    def extends(self):
+        return self.module.lookup(self._extends)
 
     def toJson(self):
         o = super().toJson()

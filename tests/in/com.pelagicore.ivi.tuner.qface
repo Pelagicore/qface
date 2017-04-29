@@ -12,6 +12,8 @@ interface Tuner {
     const Station defaultStation;
     /** operation nextStation */
     void nextStation();
+    /** operation numStations */
+    int numStations() const;
     /** operation previousStation */
     void previousStation();
     /** operation updateCurrentStation */

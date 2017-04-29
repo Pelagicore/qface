@@ -150,6 +150,9 @@ class DomainListener(TListener):
         assert self.interface
         name = ctx.name.text
         self.operation = Operation(name, self.interface)
+        modifier = ctx.operationModifierSymbol()
+        if modifier:
+            self.operation.const = bool(modifier.is_const)
         self.parse_annotations(ctx, self.operation)
         self.parse_type(ctx, self.operation.type)
         contextMap[ctx] = self.operation

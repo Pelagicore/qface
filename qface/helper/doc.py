@@ -37,7 +37,7 @@ class DocObject:
         elif attr_type is list:
             getattr(self, name).append(value)
         else:
-            print('documentation tag not supported')
+            print('documentation tag @{0} not supported'.format(name))
 
     @staticmethod
     def _translate(name, value):

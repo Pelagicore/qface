@@ -135,3 +135,34 @@ Below is an example of a QFace file.
         common.TimeStamp modified;
     }
 
+
+Annotations
+===========
+
+Annotation allow the writer to add meta data to an interface document. It uses the `@` notation followed by valid YAML one line content.
+
+.. code-block:: js
+
+    @singleton: true
+    @config: { port: 1234 }
+    interface Echo {
+    }
+
+More information on annotations can be found in the annotations chapter.
+
+Comments
+========
+
+Comments use the JavaDoc convention of using an `@` sign as prefix with the keyword followed by the required paramters.
+
+.. code-block::java
+
+    /**
+     * @brief The last echo message
+     */
+
+Currently only brief, description, see and deprecated are supported doc tags.
+
+The QtCPP builtin generator generates valid Qt documentation out of these comments.
+
+

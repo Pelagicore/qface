@@ -39,7 +39,11 @@ interfaceMemberSymbol
     ;
 
 operationSymbol
-    : comment=DOCCOMMENT?  tagSymbol* (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
+    : comment=DOCCOMMENT?  tagSymbol* (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' operationModifierSymbol? ';'?
+    ;
+
+operationModifierSymbol
+    : is_const='const'
     ;
 
 signalSymbol

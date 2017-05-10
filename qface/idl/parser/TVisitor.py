@@ -49,6 +49,11 @@ class TVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by TParser#operationModifierSymbol.
+    def visitOperationModifierSymbol(self, ctx:TParser.OperationModifierSymbolContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by TParser#signalSymbol.
     def visitSignalSymbol(self, ctx:TParser.SignalSymbolContext):
         return self.visitChildren(ctx)

@@ -8,3 +8,4 @@ pyyaml
 pytest
 coverage
 pytest-cov
+six

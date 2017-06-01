@@ -53,6 +53,7 @@ setup(
         'antlr4-python3-runtime>=4.6',
         'click',
         'watchdog',
+        'six',
     ],
     extras_require={
         'dev': [

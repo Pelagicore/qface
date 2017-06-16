@@ -217,6 +217,11 @@ class TypeSymbol(NamedElement):
         return self.is_complex and isinstance(self.reference, Struct)
 
     @property
+    def is_interface(self):
+        '''checks if type is interface'''
+        return self.is_complex and isinstance(self.reference, Interface)
+
+    @property
     def is_variant(self):
         '''checks if type is primitive and string'''
         return self.is_primitive and self.name == 'var'

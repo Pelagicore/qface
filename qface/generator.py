@@ -85,7 +85,7 @@ class Generator(object):
                 click.secho('preserve changed file: {0}'.format(path), fg='blue')
             else:
                 click.secho('write changed file: {0}'.format(path), fg='blue')
-                path.open('w').write(data)
+                path.open('w', encoding='utf-8').write(data)
 
     def _has_different_content(self, data, path):
         if not path.exists():

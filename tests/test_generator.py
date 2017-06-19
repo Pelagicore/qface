@@ -32,7 +32,7 @@ def test_gen_interface():
     template = """{{module.interfaces|join(',')}}"""
     module = system.lookup('com.pelagicore.ivi.tuner')
     text = gen.apply(template, {"module": module})
-    assert text == 'BaseTuner,Tuner'
+    assert text == 'BaseTuner,Tuner,TunerExtension'
 
 
 def test_parse_document():

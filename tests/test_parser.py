@@ -165,3 +165,12 @@ def test_extension():
     # import pdb; pdb.set_trace()
     assert extends is interface.extends
 
+
+def test_interface_property():
+    system = load_tuner()
+    tuner = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    extension = system.lookup('com.pelagicore.ivi.tuner.TunerExtension')
+    prop = tuner._propertyMap['extension']
+    assert prop.type.is_interface
+    assert prop.type.reference is extension
+

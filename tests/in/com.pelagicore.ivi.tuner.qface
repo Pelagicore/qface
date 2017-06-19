@@ -32,6 +32,11 @@ interface Tuner extends BaseTuner {
 
     signal scanFinished();
     signal broadcastMessage(string message);
+
+    TunerExtension extension;
+}
+
+interface TunerExtension {
 }
 
 /** enum State */

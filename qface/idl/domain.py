@@ -310,6 +310,14 @@ class Module(Symbol):
         return self.name.split('.')
 
     @property
+    def majorVersion(self):
+        return self.version.split('.')[0]
+
+    @property
+    def minorVersion(self):
+        return self.version.split('.')[1]
+
+    @property
     def module_name(self):
         return self.name.split('.')[-1].capitalize()
 

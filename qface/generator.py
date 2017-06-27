@@ -36,6 +36,11 @@ def upper_first_filter(s):
     return s[0].upper() + s[1:]
 
 
+def lower_first_filter(s):
+    s = str(s)
+    return s[0].lower() + s[1:]
+
+
 class Generator(object):
     """Manages the templates and applies your context data"""
     def __init__(self, search_path: str):
@@ -45,6 +50,7 @@ class Generator(object):
             lstrip_blocks=True
         )
         self.env.filters['upperfirst'] = upper_first_filter
+        self.env.filters['lowerfirst'] = lower_first_filter
         self._destination = Path()
 
     @property

@@ -106,9 +106,9 @@ def test_default_value():
     parameter = operation._parameterMap['message']
 
     types = {
-        'bool': 'false',
-        'int': '0',
-        'real': '0.0',
+        'bool': 'bool(false)',
+        'int': 'int(0)',
+        'real': 'qreal(0.0)',
         'string': 'QString()',
         'var': 'QVariant()'
     }

@@ -67,5 +67,5 @@ def test_destination_prefix():
         ctx = {'out': out.abspath(), 'module': module}
         generator.write(dst_template, 'module.txt', ctx)
         path = generator.apply(dst_template, ctx)
-        assert Path(path).exists()
+        assert Path(path).exists() == True
     out.rmtree_p()

@@ -1,6 +1,5 @@
 # Copyright (c) Pelagicore AB 2016
 import logging
-from _operator import concat
 
 from .parser.TListener import TListener
 from .parser.TParser import TParser
@@ -110,6 +109,8 @@ class DomainListener(TListener):
         name = ctx.name.text
         self.interface = Interface(name, self.module)
         self.parse_annotations(ctx, self.interface)
+        if ctx.extends:
+            self.interface._extends = ctx.extends.text
         contextMap[ctx] = self.interface
 
     def exitInterfaceSymbol(self, ctx: TParser.InterfaceSymbolContext):
@@ -151,6 +152,9 @@ class DomainListener(TListener):
         assert self.interface
         name = ctx.name.text
         self.operation = Operation(name, self.interface)
+        modifier = ctx.operationModifierSymbol()
+        if modifier:
+            self.operation.const = bool(modifier.is_const)
         self.parse_annotations(ctx, self.operation)
         self.parse_type(ctx, self.operation.type)
         contextMap[ctx] = self.operation
@@ -181,7 +185,10 @@ class DomainListener(TListener):
         assert self.interface
         name = ctx.name.text
         self.property = Property(name, self.interface)
-        self.property.is_readonly = bool(ctx.isReadOnly)
+        modifier = ctx.propertyModifierSymbol()
+        if modifier:
+            self.property.readonly = bool(modifier.is_readonly)
+            self.property.const = bool(modifier.is_const)
         self.parse_annotations(ctx, self.property)
         self.parse_type(ctx, self.property.type)
         contextMap[ctx] = self.property

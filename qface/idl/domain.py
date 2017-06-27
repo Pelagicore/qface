@@ -78,6 +78,11 @@ class System(object):
             type_name = parts[1]
         return (module_name, type_name, fragment_name)
 
+    def toJson(self):
+        o = {}
+        o['modules'] = [o.toJson() for o in self.modules]
+        return o
+
 
 class NamedElement(object):
     def __init__(self, name, module: 'Module'):
@@ -102,6 +107,12 @@ class NamedElement(object):
             return self.module.name
         else:
             return '{0}.{1}'.format(self.module.name, self.name)
+
+    def toJson(self):
+        o = {}
+        if self.name:
+            o['name'] = self.name
+        return o
 
 
 class Symbol(NamedElement):
@@ -144,6 +155,11 @@ class Symbol(NamedElement):
     def contents(self):
         return self._contentMap.values()
 
+    def toJson(self):
+        o = super().toJson()
+        if self.type.is_valid:
+            o['type'] = self.type.toJson()
+        return o
 
 
 class TypeSymbol(NamedElement):
@@ -165,7 +181,10 @@ class TypeSymbol(NamedElement):
     @property
     def is_valid(self):
         '''checks if type is a valid type'''
-        return self.is_primitive or self.is_complex
+        return (self.is_primitive and self.name) \
+            or (self.is_complex and self.name) \
+            or (self.is_list and self.nested) \
+            or (self.is_model and self.nested) \
 
     @property
     def is_bool(self):
@@ -198,6 +217,11 @@ class TypeSymbol(NamedElement):
         return self.is_complex and isinstance(self.reference, Struct)
 
     @property
+    def is_interface(self):
+        '''checks if type is interface'''
+        return self.is_complex and isinstance(self.reference, Interface)
+
+    @property
     def is_variant(self):
         '''checks if type is primitive and string'''
         return self.is_primitive and self.name == 'var'
@@ -219,6 +243,22 @@ class TypeSymbol(NamedElement):
     @property
     def type(self):
         return self
+
+    def toJson(self):
+        o = super().toJson()
+        if self.is_void:
+            o['void'] = self.is_void
+        if self.is_primitive:
+            o['primitive'] = self.is_primitive
+        if self.is_complex:
+            o['complex'] = self.is_complex
+        if self.is_list:
+            o['list'] = self.is_list
+        if self.is_model:
+            o['model'] = self.is_model
+        if self.nested:
+            o['nested'] = self.nested.toJson()
+        return o
 
 
 class Module(Symbol):
@@ -270,6 +310,14 @@ class Module(Symbol):
         return self.name.split('.')
 
     @property
+    def majorVersion(self):
+        return self.version.split('.')[0]
+
+    @property
+    def minorVersion(self):
+        return self.version.split('.')[1]
+
+    @property
     def module_name(self):
         return self.name.split('.')[-1].capitalize()
 
@@ -283,6 +331,14 @@ class Module(Symbol):
             return symbol
         return self.system.lookup(name)
 
+    def toJson(self):
+        o = super().toJson()
+        o['version'] = self.version
+        o['interfaces'] = [s.toJson() for s in self.interfaces]
+        o['structs'] = [s.toJson() for s in self.structs]
+        o['enums'] = [s.toJson() for s in self.enums]
+        return o
+
 
 class Interface(Symbol):
     """A interface is an object with operations, properties and signals"""
@@ -294,6 +350,7 @@ class Interface(Symbol):
         self._operationMap = OrderedDict()  # type: dict[str, Operation]
         self._signalMap = OrderedDict()  # type: dict[str, Signal]
         self._contentMap = ChainMap(self._propertyMap, self._operationMap, self._signalMap)
+        self._extends = None
 
     @property
     def properties(self):
@@ -310,6 +367,17 @@ class Interface(Symbol):
         '''returns ordered list of signals'''
         return self._signalMap.values()
 
+    @property
+    def extends(self):
+        return self.module.lookup(self._extends)
+
+    def toJson(self):
+        o = super().toJson()
+        o['properties'] = [s.toJson() for s in self.properties]
+        o['operations'] = [s.toJson() for s in self.operations]
+        o['signals'] = [s.toJson() for s in self.signals]
+        return o
+
 
 class Operation(Symbol):
     """An operation inside a interface"""
@@ -325,6 +393,11 @@ class Operation(Symbol):
         '''returns ordered list of parameters'''
         return self._parameterMap.values()
 
+    def toJson(self):
+        o = super().toJson()
+        o['parameters'] = [s.toJson() for s in self.parameters]
+        return o
+
 
 class Signal(Symbol):
     """A signal inside an interface"""
@@ -339,6 +412,11 @@ class Signal(Symbol):
     def parameters(self):
         '''returns ordered list of parameters'''
         return self._parameterMap.values()
+
+    def toJson(self):
+        o = super().toJson()
+        o['parameters'] = [s.toJson() for s in self.parameters]
+        return o
 
 
 class Parameter(Symbol):
@@ -357,7 +435,16 @@ class Property(Symbol):
         log.debug('Property()')
         self.interface = interface
         self.interface._propertyMap[name] = self
-        self.is_readonly = False
+        self.readonly = False
+        self.const = False
+
+    def toJson(self):
+        o = super().toJson()
+        if self.readonly:
+            o['readonly'] = True
+        if self.const:
+            o['const'] = True
+        return o
 
 
 class Struct(Symbol):
@@ -366,12 +453,17 @@ class Struct(Symbol):
         super().__init__(name, module)
         log.debug('Struct()')
         self.module._structMap[name] = self
-        self._fieldMap = self._contentMap = OrderedDict()  # type: dict[str, Field]
+        self._fieldMap = self._contentMap = OrderedDict()
 
     @property
     def fields(self):
         '''returns ordered list of members'''
         return self._fieldMap.values()
+
+    def toJson(self):
+        o = super().toJson()
+        o['fields'] = [s.toJson() for s in self.fields]
+        return o
 
 
 class Field(Symbol):
@@ -398,6 +490,15 @@ class Enum(Symbol):
         '''returns ordered list of members'''
         return self._memberMap.values()
 
+    def toJson(self):
+        o = super().toJson()
+        if self.is_enum:
+            o['enum'] = self.is_enum
+        if self.is_flag:
+            o['flag'] = self.is_flag
+        o['members'] = [s.toJson() for s in self.members]
+        return o
+
 
 class EnumMember(Symbol):
     """A enum value"""
@@ -407,3 +508,9 @@ class EnumMember(Symbol):
         self.enum = enum
         self.enum._memberMap[name] = self
         self.value = 0
+
+    def toJson(self):
+        o = super().toJson()
+        o['value'] = self.value
+        return o
+

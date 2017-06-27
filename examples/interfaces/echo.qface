@@ -1,19 +1,38 @@
 module org.example 1.0;
 
 /**
- * Provide a simple echo service.
+ * @brief Provide a simple echo service.
  */
 interface Echo {
     /**
-     * The last echo message.
+     * @brief The last echo message.
      */
-    string currentMessage;
+    readonly string currentMessage;
     /**
-     * Returns the passed in message
+     * @brief Returns the passed in message
      */
     void echo(Message message);
 }
 
+/**
+ * @brief A message structure to send and receive
+ */
 struct Message {
+    /**
+     * @brief the text to send
+     */
     string text;
+}
+
+/**
+ * @brief Status
+ */
+enum Status {
+    /**
+     * @brief Nothing loaded yet
+     */
+    Null,
+    Loading,
+    Ready,
+    Error
 }

@@ -1,7 +1,8 @@
 """
 Provides helper functionality specificially for Qt C++/QML code generators
 """
-
+import qface.idl.domain as domain
+from jinja2 import environmentfilter
 
 def upper_first(s):
     s = str(s)
@@ -23,13 +24,13 @@ class Filters(object):
         t = symbol.type  # type: qface.domain.TypeSymbol
         if t.is_primitive:
             if t.is_int:
-                return '0'
+                return 'int(0)'
             if t.is_bool:
-                return 'false'
+                return 'bool(false)'
             if t.is_string:
                 return 'QString()'
             if t.is_real:
-                return '0.0'
+                return 'qreal(0.0)'
             if t.is_variant:
                 return 'QVariant()'
         elif t.is_void:
@@ -105,3 +106,56 @@ class Filters(object):
             return '{0}{1}'.format(prefix, symbol.type)
         return 'XXX'
 
+    @staticmethod
+    def open_ns(symbol):
+        ''' generates a open namespace from symbol namespace x { y { z {'''
+        blocks = ['{0} {{'.format(x) for x in symbol.module.name_parts]
+        return 'namespace {0}'.format(str.join(' ', blocks))
+
+    @staticmethod
+    def close_ns(symbol):
+        '''generates a closing names statement from a symbol'''
+        return ' '.join(['}' for x in symbol.module.name_parts])
+
+    @staticmethod
+    def using_ns(symbol):
+        '''generates a using namespace x::y::z statement from a symbol'''
+        id = '::'.join(symbol.module.name_parts)
+        return 'using namespace {0}'.format(id)
+
+    @staticmethod
+    def signalName(s):
+        if isinstance(s, domain.Property):
+            return '{0}Changed'.format(s)
+        return s
+
+    @staticmethod
+    @environmentfilter
+    def parameters(env, s, filter=None, spaces=True):
+        if not filter:
+            filter = Filters.parameterType
+        else:
+            filter = env.filters[filter]
+        args = []
+        indent = ', '
+        if not spaces:
+            indent = ','
+        if isinstance(s, domain.Operation):
+            args = s.parameters
+        elif isinstance(s, domain.Signal):
+            args = s.parameters
+        elif isinstance(s, domain.Property):
+            args = [s]
+        return indent.join([filter(a) for a in args])
+
+    @staticmethod
+    def signature(s):
+        if isinstance(s, domain.Operation):
+            args = s.parameters
+        elif isinstance(s, domain.Signal):
+            args = s.parameters
+        elif isinstance(s, domain.Property):
+            args = [s.type] # for <property>Changed(<type>)
+        else:
+            args = []
+        return ','.join([Filters.returnType(a) for a in args])

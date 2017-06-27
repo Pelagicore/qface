@@ -1,3 +1,11 @@
+{% include 'copyright.h' %}
+
+
+/*
+ * This is an auto-generated file.
+ * Do not edit! All changes made to it will be lost.
+ */
+
 import QtQml 2.2
 import QtQml.Models 2.2
 
@@ -6,12 +14,26 @@ import "."
 {{interface.comment}}
 QtObject {
     id: root
+
 {% for property in interface.properties %}
-    {{property.comment}}
-    {%+ if property.is_readonly %}readonly {% endif %}property {{property|propertyType}} {{property}} : {{property|defaultValue}}
+{% if property.readonly %}
+{% if property.comment %}
+    {{ property.comment }}
+{% endif %}
+    readonly property {{property|propertyType}} {{property}} : _{{property}}
+    property {{property|propertyType}} _{{property}} : {{property|defaultValue}}
+{% else %}
+{% if property.comment %}
+    {{ property.comment }}
+{% endif %}
+    property {{property|propertyType}} {{property}} : {{property|defaultValue }}
+{% endif %}
 {% endfor %}
+
 {% for operation in interface.operations %}
-    {{operation.comment}}
+{% if operation.comment %}
+    {{ operation.comment }}
+{% endif %}
     property var {{operation}} : function({{operation.parameters|join(', ')}}) {}
 {% endfor %}
 
@@ -23,5 +45,5 @@ QtObject {
         {% endfor -%}
     )
 {% endfor %}
-
 }
+

@@ -22,7 +22,7 @@ Installs qface as an "editable" package. Means updates on the local git repo are
 To install the python dependencies use
 
     cd qface
-    pip3 install -r requirements
+    pip3 install -r requirements.txt
     pip3 install -e .
 
 For updating the grammar you also need antlr4 (see http://www.antlr.org).

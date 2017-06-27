@@ -16,6 +16,8 @@ class RunScriptChangeHandler(FileSystemEventHandler):
         self.is_running = False
 
     def on_modified(self, event):
+        if event.is_directory:
+            return
         self.run()
 
     def run(self):

@@ -68,3 +68,15 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
     {% endfor %}
     qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{module.module_name}}Module", {{class|lower}}_singletontype_provider);
 }
+
+
+{% for enum in module.enums %}
+/**
+ * \qmlproperty enumeration {{module.module_name}}Module::{{enum}}
+ * \list
+ {% for member in enum.members %}
+ * \li {{member}}
+ {% endfor %}
+ * \endlist
+ */
+{% endfor %}

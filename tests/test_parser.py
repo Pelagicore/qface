@@ -52,8 +52,13 @@ def test_property():
     assert property.type.name == 'Station'
     assert property.module == module
     assert property.type.qualified_name == 'com.pelagicore.ivi.tuner.Station'
-    assert property.is_readonly
+    assert property.readonly
+    assert not property.const
     assert property.comment == '/** property currentStation */'
+
+    property = interface._propertyMap['defaultStation']
+    assert not property.readonly
+    assert property.const
 
 
 def test_operation():
@@ -63,6 +68,9 @@ def test_operation():
     assert operation
     operation = interface._contentMap['previousStation']
     assert operation
+    operation = interface._contentMap['numStations']
+    assert operation
+    assert operation.const
 
 
 def test_signals():
@@ -148,3 +156,21 @@ def test_model():
     assert property.type.is_model is True
     assert property.type.nested.is_complex
     assert property.type.nested.name == 'Station'
+
+
+def test_extension():
+    system = load_tuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    extends = system.lookup('com.pelagicore.ivi.tuner.BaseTuner')
+    # import pdb; pdb.set_trace()
+    assert extends is interface.extends
+
+
+def test_interface_property():
+    system = load_tuner()
+    tuner = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    extension = system.lookup('com.pelagicore.ivi.tuner.TunerExtension')
+    prop = tuner._propertyMap['extension']
+    assert prop.type.is_interface
+    assert prop.type.reference is extension
+

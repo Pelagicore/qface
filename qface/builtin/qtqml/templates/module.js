@@ -1,3 +1,11 @@
+{% include 'copyright.h' %}
+
+
+/*
+ * This is an auto-generated file.
+ * Do not edit! All changes made to it will be lost.
+ */
+
 .pragma library
 
 {% for enum in module.enums %}
@@ -9,7 +17,7 @@ var {{member}} = {{member.value}};
 
 {% for struct in module.structs %}
 function create{{struct}}() {
-    return { 
+    return {
         {% for field in struct.fields %}
         {{field}} : {{field | defaultValue}},
         {% endfor %}

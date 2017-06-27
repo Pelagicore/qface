@@ -167,12 +167,13 @@ def uninstall():
 
 @cli.command()
 def upload():
+    Path('build').rmtree_p()
     dist = Path('dist')
-    if dist.exists():
-        dist.rmdir_p()
+    dist.rmtree_p()
     dist.makedirs_p()
     sh('python3 setup.py bdist_wheel')
     sh('twine upload dist/*')
+    Path('build').rmtree_p()
 
 
 @cli.command()

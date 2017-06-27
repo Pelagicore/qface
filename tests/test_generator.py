@@ -29,14 +29,10 @@ def test_gen_module():
 def test_gen_interface():
     system = loadSystem()
     gen = Generator(search_path='tests/templates')
-    template = """
-        {%- for interface in module.interfaces -%}
-            {{interface}}
-        {%- endfor -%}
-    """
+    template = """{{module.interfaces|join(',')}}"""
     module = system.lookup('com.pelagicore.ivi.tuner')
     text = gen.apply(template, {"module": module})
-    assert text == 'Tuner'
+    assert text == 'BaseTuner,Tuner,TunerExtension'
 
 
 def test_parse_document():

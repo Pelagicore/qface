@@ -29,7 +29,7 @@ definitionSymbol
     ;
 
 interfaceSymbol
-    : comment=DOCCOMMENT? tagSymbol* 'interface' name=IDENTIFIER '{' interfaceMemberSymbol* '}' ';'?
+    : comment=DOCCOMMENT? tagSymbol* 'interface' name=IDENTIFIER ('extends' extends=IDENTIFIER)? '{' interfaceMemberSymbol* '}' ';'?
     ;
 
 interfaceMemberSymbol
@@ -39,7 +39,11 @@ interfaceMemberSymbol
     ;
 
 operationSymbol
-    : comment=DOCCOMMENT?  tagSymbol* (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' ';'?
+    : comment=DOCCOMMENT?  tagSymbol* (typeSymbol | 'void') name=IDENTIFIER '(' operationParameterSymbol* ')' operationModifierSymbol? ';'?
+    ;
+
+operationModifierSymbol
+    : is_const='const'
     ;
 
 signalSymbol
@@ -48,7 +52,12 @@ signalSymbol
 
 
 propertySymbol
-    : comment=DOCCOMMENT? tagSymbol* isReadOnly='readonly'? typeSymbol name=IDENTIFIER ';'?
+    : comment=DOCCOMMENT? tagSymbol* propertyModifierSymbol? typeSymbol name=IDENTIFIER ';'?
+    ;
+
+propertyModifierSymbol
+    : is_readonly='readonly'
+    | is_const='const'
     ;
 
 operationParameterSymbol

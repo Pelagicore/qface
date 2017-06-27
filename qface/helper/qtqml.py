@@ -19,10 +19,14 @@ class Filters(object):
         if t.is_primitive:
             if t.name == 'int':
                 return '0'
+            elif t.name == 'real':
+                return "0.0"
             elif t.name == 'bool':
                 return 'false'
             elif t.name == 'string':
                 return "''"
+            elif t.name == 'var':
+                return "undefined"
         elif t.is_enum:
             value = next(iter(t.reference.members))
             return '{0}Module.{1}'.format(module, value)

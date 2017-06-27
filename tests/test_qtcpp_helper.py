@@ -200,3 +200,15 @@ def test_parameter_type():
     assert answer == 'QmlMessageModel *{0}'.format(prop.name)
 
 
+def test_namespace():
+    system = parse_document()
+    module = system.lookup('org.example')
+    assert module
+    ns = qtcpp.Filters.open_ns(module)
+    assert ns == 'namespace org { example {'
+
+    ns = qtcpp.Filters.close_ns(module)
+    assert ns == '} }'
+
+    ns = qtcpp.Filters.using_ns(module)
+    assert ns == 'using namespace org::example'

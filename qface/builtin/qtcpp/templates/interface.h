@@ -1,5 +1,5 @@
 {# Copyright (c) Pelagicore AB 2016 #}
-{% set class = 'Qml{0}'.format(interface) %}
+{% set class = '{0}'.format(interface) %}
 /*
  * This is a preserved file.
  * Changes will not be overriden by the generator.
@@ -10,10 +10,10 @@
 
 #include <QtCore>
 
-#include "generated/qml{{module.module_name|lower}}module.h"
-#include "generated/qmlabstract{{interface|lower}}.h"
+#include "generated/{{module.module_name|lower}}module.h"
+#include "generated/abstract{{interface|lower}}.h"
 
-class {{class}} : public QmlAbstract{{interface}}
+class {{class}} : public Abstract{{interface}}
 {
     Q_OBJECT
 public:

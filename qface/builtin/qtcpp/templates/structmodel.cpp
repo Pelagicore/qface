@@ -20,7 +20,7 @@ int {{class}}::count() const
     return m_data.count();
 }
 
-Qml{{struct}} {{class}}::get(int index)
+{{struct}} {{class}}::get(int index)
 {
     return m_data.value(index);
 }
@@ -52,7 +52,7 @@ QHash<int, QByteArray> {{class}}::roleNames() const
 }
 
 
-void {{class}}::insert(int row, const Qml{{struct}} &{{struct|lower}})
+void {{class}}::insert(int row, const {{struct}} &{{struct|lower}})
 {
     if (row < 0)
         row = 0;
@@ -65,19 +65,19 @@ void {{class}}::insert(int row, const Qml{{struct}} &{{struct|lower}})
     emit countChanged(count());
 }
 
-void {{class}}::reset(const QList<Qml{{struct}}> data)
+void {{class}}::reset(const QList<{{struct}}> data)
 {
     beginResetModel();
     m_data = data;
     endResetModel();
 }
 
-void {{class}}::append(const Qml{{struct}} &{{struct|lower}})
+void {{class}}::append(const {{struct}} &{{struct|lower}})
 {
     insert(m_data.count(), {{struct|lower}});
 }
 
-void {{class}}::update(int row, const Qml{{struct}} &{{struct|lower}})
+void {{class}}::update(int row, const {{struct}} &{{struct|lower}})
 {
     if(row < 0 || row >= m_data.count()) {
         return;

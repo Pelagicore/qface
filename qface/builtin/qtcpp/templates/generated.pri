@@ -8,26 +8,26 @@ QT += qml quick
 CONFIG += c++11
 
 HEADERS += \
-    $$PWD/qml{{module.module_name|lower}}module.h \
+    $$PWD/{{module.module_name|lower}}module.h \
 {% for interface in module.interfaces %}
-    $$PWD/qmlabstract{{interface|lower}}.h \
+    $$PWD/abstract{{interface|lower}}.h \
 {% endfor %}
 {% for struct in module.structs %}
-    $$PWD/qml{{struct|lower}}.h \
-    $$PWD/qml{{struct|lower}}model.h \
+    $$PWD/{{struct|lower}}.h \
+    $$PWD/{{struct|lower}}model.h \
 {% endfor %}
-    $$PWD/qmlvariantmodel.h
+    $$PWD/variantmodel.h
 
 
 SOURCES += \
-    $$PWD/qml{{module.module_name|lower}}module.cpp \
+    $$PWD/{{module.module_name|lower}}module.cpp \
 {% for interface in module.interfaces %}
-    $$PWD/qmlabstract{{interface|lower}}.cpp \
+    $$PWD/abstract{{interface|lower}}.cpp \
 {% endfor %}
 {% for struct in module.structs %}
-    $$PWD/qml{{struct|lower}}.cpp \
-    $$PWD/qml{{struct|lower}}model.cpp \
+    $$PWD/{{struct|lower}}.cpp \
+    $$PWD/{{struct|lower}}model.cpp \
 {% endfor %}
-    $$PWD/qmlvariantmodel.cpp
+    $$PWD/variantmodel.cpp
 
 

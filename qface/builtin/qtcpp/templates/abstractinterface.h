@@ -9,7 +9,7 @@
 
 #include <QtCore>
 
-#include "qml{{module.module_name|lower}}module.h"
+#include "{{module.module_name|lower}}module.h"
 
 class {{class}} : public QObject
 {

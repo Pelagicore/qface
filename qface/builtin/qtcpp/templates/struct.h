@@ -24,6 +24,8 @@ public:
     {{class}}(const {{class}} &other);
     ~{{class}}();
 
+    static void registerQmlTypes(const QString& uri, int majorVersion=1, int minorVersion=0);
+
     Q_INVOKABLE {{class}} clone();
 
     bool operator==(const {{class}} &other) const;
@@ -39,7 +41,5 @@ public:
 private:
     QExplicitlySharedDataPointer <{{class}}Data> d;
 };
-
-Q_DECLARE_METATYPE({{class}})
 
 

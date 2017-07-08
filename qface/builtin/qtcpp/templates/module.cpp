@@ -45,16 +45,16 @@ QObject* {{class|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
    \qmlmethod {{struct}} {{module.module_name}}Module::create{{struct}}()
    \brief Creates a default constructed data object from type {{struct}}
 */
-Qml{{struct}} {{class}}::create{{struct}}()
+{{struct}} {{class}}::create{{struct}}()
 {
-    return Qml{{struct}}();
+    return {{struct}}();
 }
 {% endfor %}
 
 void {{class}}::registerTypes()
 {
     {% for struct in module.structs %}
-    qRegisterMetaType<Qml{{struct}}>();
+    qRegisterMetaType<{{struct}}>();
     {% endfor %}
     {% for enum in module.enums %}
     qRegisterMetaType<{{class}}::{{enum}}>();
@@ -64,7 +64,7 @@ void {{class}}::registerTypes()
 void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minorVersion)
 {
     {% for struct in module.structs %}
-    qmlRegisterUncreatableType<Qml{{struct}}Model>(uri.toLatin1(), majorVersion, minorVersion, "{{struct}}Model", "Model can not be instantiated from QML");
+    qmlRegisterUncreatableType<{{struct}}Model>(uri.toLatin1(), majorVersion, minorVersion, "{{struct}}Model", "Model can not be instantiated from QML");
     {% endfor %}
     qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{module.module_name}}Module", {{class|lower}}_singletontype_provider);
 }

@@ -7,6 +7,8 @@
 ****************************************************************************/
 
 #include "{{class|lower}}.h"
+#include <QtQml>
+
 
 
 class {{class}}Data : public QSharedData
@@ -63,6 +65,12 @@ public:
 {{class}}::~{{class}}()
 {
 }
+
+void {{class}}::registerQmlTypes(const QString& uri, int majorVersion=1, int minorVersion=0);
+{
+    qmlRegisterType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{class}}");
+}
+
 
 {% for field in struct.fields %}
 /*!

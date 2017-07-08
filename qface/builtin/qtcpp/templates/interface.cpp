@@ -1,5 +1,5 @@
 {# Copyright (c) Pelagicore AB 2016 #}
-{% set class = 'Qml{0}'.format(interface) %}
+{% set class = '{0}'.format(interface) %}
 /*
  * This is a preserved file.
  * Changes will not be overriden by the generator.
@@ -33,7 +33,7 @@ QObject* {{class|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 
 {{interface.comment}}
 {{class}}::{{class}}(QObject *parent)
-    : QmlAbstract{{interface}}(parent)
+    : Abstract{{interface}}(parent)
 {
 }
 

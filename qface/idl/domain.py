@@ -102,7 +102,7 @@ class NamedElement(object):
 
     @property
     def qualified_name(self):
-        '''return the fully qualified name (`module + "." + name`)'''
+        '''return the fully qualified name (`<module>.<name>`)'''
         if self.module == self:
             return self.module.name
         else:
@@ -389,6 +389,11 @@ class Operation(Symbol):
         self._parameterMap = self._contentMap = OrderedDict()  # type: dict[Parameter]
 
     @property
+    def qualified_name(self):
+        '''return the fully qualified name (`<module>.<interface>#<operation>`)'''
+        return '{0}.{1}#{2}'.format(self.module.name, self.interface.name, self.name)
+
+    @property
     def parameters(self):
         '''returns ordered list of parameters'''
         return self._parameterMap.values()
@@ -407,6 +412,11 @@ class Signal(Symbol):
         self.interface = interface
         self.interface._signalMap[name] = self
         self._parameterMap = self._contentMap = OrderedDict()  # type: dict[Parameter]
+
+    @property
+    def qualified_name(self):
+        '''return the fully qualified name (`module + "." + name`)'''
+        return '{0}.{1}#{2}'.format(self.module.name, self.interface.name, self.name)
 
     @property
     def parameters(self):
@@ -437,6 +447,12 @@ class Property(Symbol):
         self.interface._propertyMap[name] = self
         self.readonly = False
         self.const = False
+
+    @property
+    def qualified_name(self):
+        '''return the fully qualified name (`<module>.<interface>#<property>`)'''
+        return '{0}.{1}#{2}'.format(self.module.name, self.interface.name, self.name)
+
 
     def toJson(self):
         o = super().toJson()
@@ -474,6 +490,12 @@ class Field(Symbol):
         self.struct = struct  # type:Struct
         self.struct._fieldMap[name] = self
 
+    @property
+    def qualified_name(self):
+        '''return the fully qualified name (`<module>.<struct>#<field>`)'''
+        return '{0}.{1}#{2}'.format(self.module.name, self.struct.name, self.name)
+
+
 
 class Enum(Symbol):
     """An enum (flag) inside a module"""
@@ -508,6 +530,10 @@ class EnumMember(Symbol):
         self.enum = enum
         self.enum._memberMap[name] = self
         self.value = 0
+
+    def qualified_name(self):
+        '''return the fully qualified name (`<module>.<enum>#<member>`)'''
+        return '{0}.{1}#{2}'.format(self.module.name, self.enum.name, self.name)
 
     def toJson(self):
         o = super().toJson()

@@ -205,10 +205,10 @@ def test_namespace():
     module = system.lookup('org.example')
     assert module
     ns = qtcpp.Filters.open_ns(module)
-    assert ns == 'namespace org { example {'
+    assert ns == 'namespace org { namespace example {'
 
     ns = qtcpp.Filters.close_ns(module)
     assert ns == '} }'
 
     ns = qtcpp.Filters.using_ns(module)
-    assert ns == 'using namespace org::example'
+    assert ns == 'using namespace org::example;'

@@ -32,16 +32,13 @@ setup(
     url=__uri__,
     author=__author__,
     author_email=__author_email__,
-    license='GPLV3',
+    license='MIT',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Code Generators',
-        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
     ],
     keywords='qt code generator framework',
     packages=find_packages(),
@@ -66,11 +63,5 @@ setup(
             'watchdog',
             'ipdb',
         ],
-    },
-    entry_points={
-        'console_scripts': [
-            'qface-qtcpp = qface.builtin.qtcpp.qtcpp:app',
-            'qface-qtqml = qface.builtin.qtqml.qtqml:app',
-        ],
-    },
+    }
 )

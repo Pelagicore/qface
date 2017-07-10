@@ -1,7 +1,7 @@
 # Copyright (c) Pelagicore AB 2016
 
 from jinja2 import Environment, FileSystemLoader, Template
-from jinja2 import TemplateSyntaxError, TemplateNotFound
+from jinja2 import TemplateSyntaxError, TemplateNotFound, TemplateError
 from path import Path
 from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
 from antlr4.error import DiagnosticErrorListener
@@ -89,6 +89,9 @@ class Generator(object):
             click.secho(message, fg='red')
         except TemplateNotFound as exc:
             message = '{0} error: Template not found'.format(exc.name)
+            click.secho(message, fg='red')
+        except TemplateError as exc:
+            message = 'error: {0}'.format(exc.message)
             click.secho(message, fg='red')
 
     def _write(self, file_path: Path, template: str, context: dict, preserve: bool = False):

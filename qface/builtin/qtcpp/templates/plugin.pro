@@ -1,7 +1,6 @@
 {# Copyright (c) Pelagicore AB 2016 #}
-
-## This is a preserved file and can be edited.
-## All changes will not be override.
+{% import "qtcpp.j2" as cpp %}
+{{ cpp.preserved(prefix="##")}}
 
 TEMPLATE = lib
 QT += qml quick

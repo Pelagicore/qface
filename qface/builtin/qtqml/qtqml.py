@@ -41,15 +41,15 @@ def run(src, dst):
             'plugin_name': plugin_name,
         })
         generator.destination = generator.apply("{{dst}}/{{module_path}}", ctx)
-        generator.write('private/{{module_name}}Module.js', 'module.js', ctx)
-        generator.write('qmldir', 'public_qmldir', ctx)
-        generator.write('private/qmldir', 'private_qmldir', ctx)
+        generator.write('qmldir', 'qmldir', ctx)
+        generator.write('private/qmldir', 'private/qmldir', ctx)
+        generator.write('private/{{module_name}}Module.js', 'private/module.js', ctx)
 
         for interface in module.interfaces:
             ctx.update({
                 'interface': interface,
             })
-            generator.write('private/Abstract{{interface}}.qml', 'AbstractInterface.qml', ctx)
+            generator.write('private/Abstract{{interface}}.qml', 'private/AbstractInterface.qml', ctx)
             generator.write('{{interface}}.qml', 'Interface.qml', ctx, preserve=True)
 
 

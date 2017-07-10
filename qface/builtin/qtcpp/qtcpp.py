@@ -27,6 +27,7 @@ def run(src, dst):
     generator.register_filter('returnType', Filters.returnType)
     generator.register_filter('parameterType', Filters.parameterType)
     generator.register_filter('defaultValue', Filters.defaultValue)
+    generator.register_filter('parameters', Filters.parameters)
     generator.register_filter('parse_doc', parse_doc)
     ctx = {'dst': dst}
     for module in system.modules:

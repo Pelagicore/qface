@@ -1,4 +1,5 @@
 {# Copyright (c) Pelagicore AB 2016 #}
+{% import "qtcpp.j2" as cpp %}
 {% set class = 'QmlAbstract{0}'.format(interface) %}
 /****************************************************************************
 ** This is an auto-generated file.
@@ -8,6 +9,7 @@
 #include "{{class|lower}}.h"
 
 #include <QtQml>
+
 
 /*!
    \qmltype {{interface}}
@@ -32,46 +34,13 @@
 }
 
 {% for property in interface.properties %}
-/*!
-   \qmlproperty {{property.type}} {{interface}}::{{property}}
-{% with doc = property.comment|parse_doc %}
-   \brief {{doc.brief}}
+{{ cpp.property_setter_impl(class, property) }}
 
-   {{doc.description}}
-{% endwith %}
-*/
-
-void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
-{
-    if(m_{{property}} == {{property}}) {
-        return;
-    }
-    m_{{property}} = {{property}};
-    emit {{property}}Changed();
-}
-
-{{property|returnType}} {{class}}::{{property}}() const
-{
-    return m_{{property}};
-}
+{{ cpp.property_getter_impl(class, property) }}
 {% endfor %}
 
 {%- for operation in interface.operations %}
-/*!
-   \qmlmethod {{operation.type}} {{interface}}::{{operation}}({{operation.parameters|map('parameterType')|join(', ')}})
-{% with doc = operation.comment|parse_doc %}
-   \brief {{doc.brief}}
-   {{doc.description}}
-{% endwith %}
-*/
-{{operation|returnType}} {{class}}::{{operation}}({{operation.parameters|map('parameterType')|join(', ')}})
-{
-    {% for parameter in operation.parameters %}
-    Q_UNUSED({{parameter.name}});
-    {% endfor %}
-    qWarning() << "{{class}}::{{operation}}(...) not implemented";
-    return {{operation|defaultValue}};
-}
+{{ cpp.operation_impl(class, operation) }}
 {% endfor %}
 
 

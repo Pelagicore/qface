@@ -1,9 +1,11 @@
 {# Copyright (c) Pelagicore AB 2016 #}
+{% import "qtcpp.j2" as cpp %}
 {% set class = 'QmlAbstract{0}'.format(interface) %}
 /****************************************************************************
 ** This is an auto-generated file.
 ** Do not edit! All changes made to it will be lost.
 ****************************************************************************/
+
 
 #pragma once
 
@@ -15,7 +17,7 @@ class {{class}} : public QObject
 {
     Q_OBJECT
 {% for property in interface.properties %}
-    Q_PROPERTY({{property|returnType}} {{property}} READ {{property}} {% if not property.readonly %}WRITE set{{property|upperfirst}} {% endif %}{% if not property.const %}NOTIFY {{property}}Changed{% endif %})
+    {{ cpp.property(property)}}
 {% endfor %}
 
 public:
@@ -24,29 +26,25 @@ public:
 
 public Q_SLOTS:
 {% for operation in interface.operations %}
-    virtual {{operation|returnType}} {{operation}}({{operation.parameters|map('parameterType')|join(', ')}});
+    {{ cpp.operation_decl(operation) }}
 {% endfor %}
-
 public:
 {% for property in interface.properties %}
-    virtual void set{{property|upperfirst}}({{ property|parameterType }});
+    {{ cpp.property_setter_decl(property) }}
 {% endfor %}
-
 public:
 {% for property in interface.properties %}
-    virtual {{property|returnType}} {{property}}() const;
+    {{cpp.property_getter_decl(property) }}
 {% endfor %}
-
 Q_SIGNALS:
 {% for signal in interface.signals %}
-    void {{signal}}({{signal.parameters|map('parameterType')|join(', ')}});
+    {{ cpp.signal_decl(signal)}}
 {% endfor %}
 {% for property in interface.properties %}
-    void {{property}}Changed();
+    {{ cpp.signal_decl(property) }}
 {% endfor %}
-
 protected:
 {% for property in interface.properties %}
-    {{property|returnType}} m_{{property}};
+    {{ cpp.property_member_decl(property) }}
 {% endfor %}
 };

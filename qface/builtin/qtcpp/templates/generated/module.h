@@ -1,4 +1,5 @@
 {# Copyright (c) Pelagicore AB 2016 #}
+{% import "qtcpp.j2" as cpp %}
 /****************************************************************************
 ** This is an auto-generated file.
 ** Do not edit! All changes made to it will be lost.
@@ -21,15 +22,7 @@ public:
     {{class}}(QObject *parent = nullptr);
 
 {% for enum in module.enums %}
-    {% set comma = joiner(",") %}
-    enum {{enum}} {
-        {%- for member in enum.members -%}
-        {{ comma() }}
-        {{member.name}} = {{member.value}}
-        {%- endfor %}
-
-    };
-    Q_ENUM({{enum}})
+{{ cpp.enum_decl(enum) }}
 {% endfor %}
 
 {% for struct in module.structs %}

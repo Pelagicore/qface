@@ -449,6 +449,18 @@ class Property(Symbol):
         self.const = False
 
     @property
+    def is_model(self):
+        return self.type.is_model
+
+    @property
+    def is_primitive_model(self):
+        return self.type.is_model and self.type.nested.is_primitive
+
+    @property
+    def is_complex_model(self):
+        return self.type.is_model and self.type.nested.is_complex
+
+    @property
     def qualified_name(self):
         '''return the fully qualified name (`<module>.<interface>#<property>`)'''
         return '{0}.{1}#{2}'.format(self.module.name, self.interface.name, self.name)

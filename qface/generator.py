@@ -1,6 +1,7 @@
 # Copyright (c) Pelagicore AB 2016
 
-from jinja2 import Environment, FileSystemLoader, Template
+from jinja2 import Environment, Template
+from jinja2 import FileSystemLoader, PackageLoader, ChoiceLoader
 from jinja2 import TemplateSyntaxError, TemplateNotFound, TemplateError
 from path import Path
 from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
@@ -45,8 +46,12 @@ def lower_first_filter(s):
 class Generator(object):
     """Manages the templates and applies your context data"""
     def __init__(self, search_path: str):
+        loader = ChoiceLoader([
+            FileSystemLoader(search_path),
+            PackageLoader('qface')
+        ])
         self.env = Environment(
-            loader=FileSystemLoader(search_path),
+            loader=loader,
             trim_blocks=True,
             lstrip_blocks=True
         )

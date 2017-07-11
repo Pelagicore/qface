@@ -154,7 +154,7 @@ class DomainListener(TListener):
         self.operation = Operation(name, self.interface)
         modifier = ctx.operationModifierSymbol()
         if modifier:
-            self.operation.const = bool(modifier.is_const)
+            self.operation.is_const = bool(modifier.is_const)
         self.parse_annotations(ctx, self.operation)
         self.parse_type(ctx, self.operation.type)
         contextMap[ctx] = self.operation

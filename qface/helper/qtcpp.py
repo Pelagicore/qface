@@ -167,3 +167,7 @@ class Filters(object):
         if expand:
             return ', '.join(['{0} {1}'.format(filter(a), a.name) for a in args])
         return ','.join([filter(a) for a in args])
+
+    @staticmethod
+    def identifier(s):
+        return str(s).lower().replace('.', '_')

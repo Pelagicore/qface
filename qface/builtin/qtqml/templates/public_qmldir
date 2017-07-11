@@ -1,4 +1,0 @@
-{{module_name}}Module 1.0 private/{{module_name}}Module.js
-{% for interface in module.interfaces %}
-{% if 'singleton' in interface.tags %}singleton {% endif %}{{interface}} 1.0 {{interface}}.qml
-{% endfor %}

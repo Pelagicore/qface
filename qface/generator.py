@@ -1,6 +1,8 @@
 # Copyright (c) Pelagicore AB 2016
 
-from jinja2 import Environment, FileSystemLoader, Template
+from jinja2 import Environment, Template
+from jinja2 import FileSystemLoader, PackageLoader, ChoiceLoader
+from jinja2 import TemplateSyntaxError, TemplateNotFound, TemplateError
 from path import Path
 from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
 from antlr4.error import DiagnosticErrorListener
@@ -44,8 +46,12 @@ def lower_first_filter(s):
 class Generator(object):
     """Manages the templates and applies your context data"""
     def __init__(self, search_path: str):
+        loader = ChoiceLoader([
+            FileSystemLoader(search_path),
+            PackageLoader('qface')
+        ])
         self.env = Environment(
-            loader=FileSystemLoader(search_path),
+            loader=loader,
             trim_blocks=True,
             lstrip_blocks=True
         )
@@ -76,10 +82,24 @@ class Generator(object):
         """Return the rendered text of a template instance"""
         return self.env.from_string(template).render(context)
 
-    def write(self, file_path: str, template: str, context: dict, preserve=False):
+    def write(self, file_path: Path, template: str, context: dict, preserve: bool = False):
         """Using a template file name it renders a template
            into a file given a context
         """
+        try:
+            self._write(file_path, template, context, preserve)
+        except TemplateSyntaxError as exc:
+            # import pdb; pdb.set_trace()
+            message = '{0}:{1} error: {2}'.format(exc.filename, exc.lineno, exc.message)
+            click.secho(message, fg='red')
+        except TemplateNotFound as exc:
+            message = '{0} error: Template not found'.format(exc.name)
+            click.secho(message, fg='red')
+        except TemplateError as exc:
+            message = 'error: {0}'.format(exc.message)
+            click.secho(message, fg='red')
+
+    def _write(self, file_path: Path, template: str, context: dict, preserve: bool = False):
         path = self.destination / Path(self.apply(file_path, context))
         path.parent.makedirs_p()
         logger.info('write {0}'.format(path))

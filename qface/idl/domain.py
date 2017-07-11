@@ -102,7 +102,7 @@ class NamedElement(object):
 
     @property
     def qualified_name(self):
-        '''return the fully qualified name (`module + "." + name`)'''
+        '''return the fully qualified name (`<module>.<name>`)'''
         if self.module == self:
             return self.module.name
         else:
@@ -125,6 +125,7 @@ class Symbol(NamedElement):
 
         self._contentMap = ChainMap()
         self.type = TypeSymbol('', self)
+        """ the associated type information """
 
     @property
     def system(self):
@@ -136,23 +137,28 @@ class Symbol(NamedElement):
         return self._tags
 
     def add_tag(self, tag):
+        """ add a tag to the tag list """
         if tag not in self._tags:
             self._tags[tag] = dict()
 
     def add_attribute(self, tag, name, value):
+        """ add an attribute (nam, value pair) to the named tag """
         self.add_tag(tag)
         d = self._tags[tag]
         d[name] = value
 
     def tag(self, name):
+        """ return tag by name """
         return self._tags[name]
 
     def attribute(self, tag, name):
+        """ return attribute by tag and attribute name """
         if tag in self._tags and name in self._tags[tag]:
             return self._tags[tag][name]
 
     @property
     def contents(self):
+        """ return general list of symbol contents """
         return self._contentMap.values()
 
     def toJson(self):
@@ -168,11 +174,17 @@ class TypeSymbol(NamedElement):
         super().__init__(name, parent.module)
         log.debug('TypeSymbol()')
         self.parent = parent
+        """ the parent symbol of this type """
         self.is_void = False  # type:bool
+        """ if type represents the void type """
         self.is_primitive = False  # type:bool
+        """ if type represents a primitive type """
         self.is_complex = False  # type:bool
+        """ if type represents a complex type """
         self.is_list = False  # type:bool
+        """ if type represents a list of nested types """
         self.is_model = False  # type:bool
+        """ if type represents a model of nested types """
         self.nested = None
         """nested type if symbol is list or model"""
         self.__reference = None
@@ -242,6 +254,7 @@ class TypeSymbol(NamedElement):
 
     @property
     def type(self):
+        """ return the type information. In this case: self """
         return self
 
     def toJson(self):
@@ -311,14 +324,17 @@ class Module(Symbol):
 
     @property
     def majorVersion(self):
+        """ returns the major version number of the version information """
         return self.version.split('.')[0]
 
     @property
     def minorVersion(self):
+        """ returns the minor version number of the version information """
         return self.version.split('.')[1]
 
     @property
     def module_name(self):
+        """ returns a capitalized name from the module name """
         return self.name.split('.')[-1].capitalize()
 
     def lookup(self, name: str, fragment: str = None):
@@ -369,6 +385,7 @@ class Interface(Symbol):
 
     @property
     def extends(self):
+        ''' returns the symbol defined by the extends interface attribute '''
         return self.module.lookup(self._extends)
 
     def toJson(self):
@@ -385,8 +402,16 @@ class Operation(Symbol):
         super().__init__(name, interface.module)
         log.debug('Operation()')
         self.interface = interface
+        """ the interface the operation is part of """
         self.interface._operationMap[name] = self
         self._parameterMap = self._contentMap = OrderedDict()  # type: dict[Parameter]
+        self.is_const = False  #type: bool
+        """reflects is the operation was declared as const operation"""
+
+    @property
+    def qualified_name(self):
+        '''return the fully qualified name (`<module>.<interface>#<operation>`)'''
+        return '{0}.{1}#{2}'.format(self.module.name, self.interface.name, self.name)
 
     @property
     def parameters(self):
@@ -407,6 +432,11 @@ class Signal(Symbol):
         self.interface = interface
         self.interface._signalMap[name] = self
         self._parameterMap = self._contentMap = OrderedDict()  # type: dict[Parameter]
+
+    @property
+    def qualified_name(self):
+        '''return the fully qualified name (`module + "." + name`)'''
+        return '{0}.{1}#{2}'.format(self.module.name, self.interface.name, self.name)
 
     @property
     def parameters(self):
@@ -437,6 +467,26 @@ class Property(Symbol):
         self.interface._propertyMap[name] = self
         self.readonly = False
         self.const = False
+
+    @property
+    def is_model(self):
+        ''' true if type is a model '''
+        return self.type.is_model
+
+    @property
+    def is_primitive_model(self):
+        ''' true if type is a model of nested primitive types '''
+        return self.type.is_model and self.type.nested.is_primitive
+
+    @property
+    def is_complex_model(self):
+        ''' true if type is a model of nested complex types '''
+        return self.type.is_model and self.type.nested.is_complex
+
+    @property
+    def qualified_name(self):
+        '''return the fully qualified name (`<module>.<interface>#<property>`)'''
+        return '{0}.{1}#{2}'.format(self.module.name, self.interface.name, self.name)
 
     def toJson(self):
         o = super().toJson()
@@ -474,6 +524,12 @@ class Field(Symbol):
         self.struct = struct  # type:Struct
         self.struct._fieldMap[name] = self
 
+    @property
+    def qualified_name(self):
+        '''return the fully qualified name (`<module>.<struct>#<field>`)'''
+        return '{0}.{1}#{2}'.format(self.module.name, self.struct.name, self.name)
+
+
 
 class Enum(Symbol):
     """An enum (flag) inside a module"""
@@ -508,6 +564,10 @@ class EnumMember(Symbol):
         self.enum = enum
         self.enum._memberMap[name] = self
         self.value = 0
+
+    def qualified_name(self):
+        '''return the fully qualified name (`<module>.<enum>#<member>`)'''
+        return '{0}.{1}#{2}'.format(self.module.name, self.enum.name, self.name)
 
     def toJson(self):
         o = super().toJson()

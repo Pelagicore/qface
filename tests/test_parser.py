@@ -68,9 +68,10 @@ def test_operation():
     assert operation
     operation = interface._contentMap['previousStation']
     assert operation
+    assert not operation.is_const
     operation = interface._contentMap['numStations']
     assert operation
-    assert operation.const
+    assert operation.is_const
 
 
 def test_signals():

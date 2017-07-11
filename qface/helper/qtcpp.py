@@ -109,8 +109,8 @@ class Filters(object):
     @staticmethod
     def open_ns(symbol):
         ''' generates a open namespace from symbol namespace x { y { z {'''
-        blocks = ['{0} {{'.format(x) for x in symbol.module.name_parts]
-        return 'namespace {0}'.format(str.join(' ', blocks))
+        blocks = ['namespace {0} {{'.format(x) for x in symbol.module.name_parts]
+        return ' '.join(blocks)
 
     @staticmethod
     def close_ns(symbol):
@@ -121,7 +121,7 @@ class Filters(object):
     def using_ns(symbol):
         '''generates a using namespace x::y::z statement from a symbol'''
         id = '::'.join(symbol.module.name_parts)
-        return 'using namespace {0}'.format(id)
+        return 'using namespace {0};'.format(id)
 
     @staticmethod
     def signalName(s):
@@ -144,18 +144,30 @@ class Filters(object):
             args = s.parameters
         elif isinstance(s, domain.Signal):
             args = s.parameters
+        elif isinstance(s, domain.Struct):
+            args = s.fields
         elif isinstance(s, domain.Property):
             args = [s]
         return indent.join([filter(a) for a in args])
 
     @staticmethod
-    def signature(s):
+    def signature(s, expand=False, filter=None):
+        if not filter:
+            filter = Filters.returnType
         if isinstance(s, domain.Operation):
             args = s.parameters
         elif isinstance(s, domain.Signal):
             args = s.parameters
         elif isinstance(s, domain.Property):
-            args = [s.type] # for <property>Changed(<type>)
+            args = [s]  # for <property>Changed(<type>)
+        elif isinstance(s, domain.Struct):
+            args = s.fields
         else:
             args = []
-        return ','.join([Filters.returnType(a) for a in args])
+        if expand:
+            return ', '.join(['{0} {1}'.format(filter(a), a.name) for a in args])
+        return ','.join([filter(a) for a in args])
+
+    @staticmethod
+    def identifier(s):
+        return str(s).lower().replace('.', '_')

@@ -134,7 +134,7 @@ class Filters(object):
     def parameters(env, s, filter=None, spaces=True):
         if not filter:
             filter = Filters.parameterType
-        else:
+        elif isinstance(filter, str):
             filter = env.filters[filter]
         args = []
         indent = ', '
@@ -151,9 +151,12 @@ class Filters(object):
         return indent.join([filter(a) for a in args])
 
     @staticmethod
-    def signature(s, expand=False, filter=None):
+    @environmentfilter
+    def signature(env, s, expand=False, filter=None):
         if not filter:
             filter = Filters.returnType
+        elif isinstance(filter, str):
+            filter = env.filters[filter]
         if isinstance(s, domain.Operation):
             args = s.parameters
         elif isinstance(s, domain.Signal):

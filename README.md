@@ -14,6 +14,10 @@ QFace is written out of the learnings of using IDLs in other large projects. Oft
 
 Please see the INSTALL and USAGE guides for more information.
 
+## Documentation
+
+Documentation is hosted at [readthedocs](http://qface.readthedocs.io/en/latest/).
+
 ## Install
 
 To install the qface library you need to have python3 and pip installed.

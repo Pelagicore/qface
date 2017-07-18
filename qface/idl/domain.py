@@ -335,7 +335,8 @@ class Module(Symbol):
     @property
     def module_name(self):
         """ returns a capitalized name from the module name """
-        return self.name.split('.')[-1].capitalize()
+        str = module.name.split('.')[-1]
+        return str[:1].upper() + str[1:]
 
     def lookup(self, name: str, fragment: str = None):
         '''lookup a symbol by name. If symbol is not local

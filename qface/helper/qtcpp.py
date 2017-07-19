@@ -36,7 +36,7 @@ class Filters(object):
         elif t.is_void:
             return ''
         elif t.is_enum:
-            module_name = t.reference.module.module_name
+            module_name = upper_first(t.reference.module.module_name)
             value = next(iter(t.reference.members))
             return '{0}{1}Module::{2}'.format(prefix, module_name, value)
         elif symbol.type.is_list:
@@ -55,7 +55,7 @@ class Filters(object):
     @staticmethod
     def parameterType(symbol):
         prefix = Filters.classPrefix
-        module_name = symbol.module.module_name
+        module_name = upper_first(symbol.module.module_name)
         if symbol.type.is_enum:
             return '{0}{1}Module::{2} {3}'.format(prefix, module_name, symbol.type, symbol)
         if symbol.type.is_void or symbol.type.is_primitive:
@@ -82,7 +82,7 @@ class Filters(object):
     @staticmethod
     def returnType(symbol):
         prefix = Filters.classPrefix
-        module_name = symbol.module.module_name
+        module_name = upper_first(symbol.module.module_name)
         if symbol.type.is_enum:
             return '{0}{1}Module::{2}'.format(prefix, module_name, symbol.type)
         if symbol.type.is_void or symbol.type.is_primitive:

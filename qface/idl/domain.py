@@ -219,14 +219,19 @@ class TypeSymbol(NamedElement):
         return self.is_primitive and self.name == 'string'
 
     @property
+    def is_enumeration(self):
+        '''checks if type is complex and insytance of type Enum'''
+        return self.is_complex and isinstance(self.reference, Enum)
+
+    @property
     def is_enum(self):
-        '''checks if type is complex and enum (or flag)'''
-        return self.is_complex and isinstance(self.reference, Enum) and self.reference.is_enum
+        '''checks if type is an enumeration and reference is enum'''
+        return self.is_enumeration and self.reference.is_enum
 
     @property
     def is_flag(self):
-        '''checks if type is an enum and reference is flag '''
-        return self.is_enum and self.reference.is_flag
+        '''checks if type is an enumeration and reference is flag '''
+        return self.is_enumeration and self.reference.is_flag
 
     @property
     def is_struct(self):
@@ -410,7 +415,7 @@ class Operation(Symbol):
         """ the interface the operation is part of """
         self.interface._operationMap[name] = self
         self._parameterMap = self._contentMap = OrderedDict()  # type: dict[Parameter]
-        self.is_const = False  #type: bool
+        self.is_const = False  # type: bool
         """reflects is the operation was declared as const operation"""
 
     @property

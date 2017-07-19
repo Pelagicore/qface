@@ -34,6 +34,8 @@ interface Tuner extends BaseTuner {
     signal broadcastMessage(string message);
 
     TunerExtension extension;
+
+    Feature feature;
 }
 
 interface TunerExtension {
@@ -60,7 +62,7 @@ enum Waveband {
     AM=1
 }
 
-flag Features {
+flag Feature {
     Mono = 0x1,
     Stereo = 0x2,
 }

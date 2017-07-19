@@ -220,8 +220,13 @@ class TypeSymbol(NamedElement):
 
     @property
     def is_enum(self):
-        '''checks if type is complex and enum'''
-        return self.is_complex and isinstance(self.reference, Enum)
+        '''checks if type is complex and enum (or flag)'''
+        return self.is_complex and isinstance(self.reference, Enum) and self.reference.is_enum
+
+    @property
+    def is_flag(self):
+        '''checks if type is an enum and reference is flag '''
+        return self.is_enum and self.reference.is_flag
 
     @property
     def is_struct(self):

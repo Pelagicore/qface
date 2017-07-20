@@ -70,11 +70,11 @@ def test_return_type():
     # check for struct
     prop = interface._propertyMap['message']
     answer = qtcpp.Filters.returnType(prop)
-    assert answer == 'QmlMessage'
+    assert answer == 'Message'
     # check for enum
     prop = interface._propertyMap['status']
     answer = qtcpp.Filters.returnType(prop)
-    assert answer == 'QmlExampleModule::Status'
+    assert answer == 'ExampleModule::Status'
 
     # check for list of primitive
     prop = interface._propertyMap['list001']
@@ -89,12 +89,12 @@ def test_return_type():
     # check for model of primitive
     prop = interface._propertyMap['model001']
     answer = qtcpp.Filters.returnType(prop)
-    assert answer == 'QmlVariantModel *'
+    assert answer == 'VariantModel *'
 
     # check for model of structs
     prop = interface._propertyMap['model002']
     answer = qtcpp.Filters.returnType(prop)
-    assert answer == 'QmlMessageModel *'
+    assert answer == 'MessageModel *'
 
 
 def test_default_value():
@@ -121,11 +121,11 @@ def test_default_value():
     # check for struct
     prop = interface._propertyMap['message']
     answer = qtcpp.Filters.defaultValue(prop)
-    assert answer == 'QmlMessage()'
+    assert answer == 'Message()'
     # check for enum
     prop = interface._propertyMap['status']
     answer = qtcpp.Filters.defaultValue(prop)
-    assert answer == 'QmlExampleModule::ON'
+    assert answer == 'ExampleModule::ON'
 
     # check for list of primitive
     prop = interface._propertyMap['list001']
@@ -140,12 +140,12 @@ def test_default_value():
     # check for model of primitive
     prop = interface._propertyMap['model001']
     answer = qtcpp.Filters.defaultValue(prop)
-    assert answer == 'new QmlVariantModel(this)'
+    assert answer == 'new VariantModel(this)'
 
     # check for model of structs
     prop = interface._propertyMap['model002']
     answer = qtcpp.Filters.defaultValue(prop)
-    assert answer == 'new QmlMessageModel(this)'
+    assert answer == 'new MessageModel(this)'
 
 
 def test_parameter_type():
@@ -173,11 +173,11 @@ def test_parameter_type():
     # check for struct
     prop = interface._propertyMap['message']
     answer = qtcpp.Filters.parameterType(prop)
-    assert answer == 'const QmlMessage &{0}'.format(prop.name)
+    assert answer == 'const Message &{0}'.format(prop.name)
     # check for enum
     prop = interface._propertyMap['status']
     answer = qtcpp.Filters.parameterType(prop)
-    assert answer == 'QmlExampleModule::Status {0}'.format(prop.name)
+    assert answer == 'ExampleModule::Status {0}'.format(prop.name)
 
     # check for list of primitive
     prop = interface._propertyMap['list001']
@@ -192,12 +192,12 @@ def test_parameter_type():
     # check for model of primitive
     prop = interface._propertyMap['model001']
     answer = qtcpp.Filters.parameterType(prop)
-    assert answer == 'QmlVariantModel *{0}'.format(prop.name)
+    assert answer == 'VariantModel *{0}'.format(prop.name)
 
     # check for model of structs
     prop = interface._propertyMap['model002']
     answer = qtcpp.Filters.parameterType(prop)
-    assert answer == 'QmlMessageModel *{0}'.format(prop.name)
+    assert answer == 'MessageModel *{0}'.format(prop.name)
 
 
 def test_namespace():

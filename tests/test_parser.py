@@ -3,6 +3,7 @@ import logging.config
 from path import Path
 
 from qface.generator import FileSystem
+import qface.idl.domain as domain
 
 # logging.config.fileConfig('logging.ini')
 logging.basicConfig()
@@ -107,6 +108,7 @@ def test_enum():
 def test_enum_counter():
     system = load_test()
     enum = system.lookup('com.pelagicore.test.State')
+    assert type(enum) is domain.Enum
     assert enum
     assert enum._memberMap['Null'].value is 0
     assert enum._memberMap['Failure'].value is 3
@@ -115,6 +117,7 @@ def test_enum_counter():
 def test_flag_counter():
     system = load_test()
     flag = system.lookup('com.pelagicore.test.Phase')
+    assert type(flag) is domain.Enum
     assert flag
     assert flag._memberMap['PhaseOne'].value is 1
     assert flag._memberMap['PhaseTwo'].value is 2
@@ -123,20 +126,30 @@ def test_flag_counter():
 
 def test_flag():
     system = load_tuner()
-    symbol = system.lookup('com.pelagicore.ivi.tuner.Features')
+    symbol = system.lookup('com.pelagicore.ivi.tuner.Feature')
+    assert type(symbol) is domain.Enum
     assert symbol.is_flag
+    assert not symbol.is_enum
+    symbol = system.lookup('com.pelagicore.ivi.tuner.Tuner#feature')
+    assert type(symbol) is domain.Property
+    assert type(symbol.type.reference) is domain.Enum
+
+    assert symbol.type.is_flag
+    assert symbol.type.is_enumeration
 
 
 def test_list():
     system = load_tuner()
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
     property = interface._propertyMap['primitiveList']
+    assert type(property) is domain.Property
     assert property.type.name == 'list'
     assert property.type.is_list is True
     assert property.type.nested.is_primitive
     assert property.type.nested.name == 'int'
 
     property = interface._propertyMap['complexList']
+    assert type(property) is domain.Property
     assert property.type.name == 'list'
     assert property.type.is_list is True
     assert property.type.nested.is_complex
@@ -147,12 +160,14 @@ def test_model():
     system = load_tuner()
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
     property = interface._propertyMap['primitiveModel']
+    assert type(property) is domain.Property
     assert property.type.name == 'model'
     assert property.type.is_model is True
     assert property.type.nested.is_primitive
     assert property.type.nested.name == 'int'
 
     property = interface._propertyMap['complexModel']
+    assert type(property) is domain.Property
     assert property.type.name == 'model'
     assert property.type.is_model is True
     assert property.type.nested.is_complex

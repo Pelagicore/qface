@@ -20,14 +20,10 @@ virtual void set{{property|upperfirst}}({{ property|parameterType }});
 virtual {{property|returnType}} {{property}}() const;
 {%- endmacro %}
 
-{% macro signal_decl(symbol) -%}
-{% if symbol.is_property %}
-void {{symbol}}Changed({{symbol|parameters}});
-{% else %}
-void {{symbol}}({{symbol|parameters}});
-{%- endif %}
-
+{% macro signal_decl(symbol, postfix="") -%}
+void {{symbol}}{{postfix}}({{symbol|parameters}});
 {%- endmacro %}
+
 {% macro property_member_decl(property) %}
 {{property|returnType}} m_{{property}};
 {%- endmacro %}
@@ -44,11 +40,10 @@ void {{symbol}}({{symbol|parameters}});
 
 void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {
-    if(m_{{property}} == {{property}}) {
-        return;
+    if (m_{{property}} != {{property}}) {
+        m_{{property}} = {{property}};
+        emit {{property}}Changed({{property}});
     }
-    m_{{property}} = {{property}};
-    emit {{property}}Changed();
 }
 {%- endmacro %}
 

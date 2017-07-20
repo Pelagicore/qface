@@ -11,7 +11,7 @@ def upper_first(s):
 
 class Filters(object):
     """provides a set of filters to be used with the template engine"""
-    classPrefix = 'Qml'
+    classPrefix = ''
 
     @staticmethod
     def className(symbol):
@@ -174,3 +174,13 @@ class Filters(object):
     @staticmethod
     def identifier(s):
         return str(s).lower().replace('.', '_')
+
+    @staticmethod
+    def upper_first(s):
+        s = str(s)
+        return s[0].upper() + s[1:]
+
+    @staticmethod
+    def path(s):
+        return str(s).replace('.', '/')
+

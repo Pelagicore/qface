@@ -3,6 +3,11 @@ Provides helper functionality specificially for Qt5 QML code generators
 """
 
 
+def upper_first(s):
+    s = str(s)
+    return s[0].upper() + s[1:]
+
+
 class Filters(object):
     """provides a set of filters to be used with the template engine"""
     classPrefix = ''
@@ -14,7 +19,7 @@ class Filters(object):
 
     @staticmethod
     def defaultValue(symbol):
-        module = symbol.module.module_name
+        module = upper_first(symbol.module.module_name)
         t = symbol.type
         if t.is_primitive:
             if t.name == 'int':

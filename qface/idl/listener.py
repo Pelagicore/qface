@@ -214,6 +214,7 @@ class DomainListener(TListener):
         if ctx.intSymbol():
             value = int(ctx.intSymbol().value.text, 0)
         self.field.value = value
+        self.parse_annotations(ctx, self.field)
         contextMap[ctx] = self.field
         if self.enum.is_flag:
             self.enumCounter <<= 1

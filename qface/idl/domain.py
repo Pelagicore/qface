@@ -125,6 +125,7 @@ class Symbol(NamedElement):
 
         self._contentMap = ChainMap()
         self.type = TypeSymbol('', self)
+        self.kind = self.__class__.__name__.lower()
         """ the associated type information """
 
     @property

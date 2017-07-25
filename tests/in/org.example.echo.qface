@@ -10,6 +10,8 @@ module org.example.echo 1.0
  * @see org.example
  * @see http://qt.io
  * @anything hello
+ *
+ * continued description
  */
 interface Echo {
     /**

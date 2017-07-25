@@ -432,6 +432,7 @@ class Operation(Symbol):
     def toJson(self):
         o = super().toJson()
         o['parameters'] = [s.toJson() for s in self.parameters]
+        o['type'] = self.type.toJson()
         return o
 
 

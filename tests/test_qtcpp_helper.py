@@ -23,6 +23,7 @@ interface Test {
     void echo(string message);
     Message message;
     Status status;
+    ApplicationState state;
     list<int> list001;
     list<Message> list002;
     model<int> model001;
@@ -38,6 +39,14 @@ enum Status {
     ON,
     OFF
 }
+
+flag ApplicationState {
+    Suspended,
+    Hidden,
+    Inactive,
+    Active,
+}
+
 """
 
 
@@ -126,6 +135,11 @@ def test_default_value():
     prop = interface._propertyMap['status']
     answer = qtcpp.Filters.defaultValue(prop)
     assert answer == 'ExampleModule::ON'
+
+    # check for flag
+    prop = interface._propertyMap['state']
+    answer = qtcpp.Filters.defaultValue(prop)
+    assert answer == '0'
 
     # check for list of primitive
     prop = interface._propertyMap['list001']

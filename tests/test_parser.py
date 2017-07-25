@@ -190,3 +190,12 @@ def test_interface_property():
     assert prop.type.is_interface
     assert prop.type.reference is extension
 
+
+def test_symbol_kind():
+    system = load_tuner()
+    tuner = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    assert tuner.kind == 'interface'
+    property = system.lookup('com.pelagicore.ivi.tuner.Tuner#primitiveModel')
+    assert property.kind == 'property'
+
+

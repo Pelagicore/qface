@@ -1,3 +1,4 @@
+
 # Copyright (c) Pelagicore AB 2016
 
 from jinja2 import Environment, Template
@@ -5,12 +6,13 @@ from jinja2 import FileSystemLoader, PackageLoader, ChoiceLoader
 from jinja2 import TemplateSyntaxError, TemplateNotFound, TemplateError
 from path import Path
 from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
-from antlr4.error import DiagnosticErrorListener
+from antlr4.error import DiagnosticErrorListener, ErrorListener
 import shelve
 import logging
 import hashlib
 import yaml
 import click
+import sys
 
 from .idl.parser.TLexer import TLexer
 from .idl.parser.TParser import TParser
@@ -43,8 +45,30 @@ def lower_first_filter(s):
     return s[0].lower() + s[1:]
 
 
+class ReportingErrorListener(ErrorListener.ErrorListener):
+    def __init__(self, document):
+        self.document = document
+
+    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
+        msg = '{0}:{1}:{2} {2}'.format(self.document, line, column, msg)
+        click.secho(msg, fg='red')
+        raise ValueError(msg)
+
+    def reportAmbiguity(self, recognizer, dfa, startIndex, stopIndex, exact, ambigAlts, configs):
+        click.secho('ambiguity', fg='red')
+
+    def reportAttemptingFullContext(self, recognizer, dfa, startIndex, stopIndex, conflictingAlts, configs):
+        click.secho('reportAttemptingFullContext', fg='red')
+
+    def reportContextSensitivity(self, recognizer, dfa, startIndex, stopIndex, prediction, configs):
+        click.secho('reportContextSensitivity', fg='red')
+
+
 class Generator(object):
     """Manages the templates and applies your context data"""
+    strict = False
+    """ enables strict code generation """
+
     def __init__(self, search_path: str):
         loader = ChoiceLoader([
             FileSystemLoader(search_path),
@@ -86,18 +110,24 @@ class Generator(object):
         """Using a template file name it renders a template
            into a file given a context
         """
+        error = False
         try:
             self._write(file_path, template, context, preserve)
         except TemplateSyntaxError as exc:
             # import pdb; pdb.set_trace()
             message = '{0}:{1} error: {2}'.format(exc.filename, exc.lineno, exc.message)
             click.secho(message, fg='red')
+            error = True
         except TemplateNotFound as exc:
             message = '{0} error: Template not found'.format(exc.name)
             click.secho(message, fg='red')
+            error = True
         except TemplateError as exc:
             message = 'error: {0}'.format(exc.message)
             click.secho(message, fg='red')
+            error = True
+        if error and Generator.strict:
+            sys.exit(-1)
 
     def _write(self, file_path: Path, template: str, context: dict, preserve: bool = False):
         path = self.destination / Path(self.apply(file_path, context))
@@ -125,9 +155,26 @@ class Generator(object):
 
 class FileSystem(object):
     """QFace helper functions to work with the file system"""
+    strict = False
+    """ enables strict parsing """
 
     @staticmethod
     def parse_document(document: Path, system: System = None):
+        error = False
+        try:
+            return FileSystem._parse_document(document, system)
+        except FileNotFoundError as e:
+            click.secho('{0}: file not found'.format(document), fg='red')
+            error = True
+        except ValueError as e:
+            click.secho('Error parsing document {0}'.format(document))
+            error = True
+        if error and FileSystem.strict:
+            sys.exit(-1)
+
+
+    @staticmethod
+    def _parse_document(document: Path, system: System = None):
         """Parses a document and returns the resulting domain system
 
         :param path: document path to parse
@@ -135,19 +182,19 @@ class FileSystem(object):
         """
         logger.debug('parse document: {0}'.format(document))
         stream = FileStream(str(document), encoding='utf-8')
-        system = FileSystem._parse_stream(stream, system)
+        system = FileSystem._parse_stream(stream, system, document)
         FileSystem.merge_annotations(system, document.stripext() + '.yaml')
         return system
 
     @staticmethod
-    def _parse_stream(stream, system: System = None):
+    def _parse_stream(stream, system: System = None, document=None):
         logger.debug('parse stream')
         system = system or System()
 
         lexer = TLexer(stream)
         stream = CommonTokenStream(lexer)
         parser = TParser(stream)
-        parser.addErrorListener(DiagnosticErrorListener.DiagnosticErrorListener())
+        parser.addErrorListener(ReportingErrorListener(document))
         tree = parser.documentSymbol()
         walker = ParseTreeWalker()
         walker.walk(DomainListener(system), tree)

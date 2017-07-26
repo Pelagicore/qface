@@ -43,9 +43,6 @@ setup(
     keywords='qt code generator framework',
     packages=find_packages(),
     include_package_data=True,
-    package_data={
-        '': ['*[!*.pyc]']
-    },
     install_requires=[
         'jinja2',
         'path.py',

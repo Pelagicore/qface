@@ -1,5 +1,12 @@
-include LICENSE.GPLV3
-include qface/builtin/qtcpp/templates/*
-include qface/builtin/qtcpp/log.yaml
-include qface/builtin/qtqml/templates/*
-include qface/builtin/qtqml/log.yaml
+include LICENSE
+include README.md
+
+graft qface/templates
+
+global-exclude *.so
+global-exclude *.pyc
+global-exclude *~
+global-exclude \#*
+global-exclude .git*
+global-exclude .DS_Store
+

@@ -1,5 +1,6 @@
 import logging
 import logging.config
+import pytest
 from path import Path
 
 from qface.generator import FileSystem
@@ -189,4 +190,25 @@ def test_interface_property():
     prop = tuner._propertyMap['extension']
     assert prop.type.is_interface
     assert prop.type.reference is extension
+
+
+def test_symbol_kind():
+    system = load_tuner()
+    tuner = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    assert tuner.kind == 'interface'
+    property = system.lookup('com.pelagicore.ivi.tuner.Tuner#primitiveModel')
+    assert property.kind == 'property'
+
+
+def test_parser_exceptions():
+    path = inputPath / 'org.example.failing.qface'
+    system = FileSystem.parse_document(path)
+
+    try:
+        system = FileSystem.parse_document('not-exists')
+    except SystemExit as e:
+        pass
+    else:
+        pytest.fail('should not ome here')
+
 

@@ -2,25 +2,29 @@ import json
 import hashlib
 
 
-def jsonify(obj):
+def jsonify(symbol):
+    """ returns json format for symbol """
     try:
         # all symbols have a toJson method, try it
-        return json.dumps(obj.toJson(), indent='  ')
+        return json.dumps(symbol.toJson(), indent='  ')
     except AttributeError:
         pass
-    return json.dumps(obj, indent='  ')
+    return json.dumps(symbol, indent='  ')
 
 
-def upper_first(s):
-    s = str(s)
-    return s[0].upper() + s[1:]
+def upper_first(symbol):
+    """ uppercase first letter """
+    name = str(symbol)
+    return name[0].upper() + name[1:]
 
 
-def hash(s, hash_type='sha1'):
-    h = hashlib.new(hash_type)
-    h.update(str(s).encode('utf-8'))
-    return h.hexdigest()
+def hash(symbol, hash_type='sha1'):
+    """ create a hash code from symbol """
+    code = hashlib.new(hash_type)
+    code.update(str(symbol).encode('utf-8'))
+    return code.hexdigest()
 
 
-def path(s):
-    return str(s).replace('.', '/')
+def path(symbol):
+    """ replaces '.' with '/' """
+    return str(symbol).replace('.', '/')

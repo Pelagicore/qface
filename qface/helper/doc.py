@@ -21,7 +21,7 @@ class DocObject:
     The documentation object passed into the template engine
     """
     def __init__(self):
-        self.brief = str()
+        self.brief = []
         self.description = []
         self.see = []
         self.deprecated = False
@@ -78,4 +78,6 @@ def parse_doc(s):
                 doc.add_tag(tag, value)
         elif tag:  # append to previous matched tag
             doc.add_tag(tag, line)
+        else: # append any loose lines to description
+            doc.add_tag('description', line)
     return doc

@@ -2,7 +2,7 @@ module com.pelagicore.ivi.tuner 1.0;
 
 
 interface BaseTuner {
-    property int baseValue;
+    int baseValue;
 }
 
 

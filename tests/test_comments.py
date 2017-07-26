@@ -35,8 +35,8 @@ def test_comment():
     interface = system.lookup('org.example.echo.Echo')
     assert interface
     o = doc.parse_doc(interface.comment)
-    assert o.brief == 'the brief'
-    assert o.description == ['the description', 'continues {@link http://qt.io}']
+    assert o.brief == ['the brief']
+    assert o.description == ['the description', 'continues {@link http://qt.io}', 'continued description']
     assert o.deprecated is True
     assert o.see == ['org.example.echo.Echo', 'org.example', 'http://qt.io']
 
@@ -50,4 +50,4 @@ def test_qdoc_translate():
     assert interface
     doc.translate = qdoc_translate
     o = doc.parse_doc(interface.comment)
-    assert o.description == ['the description', 'continues \\link{http://qt.io}']
+    assert o.description == ['the description', 'continues \\link{http://qt.io}', 'continued description']

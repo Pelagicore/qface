@@ -125,6 +125,7 @@ class Symbol(NamedElement):
 
         self._contentMap = ChainMap()
         self.type = TypeSymbol('', self)
+        self.kind = self.__class__.__name__.lower()
         """ the associated type information """
 
     @property
@@ -431,6 +432,7 @@ class Operation(Symbol):
     def toJson(self):
         o = super().toJson()
         o['parameters'] = [s.toJson() for s in self.parameters]
+        o['type'] = self.type.toJson()
         return o
 
 

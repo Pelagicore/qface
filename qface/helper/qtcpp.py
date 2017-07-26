@@ -39,6 +39,8 @@ class Filters(object):
             module_name = upper_first(t.reference.module.module_name)
             value = next(iter(t.reference.members))
             return '{0}{1}Module::{2}'.format(prefix, module_name, value)
+        elif t.is_flag:
+            return '0'
         elif symbol.type.is_list:
             nested = Filters.returnType(symbol.type.nested)
             return 'QVariantList()'.format(nested)

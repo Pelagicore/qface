@@ -126,6 +126,11 @@ class Filters(object):
         return 'using namespace {0};'.format(id)
 
     @staticmethod
+    def ns(symbol):
+        '''generates a namespace x::y::z statement from a symbol'''
+        return '::'.join(symbol.module.name_parts)
+
+    @staticmethod
     def signalName(s):
         if isinstance(s, domain.Property):
             return '{0}Changed'.format(s)

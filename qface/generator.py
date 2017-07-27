@@ -82,6 +82,7 @@ class Generator(object):
         self.env.filters['upperfirst'] = upper_first_filter
         self.env.filters['lowerfirst'] = lower_first_filter
         self._destination = Path()
+        self.context = {}
 
     @property
     def destination(self):
@@ -90,7 +91,7 @@ class Generator(object):
 
     @destination.setter
     def destination(self, dst: str):
-        self._destination = Path(dst)
+        self._destination = Path(self.apply(dst, self.context))
 
     def get_template(self, name: str):
         """Retrieves a single template file from the template loader"""
@@ -106,10 +107,13 @@ class Generator(object):
         """Return the rendered text of a template instance"""
         return self.env.from_string(template).render(context)
 
-    def write(self, file_path: Path, template: str, context: dict, preserve: bool = False):
+    def write(self, file_path: Path, template: str, context: dict={}, preserve: bool = False):
         """Using a template file name it renders a template
            into a file given a context
         """
+        if not context:
+            context = self.context
+
         error = False
         try:
             self._write(file_path, template, context, preserve)

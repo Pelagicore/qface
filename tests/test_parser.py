@@ -204,11 +204,6 @@ def test_parser_exceptions():
     path = inputPath / 'org.example.failing.qface'
     system = FileSystem.parse_document(path)
 
-    try:
-        system = FileSystem.parse_document('not-exists')
-    except SystemExit as e:
-        pass
-    else:
-        pytest.fail('should not ome here')
+    system = FileSystem.parse_document('not-exists')
 
 

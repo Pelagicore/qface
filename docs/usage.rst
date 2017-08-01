@@ -7,64 +7,32 @@ Concept
 
 QFace requires one or more IDL files as input file and a generator to produce output files. The IDL files are named QFace interface documents.
 
-.. image:: qface_concept.png
+.. figure:: qface_concept.jpg
 
-There are several ways to call the generator.
+To use qface you need to write your own generator. A generatopr is a small python script which reads the qface document and write code using a generator.
 
+.. code-block:: python
 
-Invocation
-==========
+    # gen.py
+    from qface.generator import FileSystem, Generator
 
-Direct Invocation
------------------
+    def generate(input, output):
+        # parse the interface files
+        system = FileSystem.parse(input)
+        # setup the generator
+        generator = Generator(search_path='templates')
+        # create a context object
+        ctx = {'output': output, 'system': system}
+        # apply the context on the template and write the output to file
+        generator.write('{{output}}/modules.csv', 'modules.csv', ctx)
 
-You can call the generator directly by using the provided script. All generators should at minimum expect a series of inputs and one output path. This is normally recommended for production.
-
-.. code-block:: sh
-
-    ./csv.py src dst
-
-Via qface invokation
---------------------
-
-You can invoke your generator using the qface helper script. This allows you also to use some specific developer support. It is recommended way during generator development.
-
-To use an existing generator just provide the path to the generator script.
-
-.. code-block:: sh
-
-    qface generate --generator ./csvgen.py input output
-
-
-To use live reloading on changes just use the reload option:
+    # call the generation function
+    generate('sample.qface', 'out')
 
 
 .. code-block:: sh
 
-    qface generate --generator ./csvgen.py input output --reload
-
-This will observe the generator folder and the input folder for changes and re-run the generator.
-
-Configuration Invokation
-------------------------
-
-You can also create a YAML configuration file (for example csv.yaml):
-
-
-.. code-block:: yaml
-
-    generator: ./csvgen.py
-    input: input
-    output: output
-    reload: false
-
-
-And then call the client with:
-
-.. code-block:: sh
-
-    qface generate --config csv.yaml
-
+    python3 gen.py
 
 
 Code Generation Principle
@@ -99,4 +67,4 @@ This script reads the input directory returns a system object form the domain mo
         {% endfor -%}
     {% endfor %}
 
-The template iterates over the domain objects and generates text which is written into a file. Using the generator write method ``generator.write(path, template, context)`` the output file path can also be specified using the template syntax . 
+The template iterates over the domain objects and generates text which is written into a file. Using the generator write method ``generator.write(path, template, context)`` the output file path can also be specified using the template syntax .

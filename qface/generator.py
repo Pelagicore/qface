@@ -20,6 +20,7 @@ from .idl.parser.TListener import TListener
 from .idl.domain import System
 from .idl.listener import DomainListener
 from .utils import merge
+from .filters import filters
 
 
 try:
@@ -33,17 +34,6 @@ logger = logging.getLogger(__name__)
 """
 Provides an API for accessing the file system and controlling the generator
 """
-
-
-def upper_first_filter(s):
-    s = str(s)
-    return s[0].upper() + s[1:]
-
-
-def lower_first_filter(s):
-    s = str(s)
-    return s[0].lower() + s[1:]
-
 
 class ReportingErrorListener(ErrorListener.ErrorListener):
     def __init__(self, document):
@@ -69,7 +59,7 @@ class Generator(object):
     strict = False
     """ enables strict code generation """
 
-    def __init__(self, search_path: str):
+    def __init__(self, search_path: str, context: dict={}):
         loader = ChoiceLoader([
             FileSystemLoader(search_path),
             PackageLoader('qface')
@@ -79,9 +69,9 @@ class Generator(object):
             trim_blocks=True,
             lstrip_blocks=True
         )
-        self.env.filters['upperfirst'] = upper_first_filter
-        self.env.filters['lowerfirst'] = lower_first_filter
+        self.env.filters.update(filters)
         self._destination = Path()
+        self.context = context
 
     @property
     def destination(self):
@@ -90,7 +80,16 @@ class Generator(object):
 
     @destination.setter
     def destination(self, dst: str):
-        self._destination = Path(dst)
+        if dst:
+            self._destination = Path(self.apply(dst, self.context))
+
+    @property
+    def filters(self):
+        return self.env.filters
+
+    @filters.setter
+    def filters(self, filters):
+        self.env.filters.update(filters)
 
     def get_template(self, name: str):
         """Retrieves a single template file from the template loader"""
@@ -106,10 +105,12 @@ class Generator(object):
         """Return the rendered text of a template instance"""
         return self.env.from_string(template).render(context)
 
-    def write(self, file_path: Path, template: str, context: dict, preserve: bool = False):
+    def write(self, file_path: Path, template: str, context: dict={}, preserve: bool = False):
         """Using a template file name it renders a template
            into a file given a context
         """
+        if not context:
+            context = self.context
         error = False
         try:
             self._write(file_path, template, context, preserve)
@@ -153,6 +154,49 @@ class Generator(object):
         self.env.filters[name] = callback
 
 
+class RuleGenerator(Generator):
+    """Generates documents based on a rule YAML document"""
+    def __init__(self, search_path: str, destination: Path, context: dict= {}):
+        super().__init__(search_path, context)
+        self.context.update({
+            'dst': destination,
+            'project': Path(destination).name,
+        })
+        self.destination = '{{dst}}'
+
+    def process_rules(self, document: Path, system: System):
+        """writes the templates read from the rules document"""
+        self.context.update({'system': system})
+        rules = FileSystem.load_yaml(document, required=True)
+        for name, target in rules.items():
+            click.secho('process target: {0}'.format(name), fg='green')
+            self._process_target(target, system)
+
+    def _process_target(self, rules: dict, system: System):
+        """ process a set of rules for a target """
+        self.context.update(rules.get('context', {}))
+        self.destination = rules.get('destination', '{{dst}}')
+        self._process_rule(rules.get('system', None), {'system': system})
+        for module in system.modules:
+            self._process_rule(rules.get('module', None), {'module': module})
+            for interface in module.interfaces:
+                self._process_rule(rules.get('interface', None), {'interface': interface})
+            for struct in module.structs:
+                self._process_rule(rules.get('struct', None), {'struct': struct})
+            for enum in module.enums:
+                self._process_rule(rules.get('enum', None), {'enum': enum})
+
+    def _process_rule(self, rule: dict, context: dict):
+        """ process a single rule """
+        if not rule:
+            return
+        self.context.update(context)
+        self.context.update(rule.get('context', {}))
+        self.destination = rule.get('destination', None)
+        for target, source in rule.get('documents', {}).items():
+            self.write(target, source)
+
+
 class FileSystem(object):
     """QFace helper functions to work with the file system"""
     strict = False
@@ -171,7 +215,6 @@ class FileSystem(object):
             error = True
         if error and FileSystem.strict:
             sys.exit(-1)
-
 
     @staticmethod
     def _parse_document(document: Path, system: System = None):
@@ -205,13 +248,7 @@ class FileSystem(object):
         """Read a YAML document and for each root symbol identifier
         updates the tag information of that symbol
         """
-        if not document.exists():
-            return
-        meta = {}
-        try:
-            meta = yaml.load(document.text(), Loader=Loader)
-        except yaml.YAMLError as exc:
-            click.secho(exc, fg='red')
+        meta = FileSystem.load_yaml(document)
         click.secho('merge tags from {0}'.format(document), fg='blue')
         for identifier, data in meta.items():
             symbol = system.lookup(identifier)
@@ -252,3 +289,16 @@ class FileSystem(object):
         if use_cache:
             cache[identifier] = system
         return system
+
+    @staticmethod
+    def load_yaml(document: Path, required=False):
+        document = Path(document)
+        if not document.exists():
+            if required:
+                click.secho('yaml document does not exists: {0}'.format(document), fg='red')
+            return {}
+        try:
+            return yaml.load(document.text(), Loader=Loader)
+        except yaml.YAMLError as exc:
+            click.secho(exc, fg='red')
+        return {}

@@ -79,7 +79,7 @@ class System(object):
         return (module_name, type_name, fragment_name)
 
     def toJson(self):
-        o = {}
+        o = OrderedDict()
         o['modules'] = [o.toJson() for o in self.modules]
         return o
 
@@ -109,7 +109,7 @@ class NamedElement(object):
             return '{0}.{1}'.format(self.module.name, self.name)
 
     def toJson(self):
-        o = {}
+        o = OrderedDict()
         if self.name:
             o['name'] = self.name
         return o
@@ -197,7 +197,7 @@ class TypeSymbol(NamedElement):
         return (self.is_primitive and self.name) \
             or (self.is_complex and self.name) \
             or (self.is_list and self.nested) \
-            or (self.is_model and self.nested) \
+            or (self.is_model and self.nested)
 
     @property
     def is_bool(self):

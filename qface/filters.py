@@ -12,10 +12,15 @@ def jsonify(symbol):
     return json.dumps(symbol, indent='  ')
 
 
-def upper_first(symbol):
+def upper_first(s):
     """ uppercase first letter """
-    name = str(symbol)
-    return name[0].upper() + name[1:]
+    s = str(s)
+    return s[0].upper() + s[1:]
+
+
+def lower_first(s):
+    s = str(s)
+    return s[0].lower() + s[1:]
 
 
 def hash(symbol, hash_type='sha1'):
@@ -28,3 +33,14 @@ def hash(symbol, hash_type='sha1'):
 def path(symbol):
     """ replaces '.' with '/' """
     return str(symbol).replace('.', '/')
+
+
+filters = {
+    'jsonify': jsonify,
+    'upper_first': upper_first,
+    'lower_first': lower_first,
+    'upperfirst': upper_first,
+    'lowerfirst': lower_first,
+    'hash': hash,
+    'path': path,
+}

@@ -20,6 +20,7 @@ from .idl.parser.TListener import TListener
 from .idl.domain import System
 from .idl.listener import DomainListener
 from .utils import merge
+from .filters import filters
 
 
 try:
@@ -33,17 +34,6 @@ logger = logging.getLogger(__name__)
 """
 Provides an API for accessing the file system and controlling the generator
 """
-
-
-def upper_first_filter(s):
-    s = str(s)
-    return s[0].upper() + s[1:]
-
-
-def lower_first_filter(s):
-    s = str(s)
-    return s[0].lower() + s[1:]
-
 
 class ReportingErrorListener(ErrorListener.ErrorListener):
     def __init__(self, document):
@@ -69,7 +59,7 @@ class Generator(object):
     strict = False
     """ enables strict code generation """
 
-    def __init__(self, search_path: str):
+    def __init__(self, search_path: str, context: dict={}):
         loader = ChoiceLoader([
             FileSystemLoader(search_path),
             PackageLoader('qface')
@@ -79,10 +69,9 @@ class Generator(object):
             trim_blocks=True,
             lstrip_blocks=True
         )
-        self.env.filters['upperfirst'] = upper_first_filter
-        self.env.filters['lowerfirst'] = lower_first_filter
+        self.env.filters.update(filters)
         self._destination = Path()
-        self.context = {}
+        self.context = context
 
     @property
     def destination(self):
@@ -91,7 +80,16 @@ class Generator(object):
 
     @destination.setter
     def destination(self, dst: str):
-        self._destination = Path(self.apply(dst, self.context))
+        if dst:
+            self._destination = Path(self.apply(dst, self.context))
+
+    @property
+    def filters(self):
+        return self.env.filters
+
+    @filters.setter
+    def filters(self, filters):
+        self.env.filters.update(filters)
 
     def get_template(self, name: str):
         """Retrieves a single template file from the template loader"""
@@ -113,7 +111,6 @@ class Generator(object):
         """
         if not context:
             context = self.context
-
         error = False
         try:
             self._write(file_path, template, context, preserve)
@@ -176,7 +173,6 @@ class FileSystem(object):
         if error and FileSystem.strict:
             sys.exit(-1)
 
-
     @staticmethod
     def _parse_document(document: Path, system: System = None):
         """Parses a document and returns the resulting domain system
@@ -209,13 +205,7 @@ class FileSystem(object):
         """Read a YAML document and for each root symbol identifier
         updates the tag information of that symbol
         """
-        if not document.exists():
-            return
-        meta = {}
-        try:
-            meta = yaml.load(document.text(), Loader=Loader)
-        except yaml.YAMLError as exc:
-            click.secho(exc, fg='red')
+        meta = FileSystem.load_yaml(document)
         click.secho('merge tags from {0}'.format(document), fg='blue')
         for identifier, data in meta.items():
             symbol = system.lookup(identifier)
@@ -256,3 +246,16 @@ class FileSystem(object):
         if use_cache:
             cache[identifier] = system
         return system
+
+    @staticmethod
+    def load_yaml(document: Path, required=False):
+        document = Path(document)
+        if not document.exists():
+            if required:
+                click.secho('yaml document does not exists: {0}'.format(document), fg='red')
+            return {}
+        try:
+            return yaml.load(document.text(), Loader=Loader)
+        except yaml.YAMLError as exc:
+            click.secho(exc, fg='red')
+        return {}

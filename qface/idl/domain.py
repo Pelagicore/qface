@@ -197,7 +197,7 @@ class TypeSymbol(NamedElement):
         return (self.is_primitive and self.name) \
             or (self.is_complex and self.name) \
             or (self.is_list and self.nested) \
-            or (self.is_model and self.nested) \
+            or (self.is_model and self.nested)
 
     @property
     def is_bool(self):

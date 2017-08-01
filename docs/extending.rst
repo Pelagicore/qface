@@ -53,3 +53,73 @@ structs and enums.
 
 The template code iterates over the domain objects and generates text using a
 mixture of output blocks ``{{}}`` and control blocks ``{%%}``.
+
+
+Rule Base Generation
+====================
+
+The `RuleGenerator` allows you to extract the documentation rules into an external yaml file. This makes the python script more compact.
+
+
+.. code-block:: python
+
+    from qface.generator import FileSystem, RuleGenerator
+    from path import Path
+
+    here = Path(__file__).dirname()
+
+    def generate(input, output):
+        # parse the interface files
+        system = FileSystem.parse(input)
+        # setup the generator
+        generator = RuleGenerator(search_path=here/'templates', destination=output)
+        generator.process_rules(here/'docs.yaml', system)
+
+The rules document is divided into several targets. Each target can have an own destination. A target is typical for exampe and app, client, server. Each target can have rules for the different symbols (system, module, interface, struct, enum). An each rule finally consists of a destination modifier, additional context and a documents collection.
+
+.. code-block:: python
+
+    <target>:
+        <symbol>:
+            context: {}
+            destination: ''
+            documents:
+                <target>:<source>
+
+* ``<target>`` is a name of the current target (e.g. client, server, plugin)
+* ``<symbol>`` must be either system, module, interface, struct or enum
+
+
+Here is an example (``docs.yaml``)
+
+.. code-block:: yaml
+
+    global:
+        destination: '{{dst}}'
+        system:
+            documents:
+                '{{project}}.pro': 'project.pro'
+                '.qmake.conf': 'qmake.conf'
+                'CMakeLists.txt': 'CMakeLists.txt'
+    plugin:
+        destination: '{{dst}}/plugin'
+        module:
+            context: {'module_name': '{{module|identifier}}'}
+            documents:
+                '{{module_name}}.pro': 'plugin/plugin.pro'
+                'CMakeLists.txt': 'plugin/CMakeLists.txt'
+                'plugin.cpp': 'plugin/plugin.cpp'
+                'plugin.h': 'plugin/plugin.h'
+                'qmldir': 'plugin/qmldir'
+        interface:
+            documents:
+                '{{interface|lower}}.h': 'plugin/interface.h'
+                '{{interface|lower}}.cpp': 'plugin/interface.cpp'
+        struct:
+            documents:
+                '{{struct|lower}}.h': 'plugin/struct.h'
+                '{{struct|lower}}.cpp': 'plugin/struct.cpp'
+
+
+The rule generator adds the ``dst``, ``project`` as also the corresponding symbols to the context automatically. On each level you are able to change the destination or update the context.
+

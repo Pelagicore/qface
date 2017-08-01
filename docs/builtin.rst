@@ -1,17 +1,31 @@
-Builtin Generators
+Generator Examples
 ==================
 
-QFace contains several built in code generators. Their purpose is merely to showcase how to write a code generator
-with QFace. They are working and complete examples of a general purpose generators.
+QFace does provide soem real world generators which are hosted as separated projects. Their purpose is merely to showcase how to write a code generator with QFace. They are working and complete examples of a general purpose generators.
 
-* The QtCPP generator generates a Qt C++ plugin with a QML API ready to be used in your project.
-* The QtQml generator generates a QML only API which ready to be used.
+`qface-qtcpp`_
 
-From the QML user interface perspective both provide the same API and are interchangeable.
+    The QtCPP generator generates a Qt C++ plugin with a QML API ready to be used in your project.
+
+    Hosted at: https://github.com/Pelagicore/qface-qtcpp
+
+`qface-qtqml`_
+
+    The QtQml generator generates a QML only API which ready to be used.
+
+    Hosted at: https://github.com/Pelagicore/qface-qtqml
+
+`qface-qtro`_
+
+    The RO (RemoteObjects) generator generates a client and server project using the Qt5 QtRemoteObejcts library
+
+    Hosted at: https://github.com/Pelagicore/qface-qtro
 
 
-.. toctree::
-   :maxdepth: 1
+From the QML user interface perspective the QtCPP and QtQML generators bth provide the same API and are interchangeable.
 
-   qtcpp
-   qtqml
+
+
+.. _qface-qtcpp: https://github.com/Pelagicore/qface-qtcpp
+.. _qface-qtqml: https://github.com/Pelagicore/qface-qtqml
+.. _qface-qtro: https://github.com/Pelagicore/qface-qtro

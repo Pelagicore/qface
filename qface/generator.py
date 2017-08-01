@@ -175,7 +175,7 @@ class RuleGenerator(Generator):
     def _process_target(self, rules: dict, system: System):
         """ process a set of rules for a target """
         self.context.update(rules.get('context', {}))
-        self.destination = rules.get('destination', None)
+        self.destination = rules.get('destination', '{{dst}}')
         self._process_rule(rules.get('system', None), {'system': system})
         for module in system.modules:
             self._process_rule(rules.get('module', None), {'module': module})

@@ -186,5 +186,12 @@ def docs_serve():
     server.serve(root='docs/_build/html', open_url=True)
 
 
+@cli.command()
+def clean():
+    Path('build').rmtree_p()
+    Path('dist').rmtree_p()
+    Path('qface.egg-info').rmtree_p()
+
+
 if __name__ == '__main__':
     cli()

@@ -154,6 +154,49 @@ class Generator(object):
         self.env.filters[name] = callback
 
 
+class RuleGenerator(Generator):
+    """Generates documents based on a rule YAML document"""
+    def __init__(self, search_path: str, destination: Path, context: dict= {}):
+        super().__init__(search_path, context)
+        self.context.update({
+            'dst': destination,
+            'project': Path(destination).name,
+        })
+        self.destination = '{{dst}}'
+
+    def process_rules(self, document: Path, system: System):
+        """writes the templates read from the rules document"""
+        self.context.update({'system': system})
+        rules = FileSystem.load_yaml(document, required=True)
+        for name, target in rules.items():
+            click.secho('process target: {0}'.format(name), fg='green')
+            self._process_target(target, system)
+
+    def _process_target(self, rules: dict, system: System):
+        """ process a set of rules for a target """
+        self.context.update(rules.get('context', {}))
+        self.destination = rules.get('destination', None)
+        self._process_rule(rules.get('system', None), {'system': system})
+        for module in system.modules:
+            self._process_rule(rules.get('module', None), {'module': module})
+            for interface in module.interfaces:
+                self._process_rule(rules.get('interface', None), {'interface': interface})
+            for struct in module.structs:
+                self._process_rule(rules.get('struct', None), {'struct': struct})
+            for enum in module.enums:
+                self._process_rule(rules.get('enum', None), {'enum': enum})
+
+    def _process_rule(self, rule: dict, context: dict):
+        """ process a single rule """
+        if not rule:
+            return
+        self.context.update(context)
+        self.context.update(rule.get('context', {}))
+        self.destination = rule.get('destination', None)
+        for target, source in rule.get('documents', {}).items():
+            self.write(target, source)
+
+
 class FileSystem(object):
     """QFace helper functions to work with the file system"""
     strict = False

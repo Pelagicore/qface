@@ -156,4 +156,4 @@ Documents can be marked as preserved to prevent them to be overwritten when the 
                 - '{{interface|lower}}.h'
                 - '{{interface|lower}}.cpp'
 
-IN the example above the two interface documents will not be overwritten during a second generator call and can be edited by the user.
+In the example above the two interface documents will not be overwritten during a second generator call and can be edited by the user.

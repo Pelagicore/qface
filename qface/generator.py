@@ -137,9 +137,9 @@ class Generator(object):
         data = self.render(template, context)
         if self._has_different_content(data, path):
             if path.exists() and preserve:
-                click.secho('preserve changed file: {0}'.format(path), fg='blue')
+                click.secho('preserve: {0}'.format(path), fg='blue')
             else:
-                click.secho('write changed file: {0}'.format(path), fg='blue')
+                click.secho('create: {0}'.format(path), fg='blue')
                 path.open('w', encoding='utf-8').write(data)
 
     def _has_different_content(self, data, path):
@@ -164,15 +164,15 @@ class RuleGenerator(Generator):
         })
         self.destination = '{{dst}}'
 
-    def process_rules(self, document: Path, system: System):
+    def process_rules(self, path: Path, system: System):
         """writes the templates read from the rules document"""
         self.context.update({'system': system})
-        rules = FileSystem.load_yaml(document, required=True)
-        for name, target in rules.items():
-            click.secho('process target: {0}'.format(name), fg='green')
-            self._process_target(target, system)
+        document = FileSystem.load_yaml(path, required=True)
+        for module, rules in document.items():
+            click.secho('module: {0}'.format(module), fg='green')
+            self._process_rules(rules, system)
 
-    def _process_target(self, rules: dict, system: System):
+    def _process_rules(self, rules: dict, system: System):
         """ process a set of rules for a target """
         self.context.update(rules.get('context', {}))
         self.destination = rules.get('destination', '{{dst}}')
@@ -249,7 +249,7 @@ class FileSystem(object):
         updates the tag information of that symbol
         """
         meta = FileSystem.load_yaml(document)
-        click.secho('merge tags from {0}'.format(document), fg='blue')
+        click.secho('merge: {0}'.format(document.name), fg='blue')
         for identifier, data in meta.items():
             symbol = system.lookup(identifier)
             if symbol:

@@ -193,8 +193,10 @@ class RuleGenerator(Generator):
         self.context.update(context)
         self.context.update(rule.get('context', {}))
         self.destination = rule.get('destination', None)
+        preserved = rule.get('preserve', [])
         for target, source in rule.get('documents', {}).items():
-            self.write(target, source)
+            preserve = target in preserved
+            self.write(target, source, preserve=preserve)
 
 
 class FileSystem(object):

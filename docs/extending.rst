@@ -75,7 +75,7 @@ The `RuleGenerator` allows you to extract the documentation rules into an extern
         generator = RuleGenerator(search_path=here/'templates', destination=output)
         generator.process_rules(here/'docs.yaml', system)
 
-The rules document is divided into several targets. Each target can have an own destination. A target is typical for exampe and app, client, server. Each target can have rules for the different symbols (system, module, interface, struct, enum). An each rule finally consists of a destination modifier, additional context and a documents collection.
+The rules document is divided into several targets. Each target can have an own destination. A target is typical for example and app, client, server. Each target can have rules for the different symbols (system, module, interface, struct, enum). An each rule finally consists of a destination modifier, additional context and a documents collection.
 
 .. code-block:: python
 
@@ -123,3 +123,37 @@ Here is an example (``docs.yaml``)
 
 The rule generator adds the ``dst``, ``project`` as also the corresponding symbols to the context automatically. On each level you are able to change the destination or update the context.
 
+
+.. rubric:: Features
+
+The rules document allows to conditional write files based on a feature set. The feature set must be a set of tags indicating the features which will then be checked in the ``when`` section of a rule.
+
+The features are passed to the generator in your custom generator code. The existence of a feature tells the rules engine to check if a ``when`` section exists conditionally execute this rule.
+
+.. code-block:: yaml
+
+    plugin:
+        when: plugin_enabled
+        destination: '{{dst}}/plugin'
+        module:
+            ...
+
+Here the plugin rule will only be run when the feature set contains a 'plugin_enabled' string.
+
+.. rubric:: Preserve
+
+Documents can be marked as preserved to prevent them to be overwritten when the user has edited them. the rules documents has an own marker for this called ``preserve``. This is a list of target documents which shall be be marked preserved by the generator.
+
+
+.. code-block:: yaml
+
+    plugin:
+        interface:
+            documents:
+                '{{interface|lower}}.h': 'plugin/interface.h'
+                '{{interface|lower}}.cpp': 'plugin/interface.cpp'
+            preserve:
+                - '{{interface|lower}}.h'
+                - '{{interface|lower}}.cpp'
+
+IN the example above the two interface documents will not be overwritten during a second generator call and can be edited by the user.

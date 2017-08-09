@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 Provides an API for accessing the file system and controlling the generator
 """
 
+
 class ReportingErrorListener(ErrorListener.ErrorListener):
     def __init__(self, document):
         self.document = document
@@ -71,6 +72,7 @@ class Generator(object):
         )
         self.env.filters.update(filters)
         self._destination = Path()
+        self._source = ''
         self.context = context
 
     @property
@@ -84,6 +86,16 @@ class Generator(object):
             self._destination = Path(self.apply(dst, self.context))
 
     @property
+    def source(self):
+        """source prefix for template lookup"""
+        return self._source
+
+    @source.setter
+    def source(self, source: str):
+        if source:
+            self._source = source
+
+    @property
     def filters(self):
         return self.env.filters
 
@@ -93,7 +105,14 @@ class Generator(object):
 
     def get_template(self, name: str):
         """Retrieves a single template file from the template loader"""
-        return self.env.get_template(name)
+        source = name
+        if name and name[0] is '/':
+            source = name[1:]
+        elif self.source is not None:
+            source = '/'.join((self.source, name))
+            print('get_template: ', name, source)
+
+        return self.env.get_template(source)
 
     def render(self, name: str, context: dict):
         """Returns the rendered text from a single template file from the
@@ -115,7 +134,6 @@ class Generator(object):
         try:
             self._write(file_path, template, context, preserve)
         except TemplateSyntaxError as exc:
-            # import pdb; pdb.set_trace()
             message = '{0}:{1} error: {2}'.format(exc.filename, exc.lineno, exc.message)
             click.secho(message, fg='red')
             error = True
@@ -161,25 +179,29 @@ class RuleGenerator(Generator):
         self.context.update({
             'dst': destination,
             'project': Path(destination).name,
+            'features': features,
         })
         self.destination = '{{dst}}'
         self.features = features
 
-    def process_rules(self, path: Path, system: System, features:set=set()):
+    def process_rules(self, path: Path, system: System):
         """writes the templates read from the rules document"""
-        self.features.update(features)
-        self.context.update({'system': system})
+        self.context.update({
+            'system': system,
+        })
         document = FileSystem.load_yaml(path, required=True)
         for module, rules in document.items():
-            click.secho('module: {0}'.format(module), fg='green')
+            click.secho('process: {0}'.format(module), fg='green')
             self._process_rules(rules, system)
 
     def _process_rules(self, rules: dict, system: System):
         """ process a set of rules for a target """
+        self._source = None # reset the template source
         if not self._shall_proceed(rules):
             return
         self.context.update(rules.get('context', {}))
         self.destination = rules.get('destination', '{{dst}}')
+        self.source = rules.get('source', None)
         self._process_rule(rules.get('system', None), {'system': system})
         for module in system.modules:
             self._process_rule(rules.get('module', None), {'module': module})
@@ -197,7 +219,10 @@ class RuleGenerator(Generator):
         self.context.update(context)
         self.context.update(rule.get('context', {}))
         self.destination = rule.get('destination', None)
+        self.source = rule.get('source', None)
         preserved = rule.get('preserve', [])
+        if not preserved:
+            preserved = []
         for target, source in rule.get('documents', {}).items():
             preserve = target in preserved
             self.write(target, source, preserve=preserve)
@@ -263,6 +288,8 @@ class FileSystem(object):
         """Read a YAML document and for each root symbol identifier
         updates the tag information of that symbol
         """
+        if not Path(document).exists():
+            return
         meta = FileSystem.load_yaml(document)
         click.secho('merge: {0}'.format(document.name), fg='blue')
         for identifier, data in meta.items():

@@ -137,7 +137,14 @@ class Filters(object):
     @staticmethod
     def ns(symbol):
         '''generates a namespace x::y::z statement from a symbol'''
-        return '::'.join(symbol.module.name_parts)
+        if symbol.type and symbol.type.is_primitive:
+            return ''
+        return '{0}::'.format('::'.join(symbol.module.name_parts))
+
+    @staticmethod
+    def fqn(symbol):
+        '''generates a fully qualified name from symbol'''
+        return '{0}::{1}'.format(Filters.ns(symbol), symbol.name)
 
     @staticmethod
     def signalName(s):
@@ -205,6 +212,7 @@ class Filters(object):
             'close_ns': Filters.close_ns,
             'using_ns': Filters.using_ns,
             'ns': Filters.ns,
+            'fqn': Filters.fqn,
             'signalName': Filters.signalName,
             'parameters': Filters.parameters,
             'signature': Filters.signature,

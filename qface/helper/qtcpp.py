@@ -28,7 +28,7 @@ class Filters(object):
                 return 'QString()'
             if t.is_real:
                 return 'qreal(0.0)'
-            if t.is_variant:
+            if t.is_var:
                 return 'QVariant()'
         elif t.is_void:
             return ''
@@ -58,12 +58,16 @@ class Filters(object):
         if symbol.type.is_enum:
             return '{0}{1}Module::{2} {3}'.format(prefix, module_name, symbol.type, symbol)
         if symbol.type.is_void or symbol.type.is_primitive:
-            if symbol.type.name == 'string':
+            if symbol.type.is_string:
                 return 'const QString &{0}'.format(symbol)
-            if symbol.type.name == 'var':
+            if symbol.type.is_var:
                 return 'const QVariant &{0}'.format(symbol)
-            if symbol.type.name == 'real':
+            if symbol.type.is_real:
                 return 'qreal {0}'.format(symbol)
+            if symbol.type.is_bool:
+                return 'bool {0}'.format(symbol)
+            if symbol.type.is_int:
+                return 'int {0}'.format(symbol)
             return '{0} {1}'.format(symbol.type, symbol)
         elif symbol.type.is_list:
             nested = Filters.returnType(symbol.type.nested)
@@ -82,16 +86,24 @@ class Filters(object):
     def returnType(symbol):
         prefix = Filters.classPrefix
         module_name = upper_first(symbol.module.module_name)
-        if symbol.type.is_enum:
+        t = symbol.type
+        if t.is_enum:
             return '{0}{1}Module::{2}'.format(prefix, module_name, symbol.type)
         if symbol.type.is_void or symbol.type.is_primitive:
-            if symbol.type.name == 'string':
+            if t.is_string:
                 return 'QString'
-            if symbol.type.name == 'var':
+            if t.is_var:
                 return 'QVariant'
-            if symbol.type.name == 'real':
+            if t.is_real:
                 return 'qreal'
-            return symbol.type.name
+            if t.is_int:
+                return 'int'
+            if t.is_bool:
+                return 'bool'
+            if t.is_void:
+                return 'void'
+            print(t)
+            assert False
         elif symbol.type.is_list:
             nested = Filters.returnType(symbol.type.nested)
             return 'QVariantList'.format(nested)
@@ -125,7 +137,14 @@ class Filters(object):
     @staticmethod
     def ns(symbol):
         '''generates a namespace x::y::z statement from a symbol'''
-        return '::'.join(symbol.module.name_parts)
+        if symbol.type and symbol.type.is_primitive:
+            return ''
+        return '{0}::'.format('::'.join(symbol.module.name_parts))
+
+    @staticmethod
+    def fqn(symbol):
+        '''generates a fully qualified name from symbol'''
+        return '{0}::{1}'.format(Filters.ns(symbol), symbol.name)
 
     @staticmethod
     def signalName(s):
@@ -193,6 +212,7 @@ class Filters(object):
             'close_ns': Filters.close_ns,
             'using_ns': Filters.using_ns,
             'ns': Filters.ns,
+            'fqn': Filters.fqn,
             'signalName': Filters.signalName,
             'parameters': Filters.parameters,
             'signature': Filters.signature,

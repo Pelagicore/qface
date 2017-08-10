@@ -30,7 +30,7 @@ void {{symbol}}{{postfix}}({{symbol|parameters}});
 
 {% macro property_setter_impl(class, property) -%}
 /*!
-   \qmlproperty {{property.type}} {{interface}}::{{property}}
+   \qmlproperty {{property.type}} {{class}}::{{property}}
 {% with doc = property.comment|parse_doc %}
    \brief {{doc.brief}}
 
@@ -42,7 +42,7 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {
     if (m_{{property}} != {{property}}) {
         m_{{property}} = {{property}};
-        emit {{property}}Changed({{property}});
+        Q_EMIT {{property}}Changed({{property}});
     }
 }
 {%- endmacro %}

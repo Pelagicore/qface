@@ -220,6 +220,11 @@ class TypeSymbol(NamedElement):
         return self.is_primitive and self.name == 'string'
 
     @property
+    def is_var(self):
+        '''checks if type is primitive and var'''
+        return self.is_primitive and self.name == 'var'
+
+    @property
     def is_enumeration(self):
         '''checks if type is complex and insytance of type Enum'''
         return self.is_complex and isinstance(self.reference, Enum)
@@ -243,11 +248,6 @@ class TypeSymbol(NamedElement):
     def is_interface(self):
         '''checks if type is interface'''
         return self.is_complex and isinstance(self.reference, Interface)
-
-    @property
-    def is_variant(self):
-        '''checks if type is primitive and string'''
-        return self.is_primitive and self.name == 'var'
 
     @property
     def reference(self):

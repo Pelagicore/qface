@@ -110,8 +110,6 @@ class Generator(object):
             source = name[1:]
         elif self.source is not None:
             source = '/'.join((self.source, name))
-            print('get_template: ', name, source)
-
         return self.env.get_template(source)
 
     def render(self, name: str, context: dict):

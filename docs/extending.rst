@@ -1,6 +1,6 @@
-***************
-Extending QFace
-***************
+*********
+Extending
+*********
 
 QFace is easy to use and easy to extend. Your generator is just a small python
 script using the qface library.
@@ -75,7 +75,7 @@ The `RuleGenerator` allows you to extract the documentation rules into an extern
         generator = RuleGenerator(search_path=here/'templates', destination=output)
         generator.process_rules(here/'docs.yaml', system)
 
-The rules document is divided into several targets. Each target can have an own destination. A target is typical for example and app, client, server. Each target can have rules for the different symbols (system, module, interface, struct, enum). An each rule finally consists of a destination modifier, additional context and a documents collection.
+The rules document is divided into several targets. Each target can have an own destination. A target is typical for example and `app`, `client` or `server`. Each target can have rules for the different symbols (system, module, interface, struct, enum). An each rule finally consists of a destination modifier, additional context and a documents collection.
 
 .. code-block:: python
 
@@ -126,14 +126,14 @@ The rule generator adds the ``dst``, ``project`` as also the corresponding symbo
 
 .. rubric:: Features
 
-The rules document allows to conditional write files based on a feature set. The feature set must be a set of tags indicating the features which will then be checked in the ``when`` section of a rule.
+The rules document allows to conditional write files based on a feature set. The feature set must be a set of tags indicating the features which will then be checked in the ``when`` section of a rule. The ``when`` tag needs to be a list of feature switched.
 
 The features are passed to the generator in your custom generator code. The existence of a feature tells the rules engine to check if a ``when`` section exists conditionally execute this rule.
 
 .. code-block:: yaml
 
     plugin:
-        when: plugin_enabled
+        when: [plugin_enabled]
         destination: '{{dst}}/plugin'
         module:
             ...
@@ -157,3 +157,27 @@ Documents can be marked as preserved to prevent them to be overwritten when the 
                 - '{{interface|lower}}.cpp'
 
 In the example above the two interface documents will not be overwritten during a second generator call and can be edited by the user.
+
+.. rubric:: Destination and Source
+
+The ``destination`` tag allows you to specify a prefix for the target destination of the document. It should always contain the ``{{dst}}`` variable to be placed inside the project folder.
+
+The ``source`` tag specifies a prefix for the templates resolving. If the template name starts with a ``/`` the prefix will be ignored.
+
+Destination and source tags are allowed on the target level as also on each system, module and other symbol levels. A tag on a parent symbol will be the default for the child symbols.
+
+.. rubric:: Implicit symbol hierarchy
+
+This is the implicit logical hierarchy taken into account:
+
+.. code-block:: xml
+
+    <target>
+        <system>
+            <module>
+                <interface>
+                <struct>
+                <enum>
+
+Typical you place the destination prefix on the module level if your destination depends on the module symbol. For generic templates you would place the destination on the system level. On the system level you can not use child symbols (such as the module) as at this time these symbols are not known yet.
+

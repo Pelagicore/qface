@@ -140,9 +140,9 @@ The features are passed to the generator in your custom generator code. The exis
 
 Here the plugin rule will only be run when the feature set contains a 'plugin_enabled' string.
 
-.. rubric:: Preserve
+.. rubric:: Preserving Documents
 
-Documents can be marked as preserved to prevent them to be overwritten when the user has edited them. the rules documents has an own marker for this called ``preserve``. This is a list of target documents which shall be be marked preserved by the generator.
+Documents can be moved to the ``preserve`` tag to prevent them to be overwritten. The rules documents has an own marker for this called ``preserve``. This is the same dictionary of target/source documents which shall be be marked preserved by the generator.
 
 
 .. code-block:: yaml
@@ -151,12 +151,10 @@ Documents can be marked as preserved to prevent them to be overwritten when the 
         interface:
             documents:
                 '{{interface|lower}}.h': 'plugin/interface.h'
-                '{{interface|lower}}.cpp': 'plugin/interface.cpp'
             preserve:
-                - '{{interface|lower}}.h'
-                - '{{interface|lower}}.cpp'
+                '{{interface|lower}}.cpp': 'plugin/interface.cpp'
 
-In the example above the two interface documents will not be overwritten during a second generator call and can be edited by the user.
+In the example above the preserve listed documents will not be overwritten during a second generator run and can be edited by the user.
 
 .. rubric:: Destination and Source
 

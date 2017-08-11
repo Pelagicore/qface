@@ -218,12 +218,10 @@ class RuleGenerator(Generator):
         self.context.update(rule.get('context', {}))
         self.destination = rule.get('destination', None)
         self.source = rule.get('source', None)
-        preserved = rule.get('preserve', [])
-        if not preserved:
-            preserved = []
         for target, source in rule.get('documents', {}).items():
-            preserve = target in preserved
-            self.write(target, source, preserve=preserve)
+            self.write(target, source)
+        for target, source in rule.get('preserve', {}).items():
+            self.write(target, source, preserve=True)
 
     def _shall_proceed(self, obj):
         conditions = obj.get('when', [])

@@ -26,6 +26,39 @@ To install the qface library you need to have python3 and pip installed.
 pip3 install qface
 ```
 
+## Install Development Version
+
+### Prerequisites
+
+To install the development version you need to clone the repository and ensure you have checkout the develop branch.
+
+```sh
+git clone git@github.com:Pelagicore/qface.git
+cd qface
+git checkout develop
+```
+
+The installation requires the python package manager called (pip) using the python 3 version. You can try:
+
+```sh
+python3 --version
+pip3 --version
+```
+
+### Installation
+
+Use the editable option of pip to install an editable version.
+
+```sh
+cd qface
+pip3 install --editable .
+```
+
+This reads the `setup.py` document and installs the package as reference to this repository. So all changes will be immediatly reflected in the installation.
+
+To update the installation just simple pull from the git repository.
+
+
 ## Download
 
 If you are looking for the examples and the builtin generators you need to download the code.

@@ -132,19 +132,19 @@ class Generator(object):
         try:
             self._write(file_path, template, context, preserve)
         except TemplateSyntaxError as exc:
-            message = '{0}:{1} error: {2}'.format(exc.filename, exc.lineno, exc.message)
-            click.secho(message, fg='red')
+            message = '{0}:{1}: error: {2}'.format(exc.filename, exc.lineno, exc.message)
+            click.secho(message, fg='red', err=True)
             error = True
         except TemplateNotFound as exc:
-            message = '{0} error: Template not found'.format(exc.name)
-            click.secho(message, fg='red')
+            message = '{0}: error: Template not found'.format(exc.name)
+            click.secho(message, fg='red', err=True)
             error = True
         except TemplateError as exc:
             message = 'error: {0}'.format(exc.message)
-            click.secho(message, fg='red')
+            click.secho(message, fg='red', err=True)
             error = True
         if error and Generator.strict:
-            sys.exit(-1)
+            sys.exit(1)
 
     def _write(self, file_path: Path, template: str, context: dict, preserve: bool = False):
         path = self.destination / Path(self.apply(file_path, context))
@@ -244,10 +244,10 @@ class FileSystem(object):
         try:
             return FileSystem._parse_document(document, system)
         except FileNotFoundError as e:
-            click.secho('{0}: file not found'.format(document), fg='red')
+            click.secho('{0}: error: file not found'.format(document), fg='red', err=True)
             error = True
         except ValueError as e:
-            click.secho('Error parsing document {0}'.format(document))
+            click.secho('Error parsing document {0}'.format(document), fg='red', err=True)
             error = True
         if error and FileSystem.strict:
             sys.exit(-1)
@@ -333,10 +333,13 @@ class FileSystem(object):
         document = Path(document)
         if not document.exists():
             if required:
-                click.secho('yaml document does not exists: {0}'.format(document), fg='red')
+                click.secho('yaml document does not exists: {0}'.format(document), fg='red', err=True)
             return {}
         try:
             return yaml.load(document.text(), Loader=Loader)
         except yaml.YAMLError as exc:
-            click.secho(str(exc), fg='red')
+            error = document
+            if hasattr(exc, 'problem_mark'):
+                error = '{0}:{1}'.format(error, exc.problem_mark.line+1)
+            click.secho('{0}: error: {1}'.format(error, str(exc)), fg='red', err=True)
         return {}

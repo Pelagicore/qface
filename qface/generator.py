@@ -1,7 +1,7 @@
 
 # Copyright (c) Pelagicore AB 2016
 
-from jinja2 import Environment, Template
+from jinja2 import Environment, Template, Undefined, StrictUndefined
 from jinja2 import FileSystemLoader, PackageLoader, ChoiceLoader
 from jinja2 import TemplateSyntaxError, TemplateNotFound, TemplateError
 from path import Path
@@ -12,7 +12,7 @@ import logging
 import hashlib
 import yaml
 import click
-import sys
+import sys, os
 
 from .idl.parser.TLexer import TLexer
 from .idl.parser.TParser import TParser
@@ -22,6 +22,7 @@ from .idl.listener import DomainListener
 from .utils import merge
 from .filters import filters
 
+from jinja2.debug import make_traceback as _make_traceback
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -30,12 +31,22 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
+def templateerror_handler(traceback):
+    exc_type, exc_obj, exc_tb = traceback.exc_info
+    error = exc_obj
+    if isinstance(exc_type, TemplateError):
+        error = exc_obj.message
+    message = '{0}:{1}: error: {2}'.format(exc_tb.tb_frame.f_code.co_filename, exc_tb.tb_lineno, error)
+    click.secho(message, fg='red', err=True)
+
+class TestableUndefined(StrictUndefined):
+    """Return an error for all undefined values, but allow testing them in if statements"""
+    def __bool__(self):
+        return False
 
 """
 Provides an API for accessing the file system and controlling the generator
 """
-
-
 class ReportingErrorListener(ErrorListener.ErrorListener):
     def __init__(self, document):
         self.document = document
@@ -68,8 +79,9 @@ class Generator(object):
         self.env = Environment(
             loader=loader,
             trim_blocks=True,
-            lstrip_blocks=True
+            lstrip_blocks=True,
         )
+        self.env.exception_handler=templateerror_handler
         self.env.filters.update(filters)
         self._destination = Path()
         self._source = ''
@@ -115,6 +127,10 @@ class Generator(object):
     def render(self, name: str, context: dict):
         """Returns the rendered text from a single template file from the
         template loader using the given context data"""
+        if Generator.strict:
+            self.env.undefined=TestableUndefined
+        else:
+            self.env.undefined=Undefined
         template = self.get_template(name)
         return template.render(context)
 
@@ -140,9 +156,9 @@ class Generator(object):
             click.secho(message, fg='red', err=True)
             error = True
         except TemplateError as exc:
-            message = 'error: {0}'.format(exc.message)
-            click.secho(message, fg='red', err=True)
+            # Just return with an error, the generic templateerror_handler takes care of printing it 
             error = True
+
         if error and Generator.strict:
             sys.exit(1)
 

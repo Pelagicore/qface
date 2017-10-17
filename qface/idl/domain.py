@@ -435,6 +435,10 @@ class Operation(Symbol):
         o['type'] = self.type.toJson()
         return o
 
+    @property
+    def hasReturnValue(self):
+        return not self.type.name == 'void'
+
 
 class Signal(Symbol):
     """A signal inside an interface"""

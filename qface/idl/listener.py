@@ -200,6 +200,7 @@ class DomainListener(TListener):
         assert self.struct
         name = ctx.name.text
         self.field = Field(name, self.struct)
+        self.parse_annotations(ctx, self.field)
         contextMap[ctx] = self.field
 
     def exitStructFieldSymbol(self, ctx: TParser.StructFieldSymbolContext):

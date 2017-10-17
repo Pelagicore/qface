@@ -2,7 +2,9 @@
 QFace
 =====
 
-QFace is a flexible Qt API generator. It uses a common IDL format (called QFace interface document) to define an API. QFace comes with a set of predefined generators to generate QML Plugins. QFace can be easily extended with your own generator.
+QFace is a flexible API generator inspired by the Qt API idioms. It uses a common IDL format (called QFace interface document) to define an API. QFace is optimized to write a custom generator based on the common IDL format.
+
+There exists already several code generators for common use cases. These can be used as is or can be used as a base for a custom generator.
 
 .. toctree::
    :maxdepth: 1
@@ -18,10 +20,34 @@ QFace is a flexible Qt API generator. It uses a common IDL format (called QFace 
    extending
    api
 
+
+Features
+========
+
+The list fo features is plit between features which are based on the choosen IDL and features wich are provided by the generator itself.
+
+.. rubric:: IDL Features
+
+- Common modern IDL
+- Scalable through modules
+- Structure through structs, enums, flags
+- Interface API with properties, operations and signals
+- Annotations using YAML syntax
+- Documentable IDL
+
+.. rubric:: Generator Features
+
+- Easy to install using python package manager
+- Designed to be extended
+- Well defined domain objects
+- Template based code generator
+- Simple rule based code builder
+- Well documented
+
 Quick Start
 ===========
 
-QFace is a generator framework but also comes with several reference code generator.
+QFace is a generator framework and is bundled with several reference code generator.
 
 To install qface you need to have python3 installed and typically also pip3
 
@@ -29,7 +55,7 @@ To install qface you need to have python3 installed and typically also pip3
 
     pip3 install qface
 
-This installs the python qface library and the two reference generator qface-qtcpp and qface-qtqml.
+This installs the python qface library onto your system.
 
 You can verify that you have qface installed with
 
@@ -98,22 +124,10 @@ And a "org.example.txt" file named after the module should be generated.
 * :doc:`domain`
 * :doc:`api`
 
-Builtin Generators
+Bundled Generators
 ------------------
 
-The built-in generators qface-qtcpp and qface-qtqml will generator cpp / qml code from the interface files. The generated code is source code compatible and can be used with the same QML based user interface
-
-.. code-block:: bash
-
-    mkdir cpp-out
-    qface-qtcpp sample.qface cpp-out
-
-    mkdir qml-out
-    qface-qtqml sample.qface qml-out
-
-The generators can run with one or more input files or folders and generate code for one or more modules. In case of the qtcpp generator the code needs to be open with QtCreator and compiled and installed.
-
-For the QML code the code must just made available to the QML import path.
+QFace has some gnerators which are bundled with the QFace library. They live in their own reposiutories. These generators are documented in the repositories.
 
 .. rubric:: See Also
 

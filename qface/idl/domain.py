@@ -500,6 +500,10 @@ class Property(Symbol):
         '''return the fully qualified name (`<module>.<interface>#<property>`)'''
         return '{0}.{1}#{2}'.format(self.module.name, self.interface.name, self.name)
 
+    @property
+    def writeable(self):
+        return not self.readonly and not self.const
+
     def toJson(self):
         o = super().toJson()
         if self.readonly:

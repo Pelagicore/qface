@@ -138,7 +138,7 @@ class Generator(object):
         """Return the rendered text of a template instance"""
         return self.env.from_string(template).render(context)
 
-    def write(self, file_path: Path, template: str, context: dict={}, preserve: bool = False):
+    def write(self, file_path: Path, template: str, context: dict={}, preserve: bool = False, force: bool = False):
         """Using a template file name it renders a template
            into a file given a context
         """
@@ -146,7 +146,7 @@ class Generator(object):
             context = self.context
         error = False
         try:
-            self._write(file_path, template, context, preserve)
+            self._write(file_path, template, context, preserve, force)
         except TemplateSyntaxError as exc:
             message = '{0}:{1}: error: {2}'.format(exc.filename, exc.lineno, exc.message)
             click.secho(message, fg='red', err=True)
@@ -162,12 +162,12 @@ class Generator(object):
         if error and Generator.strict:
             sys.exit(1)
 
-    def _write(self, file_path: Path, template: str, context: dict, preserve: bool = False):
+    def _write(self, file_path: Path, template: str, context: dict, preserve: bool = False, force: bool = False):
         path = self.destination / Path(self.apply(file_path, context))
         path.parent.makedirs_p()
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
-        if self._has_different_content(data, path):
+        if self._has_different_content(data, path) or force:
             if path.exists() and preserve:
                 click.secho('preserve: {0}'.format(path), fg='blue')
             else:

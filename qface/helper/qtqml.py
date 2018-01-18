@@ -59,3 +59,11 @@ class Filters(object):
             return 'ListModel'
         return t
 
+    @staticmethod
+    def path(s):
+        return str(s).replace('.', '/')
+
+    @staticmethod
+    def identifier(s):
+        return str(s).lower().replace('.', '_')
+

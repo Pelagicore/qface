@@ -126,7 +126,9 @@ class Filters(object):
     @staticmethod
     def close_ns(symbol):
         '''generates a closing names statement from a symbol'''
-        return ' '.join(['}' for x in symbol.module.name_parts])
+        closing = ' '.join(['}' for x in symbol.module.name_parts])
+        name = '::'.join(symbol.module.name_parts)
+        return '{0} // namespace {1}'.format(closing, name)
 
     @staticmethod
     def using_ns(symbol):

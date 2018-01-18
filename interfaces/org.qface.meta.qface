@@ -1,0 +1,81 @@
+ module org.qface.meta 1.0
+
+interface MetaBuilder {
+    ESystem system;
+    void load(string path);
+    void store(string path);
+}
+
+struct EType {
+    bool isComplex
+    bool isPrimitive;
+    bool isString;
+    bool isBool;
+    bool isInt;
+    bool isReal;
+    bool isList;
+    bool isModel;
+    string name;
+}
+
+struct ESystem {
+    list<EModule> modules;
+}
+
+struct EModule {
+    list<EInterface> interfaces;
+    list<EStruct> structs;
+    list<EEnum> enums;
+    list<EFlag> flags;
+}
+
+struct EInterface {
+    string name;
+    list<EProperty> properties;
+    list<EOperation> operations;
+    list<ESignal> signals;
+}
+
+struct EProperty {
+    string name
+    EType type
+}
+
+struct EOperation {
+    string name;
+    EType type;
+    list<EParameter> parameters;
+}
+
+struct ESignal {
+    string name;
+    list<EParameter> parameters;
+}
+
+struct EStruct {
+    string name;
+    list<EField> fields;
+}
+
+struct EField {
+    string name;
+    EType type;
+}
+
+struct Enum {
+    string name
+    model<EEnumMember> members;
+}
+
+struct EEnumMember {
+    int value;
+    string name;
+}
+
+struct EFlag {
+    string name
+    model<EEnumMember> members;
+}
+
+
+

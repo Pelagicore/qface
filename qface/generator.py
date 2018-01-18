@@ -1,7 +1,7 @@
 
 # Copyright (c) Pelagicore AB 2016
 
-from jinja2 import Environment, Template
+from jinja2 import Environment, Template, Undefined, StrictUndefined
 from jinja2 import FileSystemLoader, PackageLoader, ChoiceLoader
 from jinja2 import TemplateSyntaxError, TemplateNotFound, TemplateError
 from path import Path
@@ -12,7 +12,7 @@ import logging
 import hashlib
 import yaml
 import click
-import sys
+import sys, os
 
 from .idl.parser.TLexer import TLexer
 from .idl.parser.TParser import TParser
@@ -22,6 +22,7 @@ from .idl.listener import DomainListener
 from .utils import merge
 from .filters import filters
 
+from jinja2.debug import make_traceback as _make_traceback
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -31,12 +32,23 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-"""
-Provides an API for accessing the file system and controlling the generator
-"""
+def template_error_handler(traceback):
+    exc_type, exc_obj, exc_tb = traceback.exc_info
+    error = exc_obj
+    if isinstance(exc_type, TemplateError):
+        error = exc_obj.message
+    message = '{0}:{1}: error: {2}'.format(exc_tb.tb_frame.f_code.co_filename, exc_tb.tb_lineno, error)
+    click.secho(message, fg='red', err=True)
+
+
+class TestableUndefined(StrictUndefined):
+    """Return an error for all undefined values, but allow testing them in if statements"""
+    def __bool__(self):
+        return False
 
 
 class ReportingErrorListener(ErrorListener.ErrorListener):
+    """ Provides an API for accessing the file system and controlling the generator """
     def __init__(self, document):
         self.document = document
 
@@ -60,7 +72,7 @@ class Generator(object):
     strict = False
     """ enables strict code generation """
 
-    def __init__(self, search_path: str, context: dict={}):
+    def __init__(self, search_path, context={}):
         loader = ChoiceLoader([
             FileSystemLoader(search_path),
             PackageLoader('qface')
@@ -68,8 +80,9 @@ class Generator(object):
         self.env = Environment(
             loader=loader,
             trim_blocks=True,
-            lstrip_blocks=True
+            lstrip_blocks=True,
         )
+        self.env.exception_handler = template_error_handler
         self.env.filters.update(filters)
         self._destination = Path()
         self._source = ''
@@ -81,7 +94,7 @@ class Generator(object):
         return self._destination
 
     @destination.setter
-    def destination(self, dst: str):
+    def destination(self, dst):
         if dst:
             self._destination = Path(self.apply(dst, self.context))
 
@@ -91,7 +104,7 @@ class Generator(object):
         return self._source
 
     @source.setter
-    def source(self, source: str):
+    def source(self, source):
         if source:
             self._source = source
 
@@ -103,28 +116,30 @@ class Generator(object):
     def filters(self, filters):
         self.env.filters.update(filters)
 
-    def get_template(self, name: str):
+    def get_template(self, name):
         """Retrieves a single template file from the template loader"""
         source = name
         if name and name[0] is '/':
             source = name[1:]
         elif self.source is not None:
             source = '/'.join((self.source, name))
-            print('get_template: ', name, source)
-
         return self.env.get_template(source)
 
-    def render(self, name: str, context: dict):
+    def render(self, name, context):
         """Returns the rendered text from a single template file from the
         template loader using the given context data"""
+        if Generator.strict:
+            self.env.undefined = TestableUndefined
+        else:
+            self.env.undefined = Undefined
         template = self.get_template(name)
         return template.render(context)
 
-    def apply(self, template: str, context: dict):
+    def apply(self, template, context):
         """Return the rendered text of a template instance"""
         return self.env.from_string(template).render(context)
 
-    def write(self, file_path: Path, template: str, context: dict={}, preserve: bool = False):
+    def write(self, file_path, template, context={}, preserve=False, force=False):
         """Using a template file name it renders a template
            into a file given a context
         """
@@ -132,28 +147,28 @@ class Generator(object):
             context = self.context
         error = False
         try:
-            self._write(file_path, template, context, preserve)
+            self._write(file_path, template, context, preserve, force)
         except TemplateSyntaxError as exc:
-            message = '{0}:{1} error: {2}'.format(exc.filename, exc.lineno, exc.message)
-            click.secho(message, fg='red')
+            message = '{0}:{1}: error: {2}'.format(exc.filename, exc.lineno, exc.message)
+            click.secho(message, fg='red', err=True)
             error = True
         except TemplateNotFound as exc:
-            message = '{0} error: Template not found'.format(exc.name)
-            click.secho(message, fg='red')
+            message = '{0}: error: Template not found'.format(exc.name)
+            click.secho(message, fg='red', err=True)
             error = True
         except TemplateError as exc:
-            message = 'error: {0}'.format(exc.message)
-            click.secho(message, fg='red')
+            # Just return with an error, the generic template_error_handler takes care of printing it
             error = True
-        if error and Generator.strict:
-            sys.exit(-1)
 
-    def _write(self, file_path: Path, template: str, context: dict, preserve: bool = False):
+        if error and Generator.strict:
+            sys.exit(1)
+
+    def _write(self, file_path: Path, template: str, context: dict, preserve: bool = False, force: bool = False):
         path = self.destination / Path(self.apply(file_path, context))
         path.parent.makedirs_p()
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
-        if self._has_different_content(data, path):
+        if self._has_different_content(data, path) or force:
             if path.exists() and preserve:
                 click.secho('preserve: {0}'.format(path), fg='blue')
             else:
@@ -220,12 +235,10 @@ class RuleGenerator(Generator):
         self.context.update(rule.get('context', {}))
         self.destination = rule.get('destination', None)
         self.source = rule.get('source', None)
-        preserved = rule.get('preserve', [])
-        if not preserved:
-            preserved = []
         for target, source in rule.get('documents', {}).items():
-            preserve = target in preserved
-            self.write(target, source, preserve=preserve)
+            self.write(target, source)
+        for target, source in rule.get('preserve', {}).items():
+            self.write(target, source, preserve=True)
 
     def _shall_proceed(self, obj):
         conditions = obj.get('when', [])
@@ -248,10 +261,10 @@ class FileSystem(object):
         try:
             return FileSystem._parse_document(document, system)
         except FileNotFoundError as e:
-            click.secho('{0}: file not found'.format(document), fg='red')
+            click.secho('{0}: error: file not found'.format(document), fg='red', err=True)
             error = True
         except ValueError as e:
-            click.secho('Error parsing document {0}'.format(document))
+            click.secho('Error parsing document {0}'.format(document), fg='red', err=True)
             error = True
         if error and FileSystem.strict:
             sys.exit(-1)
@@ -337,10 +350,13 @@ class FileSystem(object):
         document = Path(document)
         if not document.exists():
             if required:
-                click.secho('yaml document does not exists: {0}'.format(document), fg='red')
+                click.secho('yaml document does not exists: {0}'.format(document), fg='red', err=True)
             return {}
         try:
             return yaml.load(document.text(), Loader=Loader)
         except yaml.YAMLError as exc:
-            click.secho(str(exc), fg='red')
+            error = document
+            if hasattr(exc, 'problem_mark'):
+                error = '{0}:{1}'.format(error, exc.problem_mark.line+1)
+            click.secho('{0}: error: {1}'.format(error, str(exc)), fg='red', err=True)
         return {}

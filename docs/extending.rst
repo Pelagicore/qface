@@ -179,3 +179,19 @@ This is the implicit logical hierarchy taken into account:
 
 Typical you place the destination prefix on the module level if your destination depends on the module symbol. For generic templates you would place the destination on the system level. On the system level you can not use child symbols (such as the module) as at this time these symbols are not known yet.
 
+Parsing Documentation Comments
+==============================
+
+The comments are provided as raw text to the template engine. You need to parse using the `parse_doc` tag and the you can inspect the documentation object.
+
+See below for a simple example
+
+.. code-block:: html
+
+    {% with doc = property.comment|parse_doc %}
+    \brief {{doc.brief}}
+
+    {{doc.description}}
+    {% endwith %}
+
+Each tag in the JavaDoc styled comment, will be converted into a property of the object returned by `parse_doc`. All lines without a tag will be merged into the description tag.

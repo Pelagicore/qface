@@ -10,3 +10,4 @@ pytest
 coverage
 pytest-cov
 six
+coloredlogs

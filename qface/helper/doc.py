@@ -2,7 +2,7 @@ import re
 
 translate = None
 """
-The translare function used for transalting inline tags. The
+The translate function used for translating inline tags. The
 function will be called with tag, value arguments.
 
 Example:
@@ -56,6 +56,8 @@ class DocObject:
 
 
 def parse_doc(s):
+    """ parse a comment in the format of JavaDoc and returns an object, where each JavaDoc tag
+        is a property of the object. """
     if not s:
         return
     doc = DocObject()

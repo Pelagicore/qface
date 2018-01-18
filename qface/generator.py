@@ -31,7 +31,8 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-def templateerror_handler(traceback):
+
+def template_error_handler(traceback):
     exc_type, exc_obj, exc_tb = traceback.exc_info
     error = exc_obj
     if isinstance(exc_type, TemplateError):
@@ -39,15 +40,15 @@ def templateerror_handler(traceback):
     message = '{0}:{1}: error: {2}'.format(exc_tb.tb_frame.f_code.co_filename, exc_tb.tb_lineno, error)
     click.secho(message, fg='red', err=True)
 
+
 class TestableUndefined(StrictUndefined):
     """Return an error for all undefined values, but allow testing them in if statements"""
     def __bool__(self):
         return False
 
-"""
-Provides an API for accessing the file system and controlling the generator
-"""
+
 class ReportingErrorListener(ErrorListener.ErrorListener):
+    """ Provides an API for accessing the file system and controlling the generator """
     def __init__(self, document):
         self.document = document
 
@@ -71,7 +72,7 @@ class Generator(object):
     strict = False
     """ enables strict code generation """
 
-    def __init__(self, search_path: str, context: dict={}):
+    def __init__(self, search_path, context={}):
         loader = ChoiceLoader([
             FileSystemLoader(search_path),
             PackageLoader('qface')
@@ -81,7 +82,7 @@ class Generator(object):
             trim_blocks=True,
             lstrip_blocks=True,
         )
-        self.env.exception_handler=templateerror_handler
+        self.env.exception_handler = template_error_handler
         self.env.filters.update(filters)
         self._destination = Path()
         self._source = ''
@@ -93,7 +94,7 @@ class Generator(object):
         return self._destination
 
     @destination.setter
-    def destination(self, dst: str):
+    def destination(self, dst):
         if dst:
             self._destination = Path(self.apply(dst, self.context))
 
@@ -103,7 +104,7 @@ class Generator(object):
         return self._source
 
     @source.setter
-    def source(self, source: str):
+    def source(self, source):
         if source:
             self._source = source
 
@@ -115,7 +116,7 @@ class Generator(object):
     def filters(self, filters):
         self.env.filters.update(filters)
 
-    def get_template(self, name: str):
+    def get_template(self, name):
         """Retrieves a single template file from the template loader"""
         source = name
         if name and name[0] is '/':
@@ -124,21 +125,21 @@ class Generator(object):
             source = '/'.join((self.source, name))
         return self.env.get_template(source)
 
-    def render(self, name: str, context: dict):
+    def render(self, name, context):
         """Returns the rendered text from a single template file from the
         template loader using the given context data"""
         if Generator.strict:
-            self.env.undefined=TestableUndefined
+            self.env.undefined = TestableUndefined
         else:
-            self.env.undefined=Undefined
+            self.env.undefined = Undefined
         template = self.get_template(name)
         return template.render(context)
 
-    def apply(self, template: str, context: dict):
+    def apply(self, template, context):
         """Return the rendered text of a template instance"""
         return self.env.from_string(template).render(context)
 
-    def write(self, file_path: Path, template: str, context: dict={}, preserve: bool = False, force: bool = False):
+    def write(self, file_path, template, context={}, preserve=False, force=False):
         """Using a template file name it renders a template
            into a file given a context
         """
@@ -156,7 +157,7 @@ class Generator(object):
             click.secho(message, fg='red', err=True)
             error = True
         except TemplateError as exc:
-            # Just return with an error, the generic templateerror_handler takes care of printing it 
+            # Just return with an error, the generic template_error_handler takes care of printing it
             error = True
 
         if error and Generator.strict:

@@ -18,7 +18,7 @@ class Filters(object):
     @staticmethod
     def defaultValue(symbol):
         prefix = Filters.classPrefix
-        t = symbol.type  # type: qface.domain.TypeSymbol
+        t = symbol.type
         if t.is_primitive:
             if t.is_int:
                 return 'int(0)'
@@ -38,18 +38,20 @@ class Filters(object):
             return '{0}{1}Module::{2}'.format(prefix, module_name, value)
         elif t.is_flag:
             return '0'
-        elif symbol.type.is_list:
-            nested = Filters.returnType(symbol.type.nested)
+        elif t.is_list:
+            nested = Filters.returnType(t.nested)
             return 'QVariantList()'.format(nested)
-        elif symbol.type.is_struct:
-            return '{0}{1}()'.format(prefix, symbol.type)
-        elif symbol.type.is_model:
-            nested = symbol.type.nested
+        elif t.is_struct:
+            return '{0}{1}()'.format(prefix, t)
+        elif t.is_model:
+            nested = t.nested
             if nested.is_primitive:
                 return 'new {0}VariantModel(this)'.format(prefix)
             elif nested.is_complex:
                 return 'new {0}{1}Model(this)'.format(prefix, nested)
-        return 'XXX'
+        elif t.is_interface:
+            return 'nullptr'
+        raise Exception("Unknown symbol type")
 
     @staticmethod
     def parameterType(symbol):
@@ -78,9 +80,12 @@ class Filters(object):
                 return '{0}VariantModel *{1}'.format(prefix, symbol)
             elif nested.is_complex:
                 return '{0}{1}Model *{2}'.format(prefix, nested, symbol)
-        else:
-            return 'const {0}{1} &{2}'.format(prefix, symbol.type, symbol)
-        return 'XXX'
+        elif symbol.type.is_complex:
+            if symbol.type.is_interface:
+                return '{0} *{1}'.format(symbol.type, symbol)
+            else:
+                return 'const {0}{1} &{2}'.format(prefix, symbol.type, symbol)
+        raise Exception("Unknown symbol type")
 
     @staticmethod
     def returnType(symbol):
@@ -113,9 +118,43 @@ class Filters(object):
                 return '{0}VariantModel *'.format(prefix)
             elif nested.is_complex:
                 return '{0}{1}Model *'.format(prefix, nested)
-        else:
-            return '{0}{1}'.format(prefix, symbol.type)
-        return 'XXX'
+        elif symbol.type.is_complex:
+            if symbol.type.is_interface:
+                return '{0}*'.format(symbol.type)
+            else:
+                return '{0}{1}'.format(prefix, symbol.type)
+        raise Exception("Unknown symbol type")
+
+    @staticmethod
+    def header_dependencies(symbol):
+        types = symbol.dependencies
+        lines = []
+        for t in types:
+            if t.is_primitive:
+                continue
+            if t.is_model:
+                lines.append('class VariantModel;')
+            if t.is_interface:
+                lines.append('class {0};'.format(t))
+            if t.is_struct:
+                lines.append('#include "{0}.h"'.format(t))
+        return "\n".join(lines)
+
+    @staticmethod
+    def source_dependencies(symbol):
+        types = symbol.dependencies
+        lines = []
+        module_name = symbol.module.module_name
+        if not symbol.kind == 'module':
+            lines.append('#include "{0}module.h"'.format(module_name.lower()))
+        for t in types:
+            if t.is_primitive:
+                continue
+            if t.is_model:
+                lines.append('#include "variantmodel.h"')
+            if t.is_interface:
+                lines.append('#include "{0}.h"'.format(t.name.lower()))
+        return "\n".join(lines)
 
     @staticmethod
     def open_ns(symbol):
@@ -221,4 +260,6 @@ class Filters(object):
             'identifier': Filters.identifier,
             'path': Filters.path,
             'className': Filters.className,
+            'source_dependencies': Filters.source_dependencies,
+            'header_dependencies': Filters.header_dependencies,
         }

@@ -124,6 +124,7 @@ class Symbol(NamedElement):
         self._tags = dict()
 
         self._contentMap = ChainMap()
+        self._dependencies = set()
         self.type = TypeSymbol('', self)
         self.kind = self.__class__.__name__.lower()
         """ the associated type information """
@@ -161,6 +162,12 @@ class Symbol(NamedElement):
     def contents(self):
         """ return general list of symbol contents """
         return self._contentMap.values()
+
+    @property
+    def dependencies(self):
+        if not self._dependencies:
+            self._dependencies = [x.type for x in self.contents]
+        return self._dependencies
 
     def toJson(self):
         o = super().toJson()

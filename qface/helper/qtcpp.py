@@ -33,9 +33,8 @@ class Filters(object):
         elif t.is_void:
             return ''
         elif t.is_enum:
-            module_name = upper_first(t.reference.module.module_name)
             value = next(iter(t.reference.members))
-            return '{0}{1}Module::{2}'.format(prefix, module_name, value)
+            return '{0}::{0}Enum::{1}'.format(symbol.type, value)
         elif t.is_flag:
             return '0'
         elif t.is_list:
@@ -56,9 +55,8 @@ class Filters(object):
     @staticmethod
     def parameterType(symbol):
         prefix = Filters.classPrefix
-        module_name = upper_first(symbol.module.module_name)
         if symbol.type.is_enum:
-            return '{0}{1}Module::{2} {3}'.format(prefix, module_name, symbol.type, symbol)
+            return '{0}::{0}Enum {1}'.format(symbol.type, symbol)
         if symbol.type.is_void or symbol.type.is_primitive:
             if symbol.type.is_string:
                 return 'const QString &{0}'.format(symbol)
@@ -82,7 +80,7 @@ class Filters(object):
                 return '{0}{1}Model *{2}'.format(prefix, nested, symbol)
         elif symbol.type.is_complex:
             if symbol.type.is_interface:
-                return '{0} *{1}'.format(symbol.type, symbol)
+                return '{0}Base *{1}'.format(symbol.type, symbol)
             else:
                 return 'const {0}{1} &{2}'.format(prefix, symbol.type, symbol)
         raise Exception("Unknown symbol type")
@@ -90,10 +88,9 @@ class Filters(object):
     @staticmethod
     def returnType(symbol):
         prefix = Filters.classPrefix
-        module_name = upper_first(symbol.module.module_name)
         t = symbol.type
         if t.is_enum:
-            return '{0}{1}Module::{2}'.format(prefix, module_name, symbol.type)
+            return '{0}::{0}Enum'.format(symbol.type)
         if symbol.type.is_void or symbol.type.is_primitive:
             if t.is_string:
                 return 'QString'
@@ -120,7 +117,7 @@ class Filters(object):
                 return '{0}{1}Model *'.format(prefix, nested)
         elif symbol.type.is_complex:
             if symbol.type.is_interface:
-                return '{0}*'.format(symbol.type)
+                return '{0}Base *'.format(symbol.type)
             else:
                 return '{0}{1}'.format(prefix, symbol.type)
         raise Exception("Unknown symbol type")

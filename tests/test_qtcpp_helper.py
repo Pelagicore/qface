@@ -83,7 +83,7 @@ def test_return_type():
     # check for enum
     prop = interface._propertyMap['status']
     answer = qtcpp.Filters.returnType(prop)
-    assert answer == 'ExampleModule::Status'
+    assert answer == 'Status::StatusEnum'
 
     # check for list of primitive
     prop = interface._propertyMap['list001']
@@ -134,7 +134,7 @@ def test_default_value():
     # check for enum
     prop = interface._propertyMap['status']
     answer = qtcpp.Filters.defaultValue(prop)
-    assert answer == 'ExampleModule::ON'
+    assert answer == 'Status::StatusEnum::ON'
 
     # check for flag
     prop = interface._propertyMap['state']
@@ -191,7 +191,7 @@ def test_parameter_type():
     # check for enum
     prop = interface._propertyMap['status']
     answer = qtcpp.Filters.parameterType(prop)
-    assert answer == 'ExampleModule::Status {0}'.format(prop.name)
+    assert answer == 'Status::StatusEnum {0}'.format(prop.name)
 
     # check for list of primitive
     prop = interface._propertyMap['list001']

@@ -13,8 +13,8 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro property(property) -%}
-Q_PROPERTY({{property|returnType}} {{property}} READ {{property}} {% if not property.readonly %}WRITE set{{property|upperfirst}} {% endif %}{% if not property.const %}NOTIFY {{property}}Changed{% endif %})
+{% macro property(property, notifiable=True) -%}
+Q_PROPERTY({{property|returnType}} {{property}} READ {{property}} {% if not property.readonly %}WRITE set{{property|upperfirst}}{% endif %}{% if not property.const and notifiable %} NOTIFY {{property}}Changed{% endif %})
 {%- endmacro %}
 
 {% macro property_setter_decl(property, ending=";") -%}
@@ -33,7 +33,7 @@ void {{symbol}}{{postfix}}({{symbol|parameters}});
 {{property|returnType}} m_{{property}};
 {%- endmacro %}
 
-{% macro property_setter_impl(class, property) -%}
+{% macro property_setter_impl(class, property, notifiable=True) -%}
 /*!
    \qmlproperty {{property.type}} {{class}}::{{property}}
 {% with doc = property.comment|parse_doc %}
@@ -45,10 +45,15 @@ void {{symbol}}{{postfix}}({{symbol|parameters}});
 
 void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {
+{% if notifiable %}
     if (m_{{property}} != {{property}}) {
         m_{{property}} = {{property}};
         Q_EMIT {{property}}Changed({{property}});
     }
+{% else %}
+    m_{{property}} = {{property}};
+{% endif %}
+
 }
 {%- endmacro %}
 

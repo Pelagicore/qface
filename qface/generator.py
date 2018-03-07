@@ -17,6 +17,7 @@ import sys, os
 from .idl.parser.TLexer import TLexer
 from .idl.parser.TParser import TParser
 from .idl.parser.TListener import TListener
+from .idl.profile import EProfile
 from .idl.domain import System
 from .idl.listener import DomainListener
 from .utils import merge
@@ -256,10 +257,10 @@ class FileSystem(object):
     """ enables strict parsing """
 
     @staticmethod
-    def parse_document(document: Path, system: System = None):
+    def parse_document(document: Path, system: System = None, profile=EProfile.FULL):
         error = False
         try:
-            return FileSystem._parse_document(document, system)
+            return FileSystem._parse_document(document, system, profile)
         except FileNotFoundError as e:
             click.secho('{0}: error: file not found'.format(document), fg='red', err=True)
             error = True
@@ -270,7 +271,7 @@ class FileSystem(object):
             sys.exit(-1)
 
     @staticmethod
-    def _parse_document(document: Path, system: System = None):
+    def _parse_document(document: Path, system: System = None, profile=EProfile.FULL):
         """Parses a document and returns the resulting domain system
 
         :param path: document path to parse
@@ -278,12 +279,12 @@ class FileSystem(object):
         """
         logger.debug('parse document: {0}'.format(document))
         stream = FileStream(str(document), encoding='utf-8')
-        system = FileSystem._parse_stream(stream, system, document)
+        system = FileSystem._parse_stream(stream, system, document, profile)
         FileSystem.merge_annotations(system, document.stripext() + '.yaml')
         return system
 
     @staticmethod
-    def _parse_stream(stream, system: System = None, document=None):
+    def _parse_stream(stream, system: System = None, document=None, profile=EProfile.FULL):
         logger.debug('parse stream')
         system = system or System()
 
@@ -293,7 +294,7 @@ class FileSystem(object):
         parser.addErrorListener(ReportingErrorListener(document))
         tree = parser.documentSymbol()
         walker = ParseTreeWalker()
-        walker.walk(DomainListener(system), tree)
+        walker.walk(DomainListener(system, profile), tree)
         return system
 
     @staticmethod
@@ -311,7 +312,7 @@ class FileSystem(object):
                 merge(symbol.tags, data)
 
     @staticmethod
-    def parse(input, identifier: str = None, use_cache=False, clear_cache=True, pattern="*.qface"):
+    def parse(input, identifier: str = None, use_cache=False, clear_cache=True, pattern="*.qface", profile=EProfile.FULL):
         """Input can be either a file or directory or a list of files or directory.
         A directory will be parsed recursively. The function returns the resulting system.
         Stores the result of the run in the domain cache named after the identifier.

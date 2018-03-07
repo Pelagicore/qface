@@ -195,3 +195,33 @@ See below for a simple example
     {% endwith %}
 
 Each tag in the JavaDoc styled comment, will be converted into a property of the object returned by `parse_doc`. All lines without a tag will be merged into the description tag.
+
+
+Language Profiles
+=================
+
+
+QFace supports the notion of profile. A profile is a set of features supported by the named profile. The intention of a profile is to make it easier for generator writers to stick to a limited set of language features, also if the overall language is evolving.
+
+Currently there exists three language profiles:
+
+* Micro - A limited set of languages features. The base profile. It does not allow importing of other modules or extending an interface, neither does it support maps.
+* Advanced - Builds upon micro and allows imports, maps, interface extension.
+* Full - Builds up on advanced and will also contain experimental language features.
+
+The current features defined are:
+- const oeprations
+- const properties
+- imports
+- maps
+- interface extensions
+
+The profiles and features are defined in the `qface.idl.profile` module.
+
+.. code-block:: py
+
+    from qface.generator import FileSystem
+    from qface.idl.profile import EProfile
+
+    system = FileSystem.parse(input=input, profile=EProfile.MICRO)
+

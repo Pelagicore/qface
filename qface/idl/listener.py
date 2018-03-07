@@ -84,7 +84,7 @@ class DomainListener(TListener):
                 data = yaml.load('\n'.join(lines), Loader=Loader)
                 symbol._tags = data
             except yaml.YAMLError as exc:
-                click.secho(exc, fg='red')
+                click.secho(str(exc), fg='red')
 
     def enterEveryRule(self, ctx):
         log.debug('enter ' + ctx.__class__.__name__)
@@ -186,9 +186,18 @@ class DomainListener(TListener):
         name = ctx.name.text
         self.property = Property(name, self.interface)
         modifier = ctx.propertyModifierSymbol()
+
         if modifier:
             self.property.readonly = bool(modifier.is_readonly)
             self.property.const = bool(modifier.is_const)
+
+        if ctx.value:
+            try:
+                value = yaml.load(ctx.value.text, Loader=Loader)
+                self.property._value = value
+            except yaml.YAMLError as exc:
+                click.secho(exc, fg='red')
+
         self.parse_annotations(ctx, self.property)
         self.parse_type(ctx, self.property.type)
         contextMap[ctx] = self.property

@@ -22,8 +22,9 @@ contextMap = {}
 
 
 class QFaceListener(TListener):
-    def __init__(self, system, profile=EProfile.BASIC):
+    def __init__(self, system, profile=EProfile.ALL):
         super().__init__()
+        click.secho('qface uses language profile: {}'.format(profile), fg='blue')
         self.lang_features = get_features(profile)
         self.system = system or System()  # type:System
 
@@ -39,7 +40,7 @@ class DomainListener(QFaceListener):
        domain data struture. As a result a system is passed
        back"""
 
-    def __init__(self, system, profile=EProfile.BASIC):
+    def __init__(self, system, profile=EProfile.ALL):
         super().__init__(system, profile)
         contextMap.clear()
         self.module = None  # type:Module

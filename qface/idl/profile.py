@@ -42,4 +42,3 @@ _profiles = {
 
 def get_features(name):
     return _profiles.get(name, set())
-

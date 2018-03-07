@@ -35,6 +35,9 @@ class Filters(object):
         elif t.is_enum:
             value = next(iter(t.reference.members))
             return '{0}::{0}Enum::{1}'.format(symbol.type, value)
+        elif symbol.kind == 'enum':
+            value = next(iter(symbol.members))
+            return '{0}::{1}'.format(symbol, value)
         elif t.is_flag:
             return '0'
         elif t.is_list:
@@ -43,14 +46,10 @@ class Filters(object):
         elif t.is_struct:
             return '{0}{1}()'.format(prefix, t)
         elif t.is_model:
-            nested = t.nested
-            if nested.is_primitive:
-                return 'new {0}VariantModel(this)'.format(prefix)
-            elif nested.is_complex:
-                return 'new {0}{1}Model(this)'.format(prefix, nested)
+            return 'new VariantModel(this)'
         elif t.is_interface:
             return 'nullptr'
-        raise Exception("Unknown symbol type")
+        raise Exception("Unknown symbol type" + repr(symbol))
 
     @staticmethod
     def parameterType(symbol):
@@ -73,11 +72,7 @@ class Filters(object):
             nested = Filters.returnType(symbol.type.nested)
             return 'const QVariantList &{1}'.format(nested, symbol)
         elif symbol.type.is_model:
-            nested = symbol.type.nested
-            if nested.is_primitive:
-                return '{0}VariantModel *{1}'.format(prefix, symbol)
-            elif nested.is_complex:
-                return '{0}{1}Model *{2}'.format(prefix, nested, symbol)
+            return 'VariantModel *{0}'.format(symbol)
         elif symbol.type.is_complex:
             if symbol.type.is_interface:
                 return '{0}Base *{1}'.format(symbol.type, symbol)
@@ -110,11 +105,7 @@ class Filters(object):
             nested = Filters.returnType(symbol.type.nested)
             return 'QVariantList'.format(nested)
         elif symbol.type.is_model:
-            nested = symbol.type.nested
-            if nested.is_primitive:
-                return '{0}VariantModel *'.format(prefix)
-            elif nested.is_complex:
-                return '{0}{1}Model *'.format(prefix, nested)
+            return 'VariantModel *'
         elif symbol.type.is_complex:
             if symbol.type.is_interface:
                 return '{0}Base *'.format(symbol.type)

@@ -27,6 +27,8 @@ interface Tuner extends BaseTuner {
 
     list<int> primitiveList;
     list<Station> complexList;
+    map<int> primitiveMap;
+    map<Station> complexMap;
     model<int> primitiveModel;
     model<Station> complexModel;
 
@@ -73,6 +75,10 @@ struct Station {
     int stationId;
     /** member name */
     string name;
+    list<int> primitiveList;
+    list<Station> complexList;
+    map<int> primitiveMap;
+    map<Station> complexMap;
 }
 
 

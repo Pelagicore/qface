@@ -1,4 +1,4 @@
-# Generated from T.g4 by ANTLR 4.7
+# Generated from T.g4 by ANTLR 4.7.1
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .TParser import TParser
@@ -176,6 +176,15 @@ class TListener(ParseTreeListener):
 
     # Exit a parse tree produced by TParser#listTypeSymbol.
     def exitListTypeSymbol(self, ctx:TParser.ListTypeSymbolContext):
+        pass
+
+
+    # Enter a parse tree produced by TParser#mapTypeSymbol.
+    def enterMapTypeSymbol(self, ctx:TParser.MapTypeSymbolContext):
+        pass
+
+    # Exit a parse tree produced by TParser#mapTypeSymbol.
+    def exitMapTypeSymbol(self, ctx:TParser.MapTypeSymbolContext):
         pass
 
 

@@ -180,6 +180,8 @@ Below is an example of a QFace file.
 
         list<int> primitiveList;
         list<Station> complexList;
+        map<int> simpleMap;
+        map<Station> complexMap;
         model<int> primitiveModel;
         model<Station> complexModel;
     }
@@ -219,6 +221,22 @@ Below is an example of a QFace file.
         common.TimeStamp modified;
     }
 
+
+
+Nested Types
+============
+
+A nested type is a complex type which nests another type. These are container types, e.g. list, map or model.
+
+.. code-block:: language
+
+    list<Color>  colors
+    map<Station> stations
+    model<WeatherInfo> weather
+
+A list is an array of the provided value type. A map specifies only the value type. The key-type should be generic (e.g. a string type) and can be freely choosen by the generator. This allows for example the geenrator to add an id to each structure and use it as a key in the map.
+
+A model is a special type of a list, it defines the model type can stream the data (e.g. add/change/remove) and the changes should be reflected by a more advanced API. Also the data could in general grow unlimited and the generator should provide some form of pagination or window API. You should use a model if you expect the data it represents can grow in a way it may influence the performance of your API.
 
 Annotations
 ===========

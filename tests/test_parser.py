@@ -157,6 +157,60 @@ def test_list():
     assert property.type.nested.name == 'Station'
 
 
+def test_struct_list():
+    system = load_tuner()
+    struct = system.lookup('com.pelagicore.ivi.tuner.Station')
+    field = struct._fieldMap['primitiveList']
+    assert type(field) is domain.Field
+    assert field.type.name == 'list'
+    assert field.type.is_list is True
+    assert field.type.nested.is_primitive
+    assert field.type.nested.name == 'int'
+
+    field = struct._fieldMap['complexList']
+    assert type(field) is domain.Field
+    assert field.type.name == 'list'
+    assert field.type.is_list is True
+    assert field.type.nested.is_complex
+    assert field.type.nested.name == 'Station'
+
+
+def test_map():
+    system = load_tuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    property = interface._propertyMap['primitiveMap']
+    assert type(property) is domain.Property
+    assert property.type.name == 'map'
+    assert property.type.is_map is True
+    assert property.type.nested.is_primitive
+    assert property.type.nested.name == 'int'
+
+    property = interface._propertyMap['complexMap']
+    assert type(property) is domain.Property
+    assert property.type.name == 'map'
+    assert property.type.is_map is True
+    assert property.type.nested.is_complex
+    assert property.type.nested.name == 'Station'
+
+
+def test_struct_map():
+    system = load_tuner()
+    struct = system.lookup('com.pelagicore.ivi.tuner.Station')
+    field = struct._fieldMap['primitiveMap']
+    assert type(field) is domain.Field
+    assert field.type.name == 'map'
+    assert field.type.is_map is True
+    assert field.type.nested.is_primitive
+    assert field.type.nested.name == 'int'
+
+    field = struct._fieldMap['complexMap']
+    assert type(field) is domain.Field
+    assert field.type.name == 'map'
+    assert field.type.is_map is True
+    assert field.type.nested.is_complex
+    assert field.type.nested.name == 'Station'
+
+
 def test_model():
     system = load_tuner()
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')

@@ -124,6 +124,7 @@ class Symbol(NamedElement):
         self._tags = dict()
 
         self._contentMap = ChainMap()
+        self._dependencies = set()
         self.type = TypeSymbol('', self)
         self.kind = self.__class__.__name__.lower()
         """ the associated type information """
@@ -162,6 +163,12 @@ class Symbol(NamedElement):
         """ return general list of symbol contents """
         return self._contentMap.values()
 
+    @property
+    def dependencies(self):
+        if not self._dependencies:
+            self._dependencies = [x.type for x in self.contents]
+        return self._dependencies
+
     def toJson(self):
         o = super().toJson()
         if self.type.is_valid:
@@ -184,6 +191,8 @@ class TypeSymbol(NamedElement):
         """ if type represents a complex type """
         self.is_list = False  # type:bool
         """ if type represents a list of nested types """
+        self.is_map = False  # type:bool
+        """ if type represents a map of nested types. A key type is not defined """
         self.is_model = False  # type:bool
         """ if type represents a model of nested types """
         self.nested = None
@@ -197,6 +206,7 @@ class TypeSymbol(NamedElement):
         return (self.is_primitive and self.name) \
             or (self.is_complex and self.name) \
             or (self.is_list and self.nested) \
+            or (self.is_map and self.nested) \
             or (self.is_model and self.nested)
 
     @property
@@ -226,7 +236,7 @@ class TypeSymbol(NamedElement):
 
     @property
     def is_enumeration(self):
-        '''checks if type is complex and insytance of type Enum'''
+        '''checks if type is complex and instance of type Enum'''
         return self.is_complex and isinstance(self.reference, Enum)
 
     @property
@@ -278,6 +288,8 @@ class TypeSymbol(NamedElement):
             o['complex'] = self.is_complex
         if self.is_list:
             o['list'] = self.is_list
+        if self.is_map:
+            o['map'] = self.is_map
         if self.is_model:
             o['model'] = self.is_model
         if self.nested:

@@ -83,7 +83,7 @@ def test_return_type():
     # check for enum
     prop = interface._propertyMap['status']
     answer = qtcpp.Filters.returnType(prop)
-    assert answer == 'ExampleModule::Status'
+    assert answer == 'Status::StatusEnum'
 
     # check for list of primitive
     prop = interface._propertyMap['list001']
@@ -103,7 +103,7 @@ def test_return_type():
     # check for model of structs
     prop = interface._propertyMap['model002']
     answer = qtcpp.Filters.returnType(prop)
-    assert answer == 'MessageModel *'
+    assert answer == 'VariantModel *'
 
 
 def test_default_value():
@@ -134,7 +134,7 @@ def test_default_value():
     # check for enum
     prop = interface._propertyMap['status']
     answer = qtcpp.Filters.defaultValue(prop)
-    assert answer == 'ExampleModule::ON'
+    assert answer == 'Status::StatusEnum::ON'
 
     # check for flag
     prop = interface._propertyMap['state']
@@ -159,7 +159,7 @@ def test_default_value():
     # check for model of structs
     prop = interface._propertyMap['model002']
     answer = qtcpp.Filters.defaultValue(prop)
-    assert answer == 'new MessageModel(this)'
+    assert answer == 'new VariantModel(this)'
 
 
 def test_parameter_type():
@@ -191,7 +191,7 @@ def test_parameter_type():
     # check for enum
     prop = interface._propertyMap['status']
     answer = qtcpp.Filters.parameterType(prop)
-    assert answer == 'ExampleModule::Status {0}'.format(prop.name)
+    assert answer == 'Status::StatusEnum {0}'.format(prop.name)
 
     # check for list of primitive
     prop = interface._propertyMap['list001']
@@ -211,7 +211,7 @@ def test_parameter_type():
     # check for model of structs
     prop = interface._propertyMap['model002']
     answer = qtcpp.Filters.parameterType(prop)
-    assert answer == 'MessageModel *{0}'.format(prop.name)
+    assert answer == 'VariantModel *{0}'.format(prop.name)
 
 
 def test_namespace():

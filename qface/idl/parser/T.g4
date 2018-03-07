@@ -76,6 +76,7 @@ typeSymbol
     : primitiveTypeSymbol
     | complexTypeSymbol
     | listTypeSymbol
+    | mapTypeSymbol
     | modelTypeSymbol
     ;
 
@@ -93,6 +94,10 @@ primitiveTypeSymbol
 
 listTypeSymbol
     : 'list' '<' valueType=typeSymbol '>'
+    ;
+
+mapTypeSymbol
+    : 'map' '<' valueType=typeSymbol '>'
     ;
 
 modelTypeSymbol

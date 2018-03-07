@@ -7,11 +7,12 @@ from .domain import *
 from antlr4 import ParserRuleContext
 import yaml
 import click
+from .profile import get_features, EProfile, EFeature
 
 try:
-    from yaml import CLoader as Loader, CDumper as Dumper
+    from yaml import CSafeLoader as Loader, CDumper as Dumper
 except ImportError:
-    from yaml import Loader, Dumper
+    from yaml import SafeLoader as Loader, Dumper
 
 
 log = logging.getLogger(__name__)
@@ -20,15 +21,28 @@ log = logging.getLogger(__name__)
 contextMap = {}
 
 
-class DomainListener(TListener):
+class QFaceListener(TListener):
+    def __init__(self, system, profile=EProfile.FULL):
+        super().__init__()
+        click.secho('qface uses language profile: {}'.format(profile), fg='blue')
+        self.lang_features = get_features(profile)
+        self.system = system or System()  # type:System
+
+    def check_support(self, feature, report=True):
+        if feature not in self.lang_features and report:
+            click.secho('Unsuported language feature: {}'.format(EFeature.IMPORT), fg='red')
+            return False
+        return True
+
+
+class DomainListener(QFaceListener):
     """The domain listener is called by the parser to fill the
        domain data struture. As a result a system is passed
        back"""
 
-    def __init__(self, system):
-        super(DomainListener, self).__init__()
+    def __init__(self, system, profile=EProfile.FULL):
+        super().__init__(system, profile)
         contextMap.clear()
-        self.system = system or System()  # type:System
         self.module = None  # type:Module
         self.interface = None  # type:Interface
         self.struct = None  # type:Struct
@@ -63,6 +77,14 @@ class DomainListener(TListener):
                 type.name = 'list'
                 type.nested = TypeSymbol("", type)
                 self.parse_type(ctxSymbol, type.nested)
+            elif ctx.typeSymbol().mapTypeSymbol():
+                self.check_support(EFeature.MAPS)
+                # type:TParser.ListTypeSymbolContext
+                ctxSymbol = ctx.typeSymbol().mapTypeSymbol()
+                type.is_map = True
+                type.name = 'map'
+                type.nested = TypeSymbol("", type)
+                self.parse_type(ctxSymbol, type.nested)
             elif ctx.typeSymbol().modelTypeSymbol():
                 # type:TParser.ModelTypeSymbolContext
                 ctxSymbol = ctx.typeSymbol().modelTypeSymbol()
@@ -84,7 +106,7 @@ class DomainListener(TListener):
                 data = yaml.load('\n'.join(lines), Loader=Loader)
                 symbol._tags = data
             except yaml.YAMLError as exc:
-                click.secho(exc, fg='red')
+                click.secho(str(exc), fg='red')
 
     def enterEveryRule(self, ctx):
         log.debug('enter ' + ctx.__class__.__name__)
@@ -186,9 +208,18 @@ class DomainListener(TListener):
         name = ctx.name.text
         self.property = Property(name, self.interface)
         modifier = ctx.propertyModifierSymbol()
+
         if modifier:
             self.property.readonly = bool(modifier.is_readonly)
             self.property.const = bool(modifier.is_const)
+
+        # if ctx.value:
+        #     try:
+        #         value = yaml.load(ctx.value.text, Loader=Loader)
+        #         self.property._value = value
+        #     except yaml.YAMLError as exc:
+        #         click.secho(exc, fg='red')
+
         self.parse_annotations(ctx, self.property)
         self.parse_type(ctx, self.property.type)
         contextMap[ctx] = self.property
@@ -227,6 +258,7 @@ class DomainListener(TListener):
 
     def enterImportSymbol(self, ctx: TParser.ImportSymbolContext):
         assert self.module
+        self.check_support(EFeature.IMPORT)
         name = ctx.name.text
         version = ctx.version.text
         self.module._importMap[name] = '{0} {1}'.format(name, version)

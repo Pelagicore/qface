@@ -24,19 +24,19 @@ class EFeature(Enum):
 
 
 class EProfile(Enum):
-    BASIC = 'basic'
+    MICRO = 'micro'
     ADVANCED = 'advanced'
-    ALL = 'all'
+    FULL = 'full'
 
 
 _profiles = {
-    EProfile.BASIC: set(),
+    EProfile.MICRO: set(),
     EProfile.ADVANCED: set([
         EFeature.EXTEND_INTERFACE,
         EFeature.IMPORT,
         EFeature.MAPS
     ]),
-    EProfile.ALL: set(EFeature)
+    EProfile.FULL: set(EFeature)
 }
 
 

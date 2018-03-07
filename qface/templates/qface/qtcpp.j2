@@ -18,11 +18,11 @@ Q_PROPERTY({{property|returnType}} {{property}} READ {{property}} {% if not prop
 {%- endmacro %}
 
 {% macro property_setter_decl(property, ending=";") -%}
-virtual void set{{property|upperfirst}}({{ property|parameterType }}){{ending}}
+void set{{property|upperfirst}}({{ property|parameterType }}){{ending}}
 {%- endmacro %}
 
 {% macro property_getter_decl(property, ending=";") -%}
-virtual {{property|returnType}} {{property}}() const{{ending}}
+{{property|returnType}} {{property}}() const{{ending}}
 {%- endmacro %}
 
 {% macro signal_decl(symbol, postfix="") -%}

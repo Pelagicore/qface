@@ -26,13 +26,12 @@ class EFeature(Enum):
 class EProfile(Enum):
     BASIC = 'basic'
     ADVANCED = 'advanced'
-    FULL = 'full'
+    ALL = 'all'
 
 
 _profiles = {
     EProfile.BASIC: set(),
     EProfile.ADVANCED: set([
-        EFeature.CONST_PROPERTY,
         EFeature.EXTEND_INTERFACE,
         EFeature.IMPORT,
         EFeature.MAPS

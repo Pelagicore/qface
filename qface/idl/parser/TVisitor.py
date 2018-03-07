@@ -1,4 +1,4 @@
-# Generated from T.g4 by ANTLR 4.7
+# Generated from T.g4 by ANTLR 4.7.1
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .TParser import TParser
@@ -101,6 +101,11 @@ class TVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by TParser#listTypeSymbol.
     def visitListTypeSymbol(self, ctx:TParser.ListTypeSymbolContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by TParser#mapTypeSymbol.
+    def visitMapTypeSymbol(self, ctx:TParser.MapTypeSymbolContext):
         return self.visitChildren(ctx)
 
 

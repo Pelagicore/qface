@@ -157,6 +157,24 @@ def test_list():
     assert property.type.nested.name == 'Station'
 
 
+def test_map():
+    system = load_tuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    property = interface._propertyMap['primitiveMap']
+    assert type(property) is domain.Property
+    assert property.type.name == 'map'
+    assert property.type.is_map is True
+    assert property.type.nested.is_primitive
+    assert property.type.nested.name == 'int'
+
+    property = interface._propertyMap['complexMap']
+    assert type(property) is domain.Property
+    assert property.type.name == 'map'
+    assert property.type.is_map is True
+    assert property.type.nested.is_complex
+    assert property.type.nested.name == 'Station'
+
+
 def test_model():
     system = load_tuner()
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')

@@ -23,16 +23,15 @@ contextMap = {}
 
 class QFaceListener(TListener):
     def __init__(self, system, profile=EProfile.BASIC):
-        super(QFaceListener, self).__init__()
+        super().__init__()
         self.lang_features = get_features(profile)
         self.system = system or System()  # type:System
 
-    def is_supported(feature, report=True):
+    def check_support(self, feature, report=True):
         if feature not in self.lang_features and report:
             click.secho('Unsuported language feature: {}'.format(EFeature.IMPORT), fg='red')
             return False
         return True
-
 
 
 class DomainListener(QFaceListener):
@@ -41,7 +40,7 @@ class DomainListener(QFaceListener):
        back"""
 
     def __init__(self, system, profile=EProfile.BASIC):
-        super(QFaceListener, self).__init__(system, profile)
+        super().__init__(system, profile)
         contextMap.clear()
         self.module = None  # type:Module
         self.interface = None  # type:Interface
@@ -75,6 +74,14 @@ class DomainListener(QFaceListener):
                 ctxSymbol = ctx.typeSymbol().listTypeSymbol()
                 type.is_list = True
                 type.name = 'list'
+                type.nested = TypeSymbol("", type)
+                self.parse_type(ctxSymbol, type.nested)
+            elif ctx.typeSymbol().mapTypeSymbol():
+                self.check_support(EFeature.MAPS)
+                # type:TParser.ListTypeSymbolContext
+                ctxSymbol = ctx.typeSymbol().mapTypeSymbol()
+                type.is_map = True
+                type.name = 'map'
                 type.nested = TypeSymbol("", type)
                 self.parse_type(ctxSymbol, type.nested)
             elif ctx.typeSymbol().modelTypeSymbol():
@@ -205,12 +212,12 @@ class DomainListener(QFaceListener):
             self.property.readonly = bool(modifier.is_readonly)
             self.property.const = bool(modifier.is_const)
 
-        if ctx.value:
-            try:
-                value = yaml.load(ctx.value.text, Loader=Loader)
-                self.property._value = value
-            except yaml.YAMLError as exc:
-                click.secho(exc, fg='red')
+        # if ctx.value:
+        #     try:
+        #         value = yaml.load(ctx.value.text, Loader=Loader)
+        #         self.property._value = value
+        #     except yaml.YAMLError as exc:
+        #         click.secho(exc, fg='red')
 
         self.parse_annotations(ctx, self.property)
         self.parse_type(ctx, self.property.type)
@@ -250,10 +257,10 @@ class DomainListener(QFaceListener):
 
     def enterImportSymbol(self, ctx: TParser.ImportSymbolContext):
         assert self.module
-        if self.is_supported(EFeature.IMPORT):
-            name = ctx.name.text
-            version = ctx.version.text
-            self.module._importMap[name] = '{0} {1}'.format(name, version)
+        self.check_support(EFeature.IMPORT)
+        name = ctx.name.text
+        version = ctx.version.text
+        self.module._importMap[name] = '{0} {1}'.format(name, version)
 
     def exitImportSymbol(self, ctx: TParser.ImportSymbolContext):
         pass

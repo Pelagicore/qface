@@ -191,6 +191,8 @@ class TypeSymbol(NamedElement):
         """ if type represents a complex type """
         self.is_list = False  # type:bool
         """ if type represents a list of nested types """
+        self.is_map = False  # type:bool
+        """ if type represents a map of nested types. A key type is not defined """
         self.is_model = False  # type:bool
         """ if type represents a model of nested types """
         self.nested = None
@@ -204,6 +206,7 @@ class TypeSymbol(NamedElement):
         return (self.is_primitive and self.name) \
             or (self.is_complex and self.name) \
             or (self.is_list and self.nested) \
+            or (self.is_map and self.nested) \
             or (self.is_model and self.nested)
 
     @property
@@ -285,6 +288,8 @@ class TypeSymbol(NamedElement):
             o['complex'] = self.is_complex
         if self.is_list:
             o['list'] = self.is_list
+        if self.is_map:
+            o['map'] = self.is_map
         if self.is_model:
             o['model'] = self.is_model
         if self.nested:

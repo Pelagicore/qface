@@ -233,7 +233,7 @@ class TypeSymbol(NamedElement):
 
     @property
     def is_enumeration(self):
-        '''checks if type is complex and insytance of type Enum'''
+        '''checks if type is complex and instance of type Enum'''
         return self.is_complex and isinstance(self.reference, Enum)
 
     @property

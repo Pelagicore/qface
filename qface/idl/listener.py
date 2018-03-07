@@ -7,6 +7,7 @@ from .domain import *
 from antlr4 import ParserRuleContext
 import yaml
 import click
+from .profile import get_features, EProfile, EFeature
 
 try:
     from yaml import CSafeLoader as Loader, CDumper as Dumper
@@ -20,15 +21,28 @@ log = logging.getLogger(__name__)
 contextMap = {}
 
 
-class DomainListener(TListener):
+class QFaceListener(TListener):
+    def __init__(self, system, profile=EProfile.BASIC):
+        super(QFaceListener, self).__init__()
+        self.lang_features = get_features(profile)
+        self.system = system or System()  # type:System
+
+    def is_supported(feature, report=True):
+        if feature not in self.lang_features and report:
+            click.secho('Unsuported language feature: {}'.format(EFeature.IMPORT), fg='red')
+            return False
+        return True
+
+
+
+class DomainListener(QFaceListener):
     """The domain listener is called by the parser to fill the
        domain data struture. As a result a system is passed
        back"""
 
-    def __init__(self, system):
-        super(DomainListener, self).__init__()
+    def __init__(self, system, profile=EProfile.BASIC):
+        super(QFaceListener, self).__init__(system, profile)
         contextMap.clear()
-        self.system = system or System()  # type:System
         self.module = None  # type:Module
         self.interface = None  # type:Interface
         self.struct = None  # type:Struct
@@ -236,9 +250,10 @@ class DomainListener(TListener):
 
     def enterImportSymbol(self, ctx: TParser.ImportSymbolContext):
         assert self.module
-        name = ctx.name.text
-        version = ctx.version.text
-        self.module._importMap[name] = '{0} {1}'.format(name, version)
+        if self.is_supported(EFeature.IMPORT):
+            name = ctx.name.text
+            version = ctx.version.text
+            self.module._importMap[name] = '{0} {1}'.format(name, version)
 
     def exitImportSymbol(self, ctx: TParser.ImportSymbolContext):
         pass

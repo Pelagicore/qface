@@ -1,4 +1,4 @@
-# Generated from T.g4 by ANTLR 4.7
+# Generated from T.g4 by ANTLR 4.7.1
 from antlr4 import *
 from io import StringIO
 from typing.io import TextIO
@@ -18,8 +18,8 @@ def serializedATN():
         buf.write("\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3")
         buf.write("\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\7\3\7\3\b\3\b\3\t")
         buf.write("\3\t\3\t\3\t\3\t\3\n\3\n\3\13\3\13\3\f\3\f\3\f\3\f\3\f")
-        buf.write("\3\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\16\3\16\3\16\3\16\3")
-        buf.write("\16\3\16\3\16\3\16\3\16\3\17\3\17\3\20\3\20\3\21\3\21")
+        buf.write("\3\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\16\3\16\3\17\3\17\3")
+        buf.write("\17\3\17\3\17\3\17\3\17\3\17\3\17\3\20\3\20\3\21\3\21")
         buf.write("\3\21\3\21\3\21\3\22\3\22\3\22\3\22\3\23\3\23\3\23\3\23")
         buf.write("\3\23\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\25\3\25\3\25")
         buf.write("\3\25\3\26\3\26\3\26\3\26\3\26\3\27\3\27\3\30\3\30\3\31")
@@ -49,7 +49,7 @@ def serializedATN():
         buf.write("\2\2\2G\3\2\2\2\2I\3\2\2\2\2K\3\2\2\2\3M\3\2\2\2\5T\3")
         buf.write("\2\2\2\7V\3\2\2\2\t]\3\2\2\2\13g\3\2\2\2\ro\3\2\2\2\17")
         buf.write("q\3\2\2\2\21s\3\2\2\2\23x\3\2\2\2\25z\3\2\2\2\27|\3\2")
-        buf.write("\2\2\31\u0082\3\2\2\2\33\u0089\3\2\2\2\35\u0092\3\2\2")
+        buf.write("\2\2\31\u0082\3\2\2\2\33\u0089\3\2\2\2\35\u008b\3\2\2")
         buf.write("\2\37\u0094\3\2\2\2!\u0096\3\2\2\2#\u009b\3\2\2\2%\u009f")
         buf.write("\3\2\2\2\'\u00a4\3\2\2\2)\u00ab\3\2\2\2+\u00af\3\2\2\2")
         buf.write("-\u00b4\3\2\2\2/\u00b6\3\2\2\2\61\u00b8\3\2\2\2\63\u00be")
@@ -69,10 +69,10 @@ def serializedATN():
         buf.write("\u0081\7v\2\2\u0081\30\3\2\2\2\u0082\u0083\7u\2\2\u0083")
         buf.write("\u0084\7k\2\2\u0084\u0085\7i\2\2\u0085\u0086\7p\2\2\u0086")
         buf.write("\u0087\7c\2\2\u0087\u0088\7n\2\2\u0088\32\3\2\2\2\u0089")
-        buf.write("\u008a\7t\2\2\u008a\u008b\7g\2\2\u008b\u008c\7c\2\2\u008c")
-        buf.write("\u008d\7f\2\2\u008d\u008e\7q\2\2\u008e\u008f\7p\2\2\u008f")
-        buf.write("\u0090\7n\2\2\u0090\u0091\7{\2\2\u0091\34\3\2\2\2\u0092")
-        buf.write("\u0093\7.\2\2\u0093\36\3\2\2\2\u0094\u0095\7?\2\2\u0095")
+        buf.write("\u008a\7?\2\2\u008a\34\3\2\2\2\u008b\u008c\7t\2\2\u008c")
+        buf.write("\u008d\7g\2\2\u008d\u008e\7c\2\2\u008e\u008f\7f\2\2\u008f")
+        buf.write("\u0090\7q\2\2\u0090\u0091\7p\2\2\u0091\u0092\7n\2\2\u0092")
+        buf.write("\u0093\7{\2\2\u0093\36\3\2\2\2\u0094\u0095\7.\2\2\u0095")
         buf.write(" \3\2\2\2\u0096\u0097\7d\2\2\u0097\u0098\7q\2\2\u0098")
         buf.write("\u0099\7q\2\2\u0099\u009a\7n\2\2\u009a\"\3\2\2\2\u009b")
         buf.write("\u009c\7k\2\2\u009c\u009d\7p\2\2\u009d\u009e\7v\2\2\u009e")
@@ -182,9 +182,10 @@ class TLexer(Lexer):
 
     literalNames = [ "<INVALID>",
             "'import'", "';'", "'module'", "'interface'", "'extends'", "'{'", 
-            "'}'", "'void'", "'('", "')'", "'const'", "'signal'", "'readonly'", 
-            "','", "'='", "'bool'", "'int'", "'real'", "'string'", "'var'", 
-            "'list'", "'<'", "'>'", "'model'", "'struct'", "'enum'", "'flag'" ]
+            "'}'", "'void'", "'('", "')'", "'const'", "'signal'", "'='", 
+            "'readonly'", "','", "'bool'", "'int'", "'real'", "'string'", 
+            "'var'", "'list'", "'<'", "'>'", "'model'", "'struct'", "'enum'", 
+            "'flag'" ]
 
     symbolicNames = [ "<INVALID>",
             "TAGLINE", "INTCONSTANT", "HEXCONSTANT", "TAGIDENTIFIER", "IDENTIFIER", 
@@ -202,7 +203,7 @@ class TLexer(Lexer):
 
     def __init__(self, input=None, output:TextIO = sys.stdout):
         super().__init__(input, output)
-        self.checkVersion("4.7")
+        self.checkVersion("4.7.1")
         self._interp = LexerATNSimulator(self, self.atn, self.decisionsToDFA, PredictionContextCache())
         self._actions = None
         self._predicates = None

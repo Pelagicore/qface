@@ -7,8 +7,8 @@ documentSymbol
     ;
 
 /**
-module name;
-import name;
+module <name> <version>;
+import <name> <version>;
 */
 headerSymbol
     : moduleSymbol importSymbol*
@@ -52,7 +52,7 @@ signalSymbol
 
 
 propertySymbol
-    : comment=DOCCOMMENT? tagSymbol* propertyModifierSymbol? typeSymbol name=IDENTIFIER ';'?
+    : comment=DOCCOMMENT? tagSymbol* propertyModifierSymbol? typeSymbol name=IDENTIFIER ('=' value=IDENTIFIER)? ';'?
     ;
 
 propertyModifierSymbol

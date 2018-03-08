@@ -115,6 +115,7 @@ class DomainListener(QFaceListener):
                 click.secho(str(exc), fg='red')
 
     def parse_value(self, ctx, symbol):
+        self.check_support(EFeature.DEFAULT_VALUES)
         if ctx.value:
             symbol.value = escape_decode(ctx.value.text[1:-1])
 

@@ -207,3 +207,11 @@ def test_parser_exceptions():
     system = FileSystem.parse_document('not-exists')
 
 
+def test_default_values():
+    system = load_test()
+    interface = system.lookup('com.pelagicore.test.ContactService')
+    symbol = system.lookup('com.pelagicore.test.ContactService#intValue')
+    assert symbol.value == "2"    
+    symbol = system.lookup('com.pelagicore.test.ContactService#realValue')
+    assert symbol.value == "0.1"    
+    

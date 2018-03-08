@@ -7,6 +7,8 @@ from .domain import *
 from antlr4 import ParserRuleContext
 import yaml
 import click
+import codecs
+import json
 
 try:
     from yaml import CSafeLoader as Loader, CDumper as Dumper
@@ -84,7 +86,7 @@ class DomainListener(TListener):
                 data = yaml.load('\n'.join(lines), Loader=Loader)
                 symbol._tags = data
             except yaml.YAMLError as exc:
-                click.secho(exc, fg='red')
+                click.secho(str(exc), fg='red')
 
     def enterEveryRule(self, ctx):
         log.debug('enter ' + ctx.__class__.__name__)
@@ -192,6 +194,8 @@ class DomainListener(TListener):
         self.parse_annotations(ctx, self.property)
         self.parse_type(ctx, self.property.type)
         contextMap[ctx] = self.property
+        if ctx.value:
+            self.property.value = codecs.decode(bytes(ctx.value.text[1:-1], 'utf-8'), 'unicode_escape')
 
     def exitPropertySymbol(self, ctx: TParser.PropertySymbolContext):
         self.property = None
@@ -201,6 +205,8 @@ class DomainListener(TListener):
         name = ctx.name.text
         self.field = Field(name, self.struct)
         self.parse_annotations(ctx, self.field)
+        if ctx.value:
+            self.field.value = codecs.decode(bytes(ctx.value.text[1:-1], 'utf-8'), 'unicode_escape')        
         contextMap[ctx] = self.field
 
     def exitStructFieldSymbol(self, ctx: TParser.StructFieldSymbolContext):

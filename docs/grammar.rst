@@ -250,3 +250,22 @@ Currently only brief, description, see and deprecated are supported doc tags.
 The QtCPP built-in generator generates valid Qt documentation out of these comments.
 
 
+Default Values
+==============
+
+QFace supports the assignment of default values to properties and struct fields. A default values is a text string
+passed onto the generator.
+
+.. code-block:: js
+
+    interface Counter {
+        int count = "0";
+        Message lastMessage;
+    }
+
+    struct Message {
+        string text = "NO DATA";
+    }
+
+You can use quotes `'` or double-quotes `"` as a marker for text. There is no type check on qface side the 
+text-content is directly on to the generator.

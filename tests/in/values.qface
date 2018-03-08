@@ -1,17 +1,13 @@
 module values 1.0
 
 interface Namespace {
-    @value: 99
-    int intValue
-    @value: 0.99
-    real realValue
-    @value: "foo"
-    string message
-    @value: { name: "Hello", age: 101 };
-    Person person
+    int intValue = "99"
+    real realValue = "0.99"
+    string message = "foo"
+    Person person = '{ name: "Hello", age: 101 }'
 }
 
 struct Person {
-    string name;
-    int age;
+    string name = "hello";
+    int age = "99";
 }

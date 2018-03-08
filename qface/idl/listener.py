@@ -8,6 +8,8 @@ from antlr4 import ParserRuleContext
 import yaml
 import click
 from .profile import get_features, EProfile, EFeature
+import codecs
+import json
 
 try:
     from yaml import CSafeLoader as Loader, CDumper as Dumper
@@ -223,6 +225,8 @@ class DomainListener(QFaceListener):
         self.parse_annotations(ctx, self.property)
         self.parse_type(ctx, self.property.type)
         contextMap[ctx] = self.property
+        if ctx.value:
+            self.property.value = codecs.decode(bytes(ctx.value.text[1:-1], 'utf-8'), 'unicode_escape')
 
     def exitPropertySymbol(self, ctx: TParser.PropertySymbolContext):
         self.property = None
@@ -232,6 +236,8 @@ class DomainListener(QFaceListener):
         name = ctx.name.text
         self.field = Field(name, self.struct)
         self.parse_annotations(ctx, self.field)
+        if ctx.value:
+            self.field.value = codecs.decode(bytes(ctx.value.text[1:-1], 'utf-8'), 'unicode_escape')        
         contextMap[ctx] = self.field
 
     def exitStructFieldSymbol(self, ctx: TParser.StructFieldSymbolContext):

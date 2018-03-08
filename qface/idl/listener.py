@@ -23,6 +23,10 @@ log = logging.getLogger(__name__)
 contextMap = {}
 
 
+def escape_decode(s):
+    """removes \-escapes from str"""
+    return codecs.decode(bytes(s, 'utf-8'), 'unicode_escape')        
+
 class QFaceListener(TListener):
     def __init__(self, system, profile=EProfile.FULL):
         super().__init__()
@@ -109,6 +113,10 @@ class DomainListener(QFaceListener):
                 symbol._tags = data
             except yaml.YAMLError as exc:
                 click.secho(str(exc), fg='red')
+
+    def parse_value(self, ctx, symbol):
+        if ctx.value:
+            symbol.value = escape_decode(ctx.value.text[1:-1])
 
     def enterEveryRule(self, ctx):
         log.debug('enter ' + ctx.__class__.__name__)
@@ -215,18 +223,10 @@ class DomainListener(QFaceListener):
             self.property.readonly = bool(modifier.is_readonly)
             self.property.const = bool(modifier.is_const)
 
-        # if ctx.value:
-        #     try:
-        #         value = yaml.load(ctx.value.text, Loader=Loader)
-        #         self.property._value = value
-        #     except yaml.YAMLError as exc:
-        #         click.secho(exc, fg='red')
-
         self.parse_annotations(ctx, self.property)
         self.parse_type(ctx, self.property.type)
+        self.parse_value(ctx, self.property)
         contextMap[ctx] = self.property
-        if ctx.value:
-            self.property.value = codecs.decode(bytes(ctx.value.text[1:-1], 'utf-8'), 'unicode_escape')
 
     def exitPropertySymbol(self, ctx: TParser.PropertySymbolContext):
         self.property = None
@@ -236,8 +236,7 @@ class DomainListener(QFaceListener):
         name = ctx.name.text
         self.field = Field(name, self.struct)
         self.parse_annotations(ctx, self.field)
-        if ctx.value:
-            self.field.value = codecs.decode(bytes(ctx.value.text[1:-1], 'utf-8'), 'unicode_escape')        
+        self.parse_value(ctx, self.field)
         contextMap[ctx] = self.field
 
     def exitStructFieldSymbol(self, ctx: TParser.StructFieldSymbolContext):

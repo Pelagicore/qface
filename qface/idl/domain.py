@@ -106,7 +106,11 @@ class NamedElement(object):
         if self.module == self:
             return self.module.name
         else:
-            return '{0}.{1}'.format(self.module.name, self.name)
+            if "." not in self.name:
+                return '{0}.{1}'.format(self.module.name, self.name)
+            else:
+                # We have a fully qualified reference, just return it
+                return self.name
 
     def toJson(self):
         o = OrderedDict()

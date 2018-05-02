@@ -2,10 +2,10 @@
 Annotations
 ***********
 
-Annotations is a way to add meta information to your interface definition. It
+Annotations allow to add meta information to your interface definition. It
 is available to each symbol in the interface.
 
-Annotations allows an interface author to extend the existing interface with additional meta information, called tags, aka annotations. One or several annotations can precede a module, ``interface``, ``struct`` or ``enum``. They are also allowed before an ``operation``, ``property`` or ``signal``. Everywhere where a documentation comment is allowed you can also add annotations.
+With annotations an interface author can extend the existing interface with additional meta information, called tags, aka annotations. One or several annotations can precede a module, ``interface``, ``struct`` or ``enum``. They are also allowed before an ``operation``, ``property`` or ``signal``. Everywhere where a documentation comment is allowed you can also add annotations.
 
 An annotation looks like this
 
@@ -16,9 +16,9 @@ An annotation looks like this
     }
 
 
-An in code annotation precedes a symbol and it starts with an ``@`` sign. A symbol can have more than one one annotation line. Each line should be one individual annotation. The content is YAML content. All ``@`` signs preceding a symbol are collected and then evaluated using a YAML parser.
+An embedded annotation precedes a symbol and it starts with an ``@`` sign. A symbol can have more than one annotation line. Each line should be one individual annotation. The content is YAML content. All ``@`` signs preceding a symbol are collected and then evaluated using a YAML parser.
 
-For larger annotations you can use the external annotation document feature.
+For larger annotations you can use the external annotation document feature (see below).
 
 .. code-block:: python
 
@@ -63,12 +63,12 @@ On the root level should be a fully qualified name of a symbol. The symbol will 
 Merging Annotations
 ===================
 
-The external annotations will be merged on top of the embedded annotations on per symbol base. Dictionaries will be merged. If a merge can not be done then the external document based annotations will override the embedded annotations.
+The external annotations will be merged on top of the embedded annotations per symbol. Dictionaries will be merged. If a merge can not be done then the external document based annotations will override the embedded annotations.
 
 Generators
 ==========
 
-The annotation are available later when navigating the domain model.
+Annotations are available later when navigating the domain model.
 
 .. code-block:: jinja2
 

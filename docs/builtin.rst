@@ -1,7 +1,7 @@
 Generator Examples
 ==================
 
-QFace does provide soem real world generators which are hosted as separated projects. Their purpose is merely to showcase how to write a code generator with QFace. They are working and complete examples of a general purpose generators.
+QFace does provide some real world generators which are hosted as separated projects. Their purpose is merely to showcase how to write a code generator with QFace. They are working and complete examples of general purpose generators.
 
 `qface-qtcpp`_
 
@@ -22,7 +22,7 @@ QFace does provide soem real world generators which are hosted as separated proj
     Hosted at: https://github.com/Pelagicore/qface-qtro
 
 
-From the QML user interface perspective the QtCPP and QtQML generators bth provide the same API and are interchangeable.
+From the QML user interface perspective the QtCPP and QtQML generators both provide the same API and are interchangeable.
 
 
 

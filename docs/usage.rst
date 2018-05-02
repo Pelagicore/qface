@@ -9,7 +9,7 @@ QFace requires one or more IDL files as input file and a generator to produce ou
 
 .. figure:: qface_concept.jpg
 
-To use qface you need to write your own generator. A generatopr is a small python script which reads the qface document and write code using a generator.
+To use QFace you need to write your own generator. A generator is a small python script which reads the QFace document and writes code using template files.
 
 .. code-block:: python
 
@@ -51,7 +51,7 @@ The code generation is driven by a small script which iterates over the domain m
         generator.write('{{output}}/modules.csv', 'modules.csv', ctx)
 
 
-This script reads the input directory returns a system object form the domain model. This is used as the root object for the code generation inside the template language.
+This script reads the input directory and returns a system object from the domain model. This is used as the root object for the code generation inside the template language.
 
 .. code-block:: jinja
 
@@ -67,4 +67,4 @@ This script reads the input directory returns a system object form the domain mo
         {% endfor -%}
     {% endfor %}
 
-The template iterates over the domain objects and generates text which is written into a file. Using the generator write method ``generator.write(path, template, context)`` the output file path can also be specified using the template syntax .
+The template iterates over the domain objects and generates text which is written into the output file. Using the generator write method ``generator.write(path, template, context)`` the output file path can be specified.

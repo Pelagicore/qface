@@ -13,7 +13,7 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro property(property, notifiable=True) -%}
+{% macro property_decl(property, notifiable=True) -%}
 Q_PROPERTY({{property|returnType}} {{property}} READ {{property}} {% if not property.readonly %}WRITE set{{property|upperfirst}}{% endif %}{% if not property.const and notifiable %} NOTIFY {{property}}Changed{% endif %})
 {%- endmacro %}
 
@@ -38,11 +38,9 @@ void {{symbol}}{{postfix}}({{symbol|parameters}});
    \qmlproperty {{property.type}} {{class}}::{{property}}
 {% with doc = property.comment|parse_doc %}
    \brief {{doc.brief}}
-
    {{doc.description}}
 {% endwith %}
 */
-
 void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {
 {% if notifiable %}
@@ -53,7 +51,6 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {% else %}
     m_{{property}} = {{property}};
 {% endif %}
-
 }
 {%- endmacro %}
 

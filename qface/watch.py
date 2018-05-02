@@ -42,6 +42,8 @@ def monitor(script, src, dst, args):
     click.secho('watch recursive: {0}'.format(script.dirname()), fg='blue')
     observer.schedule(event_handler, script.dirname(), recursive=True)
     for entry in src:
+        if entry.isfile():
+            entry = entry.parent
         click.secho('watch recursive: {0}'.format(entry), fg='blue')
         observer.schedule(event_handler, entry, recursive=True)
     event_handler.run()  # run always once

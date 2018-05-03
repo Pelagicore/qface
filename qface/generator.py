@@ -73,7 +73,7 @@ class Generator(object):
     strict = False
     """ enables strict code generation """
 
-    def __init__(self, search_path, context={}):
+    def __init__(self, search_path, context={}, force=False):
         loader = ChoiceLoader([
             FileSystemLoader(search_path),
             PackageLoader('qface')
@@ -88,6 +88,7 @@ class Generator(object):
         self._destination = Path()
         self._source = ''
         self.context = context
+        self.force = force
 
     @property
     def destination(self):
@@ -165,12 +166,13 @@ class Generator(object):
             sys.exit(1)
 
     def _write(self, file_path: Path, template: str, context: dict, preserve: bool = False, force: bool = False):
+        force = self.force or force
         path = self.destination / Path(self.apply(file_path, context))
         path.parent.makedirs_p()
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
         if self._has_different_content(data, path) or force:
-            if path.exists() and preserve:
+            if path.exists() and preserve and not force:
                 click.secho('preserve: {0}'.format(path), fg='blue')
             else:
                 click.secho('create: {0}'.format(path), fg='blue')
@@ -190,8 +192,8 @@ class Generator(object):
 
 class RuleGenerator(Generator):
     """Generates documents based on a rule YAML document"""
-    def __init__(self, search_path: str, destination:Path, context:dict={}, features:set=set()):
-        super().__init__(search_path, context)
+    def __init__(self, search_path: str, destination:Path, context:dict={}, features:set=set(), force=False):
+        super().__init__(search_path, context, force)
         self.context.update({
             'dst': destination,
             'project': Path(destination).name,

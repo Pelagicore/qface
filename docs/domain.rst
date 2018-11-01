@@ -12,10 +12,10 @@ The IDL is converted into an in memory domain model (see qface/idl/domain.py)
     - System
         - Module
             - Import
-            - Service
+            - Interface
                 - Property
                 - Operation
-                - Event
+                - Signal
             - Enum
             - Flag
             - Struct

@@ -3,7 +3,7 @@ from watchdog.observers import Observer
 import click
 from path import Path
 import time
-from subprocess import call
+from .shell import sh
 
 """
 Provides an API to monitor the file system
@@ -11,10 +11,9 @@ Provides an API to monitor the file system
 
 
 class RunScriptChangeHandler(FileSystemEventHandler):
-    def __init__(self, args, cwd):
+    def __init__(self, script):
         super().__init__()
-        self.args = args
-        self.cwd = cwd
+        self.script = script
         self.is_running = False
 
     def on_modified(self, event):
@@ -26,19 +25,26 @@ class RunScriptChangeHandler(FileSystemEventHandler):
         if self.is_running:
             return
         self.is_running = True
-        call(self.args, cwd=self.cwd)
+        sh(self.script, cwd=Path.getcwd())
         self.is_running = False
 
 
-def monitor(args, watch, cwd=Path.getcwd()):
+def monitor(script_dir, src, dst, argv):
     """
     reloads the script given by argv when src files changes
     """
-    watch = watch if isinstance(watch, (list, tuple)) else [watch]
-    watch = [Path(entry).expand().abspath() for entry in watch]
-    event_handler = RunScriptChangeHandler(args, cwd)
+    if script_dir.isfile():
+        script_dir = script_dir.dirname()
+    src = src if isinstance(src, (list, tuple)) else [src]
+    dst = Path(dst).expand().abspath()
+    src = [Path(entry).expand().abspath() for entry in src]
+    command = ' '.join(argv)
+    print('command: ', command)
+    event_handler = RunScriptChangeHandler(command)
     observer = Observer()
-    for entry in watch:
+    click.secho('watch recursive: {0}'.format(script_dir), fg='blue')
+    observer.schedule(event_handler, script_dir, recursive=True)
+    for entry in src:
         if entry.isfile():
             entry = entry.parent
         click.secho('watch recursive: {0}'.format(entry), fg='blue')

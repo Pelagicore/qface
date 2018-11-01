@@ -1,10 +1,11 @@
+from .generator import FileSystem
+from .helper import doc
 
 
-def merge(a, b):
-    "merges b into a recursively if a and b are dicts"
-    for key in b:
-        if isinstance(a.get(key), dict) and isinstance(b.get(key), dict):
-            merge(a[key], b[key])
-        else:
-            a[key] = b[key]
-    return a
+def module_info(text):
+    system = FileSystem.parse_text(text)
+    module = list(system.modules)[0]
+    return {
+        'title': module.name,
+        'brief': " ".join(doc.parse_doc(module.comment).brief)
+    }

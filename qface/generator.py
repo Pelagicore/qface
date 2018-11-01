@@ -5,14 +5,15 @@ from jinja2 import Environment, Template, Undefined, StrictUndefined
 from jinja2 import FileSystemLoader, PackageLoader, ChoiceLoader
 from jinja2 import TemplateSyntaxError, TemplateNotFound, TemplateError
 from path import Path
-from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
+from antlr4 import InputStream, FileStream, CommonTokenStream, ParseTreeWalker
 from antlr4.error import DiagnosticErrorListener, ErrorListener
 import shelve
 import logging
 import hashlib
 import yaml
 import click
-import sys, os
+import sys
+import os
 
 from .idl.parser.TLexer import TLexer
 from .idl.parser.TParser import TParser
@@ -20,7 +21,6 @@ from .idl.parser.TListener import TListener
 from .idl.profile import EProfile
 from .idl.domain import System
 from .idl.listener import DomainListener
-from .utils import merge
 from .filters import filters
 
 from jinja2.debug import make_traceback as _make_traceback
@@ -31,6 +31,16 @@ except ImportError:
     from yaml import Loader, Dumper
 
 logger = logging.getLogger(__name__)
+
+
+def merge(a, b):
+    "merges b into a recursively if a and b are dicts"
+    for key in b:
+        if isinstance(a.get(key), dict) and isinstance(b.get(key), dict):
+            merge(a[key], b[key])
+        else:
+            a[key] = b[key]
+    return a
 
 
 def template_error_handler(traceback):
@@ -273,6 +283,11 @@ class FileSystem(object):
             sys.exit(-1)
 
     @staticmethod
+    def parse_text(text: str, system: System = None, profile=EProfile.FULL):
+        stream = InputStream(text)
+        return FileSystem._parse_stream(stream, system, "<TEXT>", profile)
+
+    @staticmethod
     def _parse_document(document: Path, system: System = None, profile=EProfile.FULL):
         """Parses a document and returns the resulting domain system
 
@@ -286,7 +301,7 @@ class FileSystem(object):
         return system
 
     @staticmethod
-    def _parse_stream(stream, system: System = None, document=None, profile=EProfile.FULL):
+    def _parse_stream(stream: InputStream, system: System = None, document=None, profile=EProfile.FULL):
         logger.debug('parse stream')
         system = system or System()
 

@@ -37,8 +37,8 @@ void {{symbol}}{{postfix}}({{symbol|parameters}});
 /*!
    \qmlproperty {{property.type}} {{class}}::{{property}}
 {% with doc = property.comment|parse_doc %}
-   \brief {{doc.brief}}
-   {{doc.description}}
+   \brief {{doc.brief|join(" ")}}
+   {{doc.description|join("\n   ")}}
 {% endwith %}
 */
 void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
@@ -68,7 +68,7 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
    \qmlmethod {{operation.type}} {{class}}::{{operation}}({{operation|parameters}})
 {% with doc = operation.comment|parse_doc %}
    \brief {{doc.brief}}
-   {{doc.description}}
+   {{doc.description|join("\n   ")}}
 {% endwith %}
 */
 {{operation|returnType}} {{class}}::{{operation}}({{operation|parameters}})

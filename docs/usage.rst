@@ -57,7 +57,7 @@ This script reads the input directory and returns a system object from the domai
 
     {% for module in system.modules %}
         {%- for interface in module.interfaces -%}
-        SERVICE, {{module}}.{{interface}}
+        INTERFACE, {{module}}.{{interface}}
         {% endfor -%}
         {%- for struct in module.structs -%}
         STRUCT , {{module}}.{{struct}}

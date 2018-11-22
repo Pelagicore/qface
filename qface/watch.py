@@ -3,7 +3,7 @@ from watchdog.observers import Observer
 import click
 from path import Path
 import time
-from subprocess import call
+from .shell import sh
 
 """
 Provides an API to monitor the file system
@@ -25,7 +25,7 @@ class RunScriptChangeHandler(FileSystemEventHandler):
         if self.is_running:
             return
         self.is_running = True
-        call(self.args, cwd=Path.getcwd())
+        sh(self.args, cwd=Path.getcwd())
         self.is_running = False
 
 

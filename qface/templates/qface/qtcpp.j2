@@ -26,7 +26,7 @@ void set{{property|upperfirst}}({{ property|parameterType }}){{ending}}
 {%- endmacro %}
 
 {% macro signal_decl(symbol, postfix="") -%}
-void {{symbol}}{{postfix}}({{symbol|parameters}});
+void {{symbol}}{{postfix}}();
 {%- endmacro %}
 
 {% macro property_member_decl(property) -%}
@@ -46,7 +46,7 @@ void {{class}}::set{{property|upperfirst}}({{ property|parameterType }})
 {% if notifiable %}
     if (m_{{property}} != {{property}}) {
         m_{{property}} = {{property}};
-        Q_EMIT {{property}}Changed({{property}});
+        Q_EMIT {{property}}Changed();
     }
 {% else %}
     m_{{property}} = {{property}};

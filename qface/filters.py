@@ -1,6 +1,6 @@
 import json
 import hashlib
-
+from .helper import qtqml
 
 def jsonify(symbol):
     """ returns json format for symbol """
@@ -35,6 +35,10 @@ def path(symbol):
     return str(symbol).replace('.', '/')
 
 
+def identifier(s):
+    return str(s).lower().replace('.', '_')
+
+
 filters = {
     'jsonify': jsonify,
     'upper_first': upper_first,
@@ -43,4 +47,7 @@ filters = {
     'lowerfirst': lower_first,
     'hash': hash,
     'path': path,
+    'identifier': identifier,
 }
+
+filters.update(qtqml.Filters.get_filters())

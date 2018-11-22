@@ -60,10 +60,10 @@ class Filters(object):
         return t
 
     @staticmethod
-    def path(s):
-        return str(s).replace('.', '/')
-
-    @staticmethod
-    def identifier(s):
-        return str(s).lower().replace('.', '_')
+    def get_filters():
+        return {
+            'qml.className': Filters.className,
+            'qml.defaultValue': Filters.defaultValue,
+            'qml.propertyType': Filters.propertyType,
+        }
 

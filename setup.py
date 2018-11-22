@@ -64,5 +64,10 @@ setup(
             'watchdog',
             'ipdb',
         ],
-    }
+    },
+    entry_points={
+        'console_scripts': [
+            'qface = qface.app:main'
+        ],
+    },
 )

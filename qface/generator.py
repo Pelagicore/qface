@@ -238,9 +238,11 @@ class RuleGenerator(Generator):
         self.context.update(rule.get('context', {}))
         self.destination = rule.get('destination', None)
         self.source = rule.get('source', None)
-        for target, source in rule.get('documents', {}).items():
+        for entry in rule.get('documents', []):
+            target, source = self._resolve_rule_document(entry)
             self.write(target, source)
-        for target, source in rule.get('preserve', {}).items():
+        for entry in rule.get('preserve', []):
+            target, source = self._resolve_rule_document(entry)
             self.write(target, source, preserve=True)
 
     def _shall_proceed(self, obj):
@@ -251,6 +253,11 @@ class RuleGenerator(Generator):
             conditions = [conditions]
         result = self.features.intersection(set(conditions))
         return bool(len(result))
+
+    def _resolve_rule_document(self, entry):
+        if type(entry) is dict:
+            return next(iter(entry.items()))
+        return (entry, entry)
 
 
 class FileSystem(object):

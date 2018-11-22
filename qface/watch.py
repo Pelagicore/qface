@@ -11,10 +11,9 @@ Provides an API to monitor the file system
 
 
 class RunScriptChangeHandler(FileSystemEventHandler):
-    def __init__(self, args, cwd):
+    def __init__(self, args):
         super().__init__()
         self.args = args
-        self.cwd = cwd
         self.is_running = False
 
     def on_modified(self, event):
@@ -26,17 +25,17 @@ class RunScriptChangeHandler(FileSystemEventHandler):
         if self.is_running:
             return
         self.is_running = True
-        call(self.args, cwd=self.cwd)
+        call(self.args, cwd=Path.getcwd())
         self.is_running = False
 
 
-def monitor(args, watch, cwd=Path.getcwd()):
+def monitor(args, watch):
     """
     reloads the script given by argv when src files changes
     """
     watch = watch if isinstance(watch, (list, tuple)) else [watch]
     watch = [Path(entry).expand().abspath() for entry in watch]
-    event_handler = RunScriptChangeHandler(args, cwd)
+    event_handler = RunScriptChangeHandler(args)
     observer = Observer()
     for entry in watch:
         if entry.isfile():

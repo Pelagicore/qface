@@ -3,7 +3,11 @@ Provides helper functionality specificially for Qt C++/QML code generators
 """
 import qface.idl.domain as domain
 from jinja2 import environmentfilter
-from ..filters import upper_first
+
+
+def upper_first(s):
+    s = str(s)
+    return s[0].upper() + s[1:]
 
 
 class Filters(object):

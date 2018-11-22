@@ -96,6 +96,7 @@ class Generator(object):
         self.env.exception_handler = template_error_handler
         self.env.filters.update(filters)
         self._destination = Path()
+        self._path = Path()
         self._source = ''
         self.context = context
         self.force = force
@@ -107,8 +108,21 @@ class Generator(object):
 
     @destination.setter
     def destination(self, dst):
-        if dst:
-            self._destination = Path(self.apply(dst, self.context))
+        self._destination = dst
+
+    @property
+    def resolved_path(self):
+        return self.destination / self.path
+
+    @property
+    def path(self):
+        return self._path
+
+    @path.setter
+    def path(self, path):
+        if not path:
+            return
+        self._path = Path(self.apply(path))
 
     @property
     def source(self):
@@ -147,7 +161,8 @@ class Generator(object):
         template = self.get_template(name)
         return template.render(context)
 
-    def apply(self, template, context):
+    def apply(self, template, context={}):
+        context.update(self.context)
         """Return the rendered text of a template instance"""
         return self.env.from_string(template).render(context)
 
@@ -177,7 +192,7 @@ class Generator(object):
 
     def _write(self, file_path: Path, template: str, context: dict, preserve: bool = False, force: bool = False):
         force = self.force or force
-        path = self.destination / Path(self.apply(file_path, context))
+        path = self.resolved_path / Path(self.apply(file_path, context))
         path.parent.makedirs_p()
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
@@ -209,7 +224,7 @@ class RuleGenerator(Generator):
             'project': Path(destination).name,
             'features': features,
         })
-        self.destination = '{{dst}}'
+        self.destination = destination
         self.features = features
 
     def process_rules(self, path: Path, system: System):
@@ -228,7 +243,7 @@ class RuleGenerator(Generator):
         if not self._shall_proceed(rules):
             return
         self.context.update(rules.get('context', {}))
-        self.destination = rules.get('destination', '{{dst}}')
+        self.path = rules.get('path', '')
         self.source = rules.get('source', None)
         self._process_rule(rules.get('system', None), {'system': system})
         for module in system.modules:
@@ -246,7 +261,7 @@ class RuleGenerator(Generator):
             return
         self.context.update(context)
         self.context.update(rule.get('context', {}))
-        self.destination = rule.get('destination', None)
+        self.path = rule.get('path', None)
         self.source = rule.get('source', None)
         for entry in rule.get('documents', []):
             target, source = self._resolve_rule_document(entry)

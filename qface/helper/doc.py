@@ -83,3 +83,9 @@ def parse_doc(s):
         else: # append any loose lines to description
             doc.add_tag('description', line)
     return doc
+
+
+def get_filters():
+    return {
+        'parse_doc': parse_doc,
+    }

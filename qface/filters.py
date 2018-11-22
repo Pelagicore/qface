@@ -1,6 +1,9 @@
 import json
 import hashlib
 from .helper import qtqml
+from .helper import qtcpp
+from .helper import doc
+
 
 def jsonify(symbol):
     """ returns json format for symbol """
@@ -51,3 +54,5 @@ filters = {
 }
 
 filters.update(qtqml.Filters.get_filters())
+filters.update(qtcpp.Filters.get_filters())
+filters.update(doc.get_filters())

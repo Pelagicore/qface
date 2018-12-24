@@ -8,12 +8,13 @@ from path import Path
 from qface.generator import FileSystem, RuleGenerator
 from qface.watch import monitor
 from qface.utils import load_filters
+from qface.shell import sh
 
 here = Path(__file__).dirname()
 logging.basicConfig()
 
 
-def run(spec, src, dst, features, force):
+def run_generator(spec, src, dst, features, force):
     spec = Path(spec)
     project = Path(dst).name
     system = FileSystem.parse(src)
@@ -45,9 +46,10 @@ def run(spec, src, dst, features, force):
 @click.option('--scaffold/--no-scaffold', default=False, help="Add extrac scaffolding code")
 @click.option('--watch', type=click.Path(exists=False, file_okay=False))
 @click.option('--feature', multiple=True)
+@click.option('--run', help="run script after generation")
 @click.option('--force/--no-force', default=False, help="forces overwriting of files")
 @click.argument('source', nargs=-1, type=click.Path(exists=True))
-def main(rules, target, reload, source, watch, scaffold, feature, force):
+def main(rules, target, reload, source, watch, scaffold, feature, force, run):
     rules = Path(rules)
     if reload:
         argv = sys.argv.copy()
@@ -61,7 +63,9 @@ def main(rules, target, reload, source, watch, scaffold, feature, force):
         features = set(feature)
         if scaffold:
             features.add('scaffold')
-        run(rules, source, target, features=features, force=force)
+        run_generator(rules, source, target, features=features, force=force)
+        if run:
+            sh(run)
 
 
 if __name__ == '__main__':

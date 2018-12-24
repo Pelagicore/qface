@@ -17,8 +17,12 @@
 Q_PROPERTY({{property|qt.returnType}} {{property}} READ {{property}} {% if not property.readonly %}WRITE push{{property|upperfirst}}{% endif %}{% if not property.const and notifiable %} NOTIFY {{property}}Changed{% endif %})
 {%- endmacro %}
 
-{% macro property_setter_decl(property, ending=";", prefix='virtual') -%}
+{% macro property_pusher_decl(property, ending=";", prefix='virtual') -%}
 {{prefix}} void push{{property|upperfirst}}({{ property|qt.parameterType }}){{ending}}
+{%- endmacro %}
+
+{% macro property_setter_decl(property, ending=";", prefix='virtual') -%}
+{{prefix}} void set{{property|upperfirst}}({{ property|qt.parameterType }}){{ending}}
 {%- endmacro %}
 
 {% macro property_getter_decl(property, ending=";", prefix='virtual') -%}
@@ -33,6 +37,20 @@ void {{symbol}}{{postfix}}();
 {{property|qt.returnType}} m_{{property}};
 {%- endmacro %}
 
+{% macro property_pusher_impl(class, property, notifiable=True) -%}
+void {{class}}::push{{property|upperfirst}}({{ property|qt.parameterType }})
+{
+{% if notifiable %}
+    if (m_{{property}} != {{property}}) {
+        m_{{property}} = {{property}};
+        Q_EMIT {{property}}Changed();
+    }
+{% else %}
+    m_{{property}} = {{property}};
+{% endif %}
+}
+{%- endmacro %}
+
 {% macro property_setter_impl(class, property, notifiable=True) -%}
 /*!
    \qmlproperty {{property.type}} {{class}}::{{property}}
@@ -41,7 +59,7 @@ void {{symbol}}{{postfix}}();
    {{doc.description|join("\n   ")}}
 {% endwith %}
 */
-void {{class}}::push{{property|upperfirst}}({{ property|qt.parameterType }})
+void {{class}}::set{{property|upperfirst}}({{ property|qt.parameterType }})
 {
 {% if notifiable %}
     if (m_{{property}} != {{property}}) {

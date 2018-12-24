@@ -1,6 +1,6 @@
 from .generator import FileSystem
 from .helper import doc
-
+import click
 
 def module_info(text):
     system = FileSystem.parse_text(text)
@@ -13,9 +13,9 @@ def module_info(text):
 
 def load_filters(path):
     if not path.exists():
-        print('filter module does not exist')
         return {}
 
+    click.secho('loading extra filters from {}'.format(path), fg='green')
     ctx = {
         'filters': {}
     }

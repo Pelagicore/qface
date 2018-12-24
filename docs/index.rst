@@ -18,6 +18,7 @@ Several code generators for common use cases have already been implemented. Thes
    json
    domain
    extending
+   script
    api
 
 

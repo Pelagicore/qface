@@ -21,7 +21,7 @@ from .idl.parser.TListener import TListener
 from .idl.profile import EProfile
 from .idl.domain import System
 from .idl.listener import DomainListener
-from .filters import filters
+from .filters import get_filters
 
 from jinja2.debug import make_traceback as _make_traceback
 
@@ -94,7 +94,7 @@ class Generator(object):
             lstrip_blocks=True,
         )
         self.env.exception_handler = template_error_handler
-        self.env.filters.update(filters)
+        self.env.filters.update(get_filters())
         self._destination = Path()
         self._path = Path()
         self._source = ''
@@ -170,6 +170,9 @@ class Generator(object):
         """Using a template file name it renders a template
            into a file given a context
         """
+        if not file_path or not template:
+            click.secho('source or target missing for document')
+            return
         if not context:
             context = self.context
         error = False

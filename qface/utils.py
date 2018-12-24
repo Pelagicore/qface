@@ -9,3 +9,16 @@ def module_info(text):
         'title': module.name,
         'brief': " ".join(doc.parse_doc(module.comment).brief)
     }
+
+
+def load_filters(path):
+    if not path.exists():
+        print('filter module does not exist')
+        return {}
+
+    ctx = {
+        'filters': {}
+    }
+    exec(path.text(), ctx)
+    return ctx['filters']
+

@@ -36,7 +36,7 @@ class Filters(object):
                 return 'QVariant()'
         elif t.is_void:
             return ''
-        elif t.is_enum:
+        elif t.is_enumeration:
             value = next(iter(t.reference.members))
             return '{0}::{0}Enum::{1}'.format(symbol.type, value)
         elif symbol.kind == 'enum':
@@ -58,7 +58,7 @@ class Filters(object):
     @staticmethod
     def parameterType(symbol):
         prefix = Filters.classPrefix
-        if symbol.type.is_enum:
+        if symbol.type.is_enumeration:
             return '{0}::{0}Enum {1}'.format(symbol.type, symbol)
         if symbol.type.is_void or symbol.type.is_primitive:
             if symbol.type.is_string:
@@ -88,7 +88,7 @@ class Filters(object):
     def returnType(symbol):
         prefix = Filters.classPrefix
         t = symbol.type
-        if t.is_enum:
+        if t.is_enumeration:
             return '{0}::{0}Enum'.format(symbol.type)
         if symbol.type.is_void or symbol.type.is_primitive:
             if t.is_string:

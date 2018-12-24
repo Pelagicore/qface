@@ -5,14 +5,15 @@ from jinja2 import Environment, Template, Undefined, StrictUndefined
 from jinja2 import FileSystemLoader, PackageLoader, ChoiceLoader
 from jinja2 import TemplateSyntaxError, TemplateNotFound, TemplateError
 from path import Path
-from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
+from antlr4 import InputStream, FileStream, CommonTokenStream, ParseTreeWalker
 from antlr4.error import DiagnosticErrorListener, ErrorListener
 import shelve
 import logging
 import hashlib
 import yaml
 import click
-import sys, os
+import sys
+import os
 
 from .idl.parser.TLexer import TLexer
 from .idl.parser.TParser import TParser
@@ -20,8 +21,7 @@ from .idl.parser.TListener import TListener
 from .idl.profile import EProfile
 from .idl.domain import System
 from .idl.listener import DomainListener
-from .utils import merge
-from .filters import filters
+from .filters import get_filters
 
 from jinja2.debug import make_traceback as _make_traceback
 
@@ -31,6 +31,16 @@ except ImportError:
     from yaml import Loader, Dumper
 
 logger = logging.getLogger(__name__)
+
+
+def merge(a, b):
+    "merges b into a recursively if a and b are dicts"
+    for key in b:
+        if isinstance(a.get(key), dict) and isinstance(b.get(key), dict):
+            merge(a[key], b[key])
+        else:
+            a[key] = b[key]
+    return a
 
 
 def template_error_handler(traceback):
@@ -73,7 +83,7 @@ class Generator(object):
     strict = False
     """ enables strict code generation """
 
-    def __init__(self, search_path, context={}):
+    def __init__(self, search_path, context={}, force=False):
         loader = ChoiceLoader([
             FileSystemLoader(search_path),
             PackageLoader('qface')
@@ -84,10 +94,12 @@ class Generator(object):
             lstrip_blocks=True,
         )
         self.env.exception_handler = template_error_handler
-        self.env.filters.update(filters)
+        self.env.filters.update(get_filters())
         self._destination = Path()
+        self._path = Path()
         self._source = ''
         self.context = context
+        self.force = force
 
     @property
     def destination(self):
@@ -96,8 +108,21 @@ class Generator(object):
 
     @destination.setter
     def destination(self, dst):
-        if dst:
-            self._destination = Path(self.apply(dst, self.context))
+        self._destination = dst
+
+    @property
+    def resolved_path(self):
+        return self.destination / self.path
+
+    @property
+    def path(self):
+        return self._path
+
+    @path.setter
+    def path(self, path):
+        if not path:
+            return
+        self._path = Path(self.apply(path))
 
     @property
     def source(self):
@@ -136,7 +161,8 @@ class Generator(object):
         template = self.get_template(name)
         return template.render(context)
 
-    def apply(self, template, context):
+    def apply(self, template, context={}):
+        context.update(self.context)
         """Return the rendered text of a template instance"""
         return self.env.from_string(template).render(context)
 
@@ -144,6 +170,9 @@ class Generator(object):
         """Using a template file name it renders a template
            into a file given a context
         """
+        if not file_path or not template:
+            click.secho('source or target missing for document')
+            return
         if not context:
             context = self.context
         error = False
@@ -165,12 +194,13 @@ class Generator(object):
             sys.exit(1)
 
     def _write(self, file_path: Path, template: str, context: dict, preserve: bool = False, force: bool = False):
-        path = self.destination / Path(self.apply(file_path, context))
+        force = self.force or force
+        path = self.resolved_path / Path(self.apply(file_path, context))
         path.parent.makedirs_p()
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
         if self._has_different_content(data, path) or force:
-            if path.exists() and preserve:
+            if path.exists() and preserve and not force:
                 click.secho('preserve: {0}'.format(path), fg='blue')
             else:
                 click.secho('create: {0}'.format(path), fg='blue')
@@ -190,14 +220,14 @@ class Generator(object):
 
 class RuleGenerator(Generator):
     """Generates documents based on a rule YAML document"""
-    def __init__(self, search_path: str, destination:Path, context:dict={}, features:set=set()):
-        super().__init__(search_path, context)
+    def __init__(self, search_path: str, destination:Path, context:dict={}, features:set=set(), force=False):
+        super().__init__(search_path, context, force)
         self.context.update({
             'dst': destination,
             'project': Path(destination).name,
             'features': features,
         })
-        self.destination = '{{dst}}'
+        self.destination = destination
         self.features = features
 
     def process_rules(self, path: Path, system: System):
@@ -216,7 +246,7 @@ class RuleGenerator(Generator):
         if not self._shall_proceed(rules):
             return
         self.context.update(rules.get('context', {}))
-        self.destination = rules.get('destination', '{{dst}}')
+        self.path = rules.get('path', '')
         self.source = rules.get('source', None)
         self._process_rule(rules.get('system', None), {'system': system})
         for module in system.modules:
@@ -234,11 +264,13 @@ class RuleGenerator(Generator):
             return
         self.context.update(context)
         self.context.update(rule.get('context', {}))
-        self.destination = rule.get('destination', None)
+        self.path = rule.get('path', None)
         self.source = rule.get('source', None)
-        for target, source in rule.get('documents', {}).items():
+        for entry in rule.get('documents', []):
+            target, source = self._resolve_rule_document(entry)
             self.write(target, source)
-        for target, source in rule.get('preserve', {}).items():
+        for entry in rule.get('preserve', []):
+            target, source = self._resolve_rule_document(entry)
             self.write(target, source, preserve=True)
 
     def _shall_proceed(self, obj):
@@ -249,6 +281,11 @@ class RuleGenerator(Generator):
             conditions = [conditions]
         result = self.features.intersection(set(conditions))
         return bool(len(result))
+
+    def _resolve_rule_document(self, entry):
+        if type(entry) is dict:
+            return next(iter(entry.items()))
+        return (entry, entry)
 
 
 class FileSystem(object):
@@ -271,6 +308,11 @@ class FileSystem(object):
             sys.exit(-1)
 
     @staticmethod
+    def parse_text(text: str, system: System = None, profile=EProfile.FULL):
+        stream = InputStream(text)
+        return FileSystem._parse_stream(stream, system, "<TEXT>", profile)
+
+    @staticmethod
     def _parse_document(document: Path, system: System = None, profile=EProfile.FULL):
         """Parses a document and returns the resulting domain system
 
@@ -284,7 +326,7 @@ class FileSystem(object):
         return system
 
     @staticmethod
-    def _parse_stream(stream, system: System = None, document=None, profile=EProfile.FULL):
+    def _parse_stream(stream: InputStream, system: System = None, document=None, profile=EProfile.FULL):
         logger.debug('parse stream')
         system = system or System()
 

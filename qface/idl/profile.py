@@ -21,6 +21,7 @@ class EFeature(Enum):
     EXTEND_INTERFACE = 'extend_interface'
     IMPORT = 'import'
     MAPS = 'maps'
+    DEFAULT_VALUES = 'default_values'
 
 
 class EProfile(Enum):
@@ -34,7 +35,8 @@ _profiles = {
     EProfile.ADVANCED: set([
         EFeature.EXTEND_INTERFACE,
         EFeature.IMPORT,
-        EFeature.MAPS
+        EFeature.MAPS,
+        EFeature.DEFAULT_VALUES
     ]),
     EProfile.FULL: set(EFeature)
 }

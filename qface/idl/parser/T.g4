@@ -7,8 +7,8 @@ documentSymbol
     ;
 
 /**
-module name;
-import name;
+module <name> <version>;
+import <name> <version>;
 */
 headerSymbol
     : moduleSymbol importSymbol*
@@ -52,7 +52,7 @@ signalSymbol
 
 
 propertySymbol
-    : comment=DOCCOMMENT? tagSymbol* propertyModifierSymbol? typeSymbol name=IDENTIFIER ';'?
+    : comment=DOCCOMMENT? tagSymbol* propertyModifierSymbol? typeSymbol name=IDENTIFIER ('=' value=STRING)? ';'?
     ;
 
 propertyModifierSymbol
@@ -109,7 +109,7 @@ structSymbol
     ;
 
 structFieldSymbol
-    : comment=DOCCOMMENT? tagSymbol* typeSymbol name=IDENTIFIER ';'?
+    : comment=DOCCOMMENT? tagSymbol* typeSymbol name=IDENTIFIER ('=' value=STRING)? ';'?
     ;
 
 enumSymbol
@@ -130,6 +130,9 @@ intSymbol
     | value=HEXCONSTANT
     ;
 
+STRING: DOUBLE_STRING | SINGLE_STRING;
+DOUBLE_STRING          : '"' ( ESC | ~ ["\\] )* '"';
+SINGLE_STRING          : '\'' ( ESC | ~ ['\\] )* '\'';
 TAGLINE         : '@' ~[\r\n]*;
 INTCONSTANT     : ('+' | '-')? '0'..'9'+;
 HEXCONSTANT     : '0x' ('0'..'9' | 'a'..'f' | 'A'..'F')+;
@@ -140,4 +143,4 @@ DOCCOMMENT      : '/**' .*? '*/';
 WHITESPACE      : [ \t\r\n]+ -> skip;
 COMMENT         : '//' ~[\r\n]* -> skip;
 MULTICOMM       : '/*' .*? '*/' -> skip;
-
+fragment ESC    : '\\' ( ["\\/bfnrt] );

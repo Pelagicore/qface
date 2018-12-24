@@ -4,7 +4,7 @@ Grammar
 
 QFace (Qt interface language) is an Interface Description Language (IDL). While it is primarily designed to define an interface between Qt, QML and C++, it is intended to be flexible enough also to be used in other contexts.
 
-The grammar of QFace is well defined and is based on the concepts of modules as larger collection of information.
+The grammar of QFace is well defined and is based on the concept of modules as larger collections of information.
 
 A module can have several interfaces, structs and/or enums/flags.
 
@@ -37,7 +37,7 @@ A QFace document always describes one module. Each document can contain one or m
 Module
 ======
 
-A module is identified name. A module should be normally a URI where all parts are lowercase (e.g. `entertainment.tuner`). A module may import other modules with the primary purpose being to ensure that dependencies are declared inside the QFace file.
+A module is identified by its name. A module should be normally a URI where all parts are lowercase (e.g. `entertainment.tuner`). A module may import other modules with the primary purpose being to ensure that dependencies are declared inside the QFace file.
 
 .. code-block:: js
 
@@ -50,7 +50,7 @@ A module is identified name. A module should be normally a URI where all parts a
 Interface
 =========
 
-An interface is a collection of properties, operation and signals. Properties carry data, whereas the operations normally modify the data. Signals are used to notify the user of changes.
+An interface is a collection of properties, operations and signals. Properties carry data, whereas the operations normally modify the data. Signals are used to notify the user of changes.
 
 .. code-block:: js
 
@@ -60,7 +60,7 @@ An interface is a collection of properties, operation and signals. Properties ca
         signal error(string message);
     }
 
-QFace allows to extends interfaces using the ``extends`` keyword after the interface name.
+QFace allows to extend interfaces using the ``extends`` keyword after the interface name.
 
 .. code-block:: js
 
@@ -75,12 +75,12 @@ QFace allows to extends interfaces using the ``extends`` keyword after the inter
 
 .. note::
 
-    For the sake of simplicity as an API designer you should carefully evaluate if this is required. The typical way in QFace to allow extension is normally to write your own code-generator and use type annotations.
+    For the sake of simplicity, as an API designer you should carefully evaluate if this is required. The typical way in QFace to allow extensions is normally to write your own code-generator and use type annotations.
 
 
     .. code-block:: js
 
-        @station
+        @extends: Station
         interface WeatherStation {
             real temperature;
         }
@@ -139,7 +139,7 @@ The value assignment for the enum type is sequential beginning from 0. To specif
         Error = 3
     }
 
-The flag type defines an enumeration type where these different values are treated as a bit mask. The values are in the sequence of the 2^n.
+The flag type defines an enumeration type where different values are treated as a bit mask. The values are in the sequence of the 2^n.
 
 .. code-block:: js
 
@@ -155,9 +155,9 @@ The flag type defines an enumeration type where these different values are treat
 Types
 =====
 
-Types are either local and can be references simply by its name, or they are from external module in this case they need to be referenced with the fully qualified name (``<module>.<symbol>``). A type can be an interface, struct, enum or flag. It is also possible to reference the inner members of the symbols with the fragment syntax (``<module>.<symbol>#<fragment>``).
+Types are either local and can be referenced simply by their names, or they are from external modules. In the latter case they need to be referenced with the fully qualified name (``<module>.<symbol>``). A type can be an interface, struct, enum or flag. It is also possible to reference the inner members of the symbols with the fragment syntax (``<module>.<symbol>#<fragment>``).
 
-A module consist of either one or more interfaces, structs and enums/flags. They can come in any number or combination. The interface is the only type which can contain properties, operations and signals. The struct is merely a container to transport structured data. An enum/flag allows the user to encode information used inside the struct or interface as data-type.
+A module consists of either one or more interfaces, structs and enums/flags. They can come in any number or combination. The interface is the only type which can contain properties, operations and signals. The struct is merely a container to transport structured data. An enum/flag allows the user to encode information used inside the struct or interface as data-type.
 
 Below is an example of a QFace file.
 
@@ -234,14 +234,14 @@ A nested type is a complex type which nests another type. These are container ty
     map<Station> stations
     model<WeatherInfo> weather
 
-A list is an array of the provided value type. A map specifies only the value type. The key-type should be generic (e.g. a string type) and can be freely choosen by the generator. This allows for example the geenrator to add an id to each structure and use it as a key in the map.
+A list is an array of the provided value type. A map specifies only the value type. The key-type should be generic (e.g. a string type) and can be freely chosen by the generator. This allows for example the generator to add an id to each structure and use it as a key in the map.
 
-A model is a special type of a list, it defines the model type can stream the data (e.g. add/change/remove) and the changes should be reflected by a more advanced API. Also the data could in general grow unlimited and the generator should provide some form of pagination or window API. You should use a model if you expect the data it represents can grow in a way it may influence the performance of your API.
+A model is a special type of a list. It should be able to stream (e.g. add/change/remove) the data and the changes should be reflected by a more advanced API. Also the data could in general grow infinitely and the generator should provide some form of pagination or window API. You should use a model if you expect the data it represents to grow in a way that it may influence the performance of your API.
 
 Annotations
 ===========
 
-Annotation allow the writer to add meta data to an interface document. It uses the `@` notation followed by valid YAML one line content.
+Annotations allow the writer to add meta data to an interface document. It uses the `@` notation followed by valid YAML one line content.
 
 .. code-block:: js
 
@@ -268,3 +268,22 @@ Currently only brief, description, see and deprecated are supported doc tags.
 The QtCPP built-in generator generates valid Qt documentation out of these comments.
 
 
+Default Values
+==============
+
+QFace supports the assignment of default values to properties and struct fields. A default values is a text string
+passed to the generator.
+
+.. code-block:: js
+
+    interface Counter {
+        int count = "0";
+        Message lastMessage;
+    }
+
+    struct Message {
+        string text = "NO DATA";
+    }
+
+You can use quotes `'` or double-quotes `"` as a marker for text. There is no type check on QFace side. The
+text-content is directly passed to the generator.

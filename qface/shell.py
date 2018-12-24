@@ -6,11 +6,11 @@ API for interacting with the system shell
 """
 
 
-def sh(cmd, **kwargs):
+def sh(args, **kwargs):
     """
     runs the given cmd as shell command
     """
-    if not cmd:
+    if not args:
         return
-    click.echo('$ {0}'.format(cmd))
-    return call(cmd, shell=True, **kwargs)
+    click.echo('$ {0}'.format(' '.join(args)))
+    return call(args, **kwargs)

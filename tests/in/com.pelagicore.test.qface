@@ -2,13 +2,12 @@ module com.pelagicore.test 1.0;
 
 import common 1.0;
 
-@service: { singleton: true}
 interface ContactService {
   State state;
-  int intValue;
-  readonly string stringValue;
-  bool boolValue;
-  real realValue;
+  int intValue = "2";
+  readonly string stringValue = "hello";
+  bool boolValue = "true";
+  real realValue = "0.1";
   var varValue;
   Contact currentContact;
   common.Date today;
@@ -39,7 +38,7 @@ flag Phase {
  * The contact information
  */
 struct Contact {
-    string name;
-    int age;
-    bool isMarried;
+    string name = "name";
+    int age = "99";
+    bool isMarried = "false";
 }

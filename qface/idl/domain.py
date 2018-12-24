@@ -126,7 +126,8 @@ class Symbol(NamedElement):
         self.comment = ''
         """comment which appeared in QFace right before symbol"""
         self._tags = dict()
-
+        """a value attached to the symbol"""
+        self.value = None
         self._contentMap = ChainMap()
         self._dependencies = set()
         self.type = TypeSymbol('', self)

@@ -1,0 +1,13 @@
+module values 1.0
+
+interface Namespace {
+    int intValue = "99"
+    real realValue = "0.99"
+    string message = "foo"
+    Person person = '{ name: "Hello", age: 101 }'
+}
+
+struct Person {
+    string name = "hello";
+    int age = "99";
+}

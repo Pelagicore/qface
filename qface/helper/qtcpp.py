@@ -3,7 +3,11 @@ Provides helper functionality specificially for Qt C++/QML code generators
 """
 import qface.idl.domain as domain
 from jinja2 import environmentfilter
-from ..filters import upper_first
+
+
+def upper_first(s):
+    s = str(s)
+    return s[0].upper() + s[1:]
 
 
 class Filters(object):
@@ -32,7 +36,7 @@ class Filters(object):
                 return 'QVariant()'
         elif t.is_void:
             return ''
-        elif t.is_enum:
+        elif t.is_enumeration:
             value = next(iter(t.reference.members))
             return '{0}::{0}Enum::{1}'.format(symbol.type, value)
         elif symbol.kind == 'enum':
@@ -54,7 +58,7 @@ class Filters(object):
     @staticmethod
     def parameterType(symbol):
         prefix = Filters.classPrefix
-        if symbol.type.is_enum:
+        if symbol.type.is_enumeration:
             return '{0}::{0}Enum {1}'.format(symbol.type, symbol)
         if symbol.type.is_void or symbol.type.is_primitive:
             if symbol.type.is_string:
@@ -84,7 +88,7 @@ class Filters(object):
     def returnType(symbol):
         prefix = Filters.classPrefix
         t = symbol.type
-        if t.is_enum:
+        if t.is_enumeration:
             return '{0}::{0}Enum'.format(symbol.type)
         if symbol.type.is_void or symbol.type.is_primitive:
             if t.is_string:
@@ -234,20 +238,20 @@ class Filters(object):
     @staticmethod
     def get_filters():
         return {
-            'defaultValue': Filters.defaultValue,
-            'returnType': Filters.returnType,
-            'parameterType': Filters.parameterType,
-            'open_ns': Filters.open_ns,
-            'close_ns': Filters.close_ns,
-            'using_ns': Filters.using_ns,
-            'ns': Filters.ns,
-            'fqn': Filters.fqn,
-            'signalName': Filters.signalName,
-            'parameters': Filters.parameters,
-            'signature': Filters.signature,
-            'identifier': Filters.identifier,
-            'path': Filters.path,
-            'className': Filters.className,
-            'source_dependencies': Filters.source_dependencies,
-            'header_dependencies': Filters.header_dependencies,
+            'qt.defaultValue': Filters.defaultValue,
+            'qt.returnType': Filters.returnType,
+            'qt.parameterType': Filters.parameterType,
+            'qt.cpp_open_ns': Filters.open_ns,
+            'qt.close_ns': Filters.close_ns,
+            'qt.using_ns': Filters.using_ns,
+            'qt.ns': Filters.ns,
+            'qt.fqn': Filters.fqn,
+            'qt.signalName': Filters.signalName,
+            'qt.parameters': Filters.parameters,
+            'qt.signature': Filters.signature,
+            'qt.identifier': Filters.identifier,
+            'qt.path': Filters.path,
+            'qt.className': Filters.className,
+            'qt.source_dependencies': Filters.source_dependencies,
+            'qt.header_dependencies': Filters.header_dependencies,
         }

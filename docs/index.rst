@@ -4,7 +4,7 @@ QFace
 
 QFace is a flexible API generator inspired by the Qt API idioms. It uses a common IDL format (called QFace interface document) to define an API. QFace is optimized to write a custom generator based on the common IDL format.
 
-There exists already several code generators for common use cases. These can be used as is or can be used as a base for a custom generator.
+Several code generators for common use cases have already been implemented. These can be used as is or can be used as a base for a custom generator.
 
 .. toctree::
    :maxdepth: 1
@@ -18,13 +18,14 @@ There exists already several code generators for common use cases. These can be 
    json
    domain
    extending
+   script
    api
 
 
 Features
 ========
 
-The list fo features is plit between features which are based on the choosen IDL and features wich are provided by the generator itself.
+The list fo features is plit between features which are based on the chosen IDL and features which are provided by the generator itself.
 
 .. rubric:: IDL Features
 
@@ -47,7 +48,7 @@ The list fo features is plit between features which are based on the choosen IDL
 Quick Start
 ===========
 
-QFace is a generator framework and is bundled with several reference code generator.
+QFace is a generator framework and is bundled with several reference code generators.
 
 To install qface you need to have python3 installed and typically also pip3
 
@@ -73,7 +74,7 @@ and then
 Custom Generator
 ----------------
 
-For your own generator you need several ingredients. A QFace interface file here called "sample.qface" a small script which loads and parses the document. And one or more template files, which generate the resulting code.
+For your own generator you need several ingredients. A QFace interface file (here called "sample.qface"), a small script which loads and parses the document (generator.py) and one or more template files, used by the script to generate the resulting code.
 
 The QFace document could look like this
 
@@ -127,7 +128,7 @@ And a "org.example.txt" file named after the module should be generated.
 Bundled Generators
 ------------------
 
-QFace has some gnerators which are bundled with the QFace library. They live in their own reposiutories. These generators are documented in the repositories.
+QFace has some generators which are bundled with the QFace library. They live in their own repositories. These generators are documented in their respective repositories.
 
 .. rubric:: See Also
 

@@ -81,9 +81,11 @@ The rules document is divided into several targets. Each target can have an own 
 
     <target>:
         <symbol>:
-            context: {}
-            destination: ''
+            context: { <key>: <value> }
+            destination: <path>
             documents:
+                <target>:<source>
+            preserve:
                 <target>:<source>
 
 * ``<target>`` is a name of the current target (e.g. client, server, plugin)

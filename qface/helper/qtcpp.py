@@ -50,7 +50,7 @@ class Filters(object):
         elif t.is_struct:
             return '{0}{1}()'.format(prefix, t)
         elif t.is_model:
-            return 'new VariantModel(this)'
+            return 'nullptr'
         elif t.is_interface:
             return 'nullptr'
         raise Exception("Unknown symbol type" + repr(symbol))
@@ -74,9 +74,9 @@ class Filters(object):
             return '{0} {1}'.format(symbol.type, symbol)
         elif symbol.type.is_list:
             nested = Filters.returnType(symbol.type.nested)
-            return 'const QVariantList &{1}'.format(nested, symbol)
+            return 'const QVariantList& {1}'.format(nested, symbol)
         elif symbol.type.is_model:
-            return 'VariantModel *{0}'.format(symbol)
+            return 'QAbstractItemModel* {0}'.format(symbol)
         elif symbol.type.is_complex:
             if symbol.type.is_interface:
                 return '{0}Base *{1}'.format(symbol.type, symbol)
@@ -109,7 +109,7 @@ class Filters(object):
             nested = Filters.returnType(symbol.type.nested)
             return 'QVariantList'.format(nested)
         elif symbol.type.is_model:
-            return 'VariantModel *'
+            return 'QAbstractItemModel* '
         elif symbol.type.is_complex:
             if symbol.type.is_interface:
                 return '{0}Base *'.format(symbol.type)
@@ -124,8 +124,6 @@ class Filters(object):
         for t in types:
             if t.is_primitive:
                 continue
-            if t.is_model:
-                lines.append('class VariantModel;')
             if t.is_interface:
                 lines.append('class {0};'.format(t))
             if t.is_struct:
@@ -142,8 +140,6 @@ class Filters(object):
         for t in types:
             if t.is_primitive:
                 continue
-            if t.is_model:
-                lines.append('#include "variantmodel.h"')
             if t.is_interface:
                 lines.append('#include "{0}.h"'.format(t.name.lower()))
         return "\n".join(lines)
@@ -241,7 +237,7 @@ class Filters(object):
             'qt.defaultValue': Filters.defaultValue,
             'qt.returnType': Filters.returnType,
             'qt.parameterType': Filters.parameterType,
-            'qt.cpp_open_ns': Filters.open_ns,
+            'qt.open_ns': Filters.open_ns,
             'qt.close_ns': Filters.close_ns,
             'qt.using_ns': Filters.using_ns,
             'qt.ns': Filters.ns,

@@ -14,19 +14,19 @@
 {%- endmacro %}
 
 {% macro property_decl(property, notifiable=True) -%}
-Q_PROPERTY({{property|qt.returnType}} {{property}} READ {{property}} {% if not property.readonly %}WRITE push{{property|upperfirst}}{% endif %}{% if not property.const and notifiable %} NOTIFY {{property}}Changed{% endif %})
+Q_PROPERTY({{property|qt.returnType}} {{property}} READ {{property}} {% if not property.readonly %}WRITE set{{property|upperfirst}}{% endif %}{% if not property.const and notifiable %} NOTIFY {{property}}Changed{% endif %})
 {%- endmacro %}
 
-{% macro property_pusher_decl(property, ending=";", prefix='virtual') -%}
+{% macro property_pusher_decl(property, ending=";", prefix='') -%}
 {{prefix}} void push{{property|upperfirst}}({{ property|qt.parameterType }}){{ending}}
 {%- endmacro %}
 
-{% macro property_setter_decl(property, ending=";", prefix='virtual') -%}
-{{prefix}} void set{{property|upperfirst}}({{ property|qt.parameterType }}){{ending}}
+{% macro property_setter_decl(property, ending=";", prefix='') -%}
+{{prefix}}void set{{property|upperfirst}}({{ property|qt.parameterType }}){{ending}}
 {%- endmacro %}
 
-{% macro property_getter_decl(property, ending=";", prefix='virtual') -%}
-{{prefix}} {{property|qt.returnType}} {{property}}() const{{ending}}
+{% macro property_getter_decl(property, ending=";", prefix='') -%}
+{{prefix}}{{property|qt.returnType}} {{property}}() const{{ending}}
 {%- endmacro %}
 
 {% macro signal_decl(symbol, postfix="") -%}

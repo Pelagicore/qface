@@ -194,7 +194,8 @@ class Generator(object):
     def _write(self, file_path: Path, template: str, context: dict, preserve: bool = False, force: bool = False):
         force = self.force or force
         path = self.resolved_path / Path(self.apply(file_path, context))
-        path.parent.makedirs_p()
+        if path.parent:
+            path.parent.makedirs_p()
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
         if self._has_different_content(data, path) or force:

@@ -1,0 +1,55 @@
+module org.qface.test 1.0
+
+interface Interface1 {
+}
+
+interface Interface2 {
+    bool v1
+    int v2
+    real v3
+    string v4
+    var v5
+}
+
+interface Interface3 {
+    list<string> list1
+    list<Type1> list2
+
+    model<string> model1
+    model<Type1> model2
+
+//    map<string> map1
+//    map<Type1> map1
+}
+
+interface Interface4 {
+    string doSimple(string p1)
+    Type1 doComplex(Type1 p1)
+    void doMany(bool p1, int p2, string p3)
+
+    signal notifyPrimitive(string p1)
+    signal notifyComplex(Type1 p1)
+}
+
+
+struct Type1 {
+    string v1
+}
+
+struct Type2 {
+    string v1
+    Type1 t1
+}
+
+
+
+enum Enumeration {
+    ZERO,
+    ONE
+}
+
+flag Flag {
+    ONE,
+    TWO,
+    FOUR
+}

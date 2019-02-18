@@ -109,6 +109,10 @@ void {{class}}::{{verb}}{{property|upperfirst}}({{ property|qt.parameterType }})
 }
 {%- endmacro %}
 
+{% macro operation_impl_start(class, operation, void=False, doc=True) -%}
+{% if not void -%}{{operation|qt.returnType}}{%- else %}void{% endif %} {{class}}::{{operation}}({{operation|qt.parameters}})
+{%- endmacro %}
+
 {% macro operation_decl(operation, ending=";", void=False) -%}
 {% if void %}
 virtual void {{operation}}({{operation|qt.parameters}}){{ending}}

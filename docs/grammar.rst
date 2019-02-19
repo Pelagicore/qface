@@ -2,15 +2,16 @@
 Grammar
 =======
 
-QFace (Qt interface language) is an Interface Description Language (IDL). While it is primarily designed to define an interface between Qt, QML and C++, it is intended to be flexible enough also to be used in other contexts.
+QFace (Quick Interface Language) is an Interface Description Language (IDL). While it is primarily designed to define an interface between Qt, QML and C++, it is intended to be flexible enough also to be used in other contexts.
 
 The grammar of QFace is well defined and is based on the concept of modules as larger collections of information.
 
-A module can have several interfaces, structs and/or enums/flags.
+A module can have several interfaces, structs and/or enums/flags. Here a not complete unformal grammar.
 
 .. code-block:: html
 
     module <module> <version>
+
     import <module> <version>
 
     interface <Identifier> {
@@ -20,7 +21,7 @@ A module can have several interfaces, structs and/or enums/flags.
     }
 
     struct <Identifier> {
-        <type> <identifier>;
+        <type> <identifier>
     }
 
     enum <Identifier> {
@@ -31,7 +32,7 @@ A module can have several interfaces, structs and/or enums/flags.
         <name> = <value>,
     }
 
-A QFace document always describes one module. Each document can contain one or more interfaces, structs, flags or enums. Each document can import other modules using the import statement.
+A QFace document always describes one module. It is convention that a qface document is named after the module. If the same module appears in different documents the behavior is not defined currently. Each document can contain one or more interfaces, structs, flags or enums. Each document can import other modules using the import statement.
 
 
 Module
@@ -46,6 +47,8 @@ A module is identified by its name. A module should be normally a URI where all 
 
     import org.common 1.0
 
+
+.. note:: The parser will not validate if the module exists yet. It will just provide the reference to the module and will try to resolve the module on code-generation runtime.
 
 Interface
 =========
@@ -62,6 +65,9 @@ An interface is a collection of properties, operations and signals. Properties c
 
 QFace allows to extend interfaces using the ``extends`` keyword after the interface name.
 
+.. note:: It is in the responsibility of the author to ensure the order of interfaces are correct. E.g. the base interface should come before the depending interface. QFace does not try to re-order interfaces based on dependency. The order they appear in the document is the order they are passed to the code generator.
+
+
 .. code-block:: js
 
     interface Station {
@@ -75,12 +81,12 @@ QFace allows to extend interfaces using the ``extends`` keyword after the interf
 
 .. note::
 
-    For the sake of simplicity, as an API designer you should carefully evaluate if this is required. The typical way in QFace to allow extensions is normally to write your own code-generator and use type annotations.
+    For the sake of simplicity, as an API designer you should carefully evaluate if an extension is required. The typical way in QFace to allow extensions is normally to write your own code-generator and use type annotations for kind of interfaces.
 
 
     .. code-block:: js
 
-        @extends: Station
+        @kind: Station
         interface WeatherStation {
             real temperature;
         }
@@ -88,11 +94,10 @@ QFace allows to extend interfaces using the ``extends`` keyword after the interf
     The API reader does not need to know the internals of the API. The station behavior would be automatically attached by the custom generator.
 
 
-
 Struct
 ======
 
-The struct resembles a data container. It consist of a set of fields where each field has a data type and a name.
+The struct resembles a data container. It consist of a set of fields where each field has a name and a data type. Data types can be primitive of complex types.
 
 .. code-block:: js
 
@@ -112,29 +117,31 @@ Structs can also be nested. A struct can be used everywhere where a type can be 
         signal error(Error error);
     }
 
+.. note:: When you nest structs, ensure the used struct comes before the using structs and there are no circular dependencies. The order struct appear is the same order they are passed to the code generator.
+
 
 
 Enum/Flag
 =========
 
-An enum and flag is an enumeration type. The value of each member is automatically assigned if missing.
+An enum and flag is an enumeration type. The value of each member is automatically assigned if missing and starts with 0.
 
 .. code-block:: js
 
     enum State {
-        Null,
-        Loading,
-        Ready,
-        Error
+        Null,       // implicit 0
+        Loading,    // will be one
+        Ready,      // will be two
+        Error       // will be three
     }
 
-The value assignment for the enum type is sequential beginning from 0. To specify the exact value you can assign a value to the member.
+The value assignment for the enum type is sequential beginning from 0. To specify the exact value you can assign a value to the member. The value can also be written in hex form (e.f. 0xN).
 
 .. code-block:: js
 
     enum State {
         Null = 0,
-        Loading = 1,
+        Loading = 0x1,
         Ready = 2,
         Error = 3
     }
@@ -144,12 +151,11 @@ The flag type defines an enumeration type where different values are treated as 
 .. code-block:: js
 
     flag Cell {
-        Null,
-        Box,
-        Wall,
-        Figure
+        Null,   // starting value is one
+        Box,    // value is two
+        Wall,   // value is four
+        Figure  // value is eight
     }
-
 
 
 Types

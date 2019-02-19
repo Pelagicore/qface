@@ -1,7 +1,7 @@
-Generator Examples
-==================
+Reference Generators
+====================
 
-QFace does provide some real world generators which are hosted as separated projects. Their purpose is merely to showcase how to write a code generator with QFace. They are working and complete examples of general purpose generators.
+QFace does provide some real world reference generators which are hosted as separated projects. Their purpose is merely to showcase how to write a code generator using QFace. They are working and complete examples of general purpose generators.
 
 `qface-qtcpp`_
 

@@ -2,6 +2,8 @@
 QFace
 =====
 
+* see https://github.com/pelagicore/qface
+
 QFace is a flexible API generator inspired by the Qt API idioms. It uses a common IDL format (called QFace interface document) to define an API. QFace is optimized to write a custom generator based on the common IDL format.
 
 Several code generators for common use cases have already been implemented. These can be used as is or can be used as a base for a custom generator.
@@ -11,30 +13,30 @@ Several code generators for common use cases have already been implemented. Thes
 
    motivation
    usage
-   builtin
+   reference
    grammar
    annotations
    yaml
    json
    domain
    extending
-   script
+   rules
    api
 
 
 Features
 ========
 
-The list fo features is plit between features which are based on the chosen IDL and features which are provided by the generator itself.
+The list fo features is split between features which are based on the chosen IDL and features which are provided by the generator itself.
 
 .. rubric:: IDL Features
 
 - Common modern IDL
 - Scalable through modules
-- Structure through structs, enums, flags
+- Structured data through structs, enums, flags
 - Interface API with properties, operations and signals
 - Annotations using YAML syntax
-- Documentable IDL
+- Fully documentable
 
 .. rubric:: Generator Features
 
@@ -62,25 +64,19 @@ You can verify that you have qface installed with
 
 .. code-block:: sh
 
-    python3
-
-and then
-
-.. code-block:: python3
-
-    import qface
+    qface --help
 
 
 Custom Generator
 ----------------
 
-For your own generator you need several ingredients. A QFace interface file (here called "sample.qface"), a small script which loads and parses the document (generator.py) and one or more template files, used by the script to generate the resulting code.
+To write a custom generator it is normally enough to write a generator rules and the used templates. We use a QFace interface file (here called "sample.qface") as an example.
 
 The QFace document could look like this
 
 .. code-block:: thrift
 
-    // sample.qface
+    // interfaces/sample.qface
     module org.example 1.0
 
     interface Echo {
@@ -88,35 +84,35 @@ The QFace document could look like this
     }
 
 
-Your generator can now parse the documents and call the templates
-
-.. code-block:: python3
-
-    // generator.py
-    from qface.generator import FileSystem, Generator
-
-    system = FileSystem.parse('sample.qface')
-    generator = Generator('./templates')
-    for module in system.modules:
-        ctx = { 'module' : module }
-        generator.write('{{module}}.txt', 'module.tpl', ctx)
-
-The final piece is the template to parameterize the output in this case called "module.tpl"
+We need now to write our templates for the code generation. In our example we would simple print out for each module the interfaces and it's operations.
 
 .. code-block:: jinja
 
-    // templates/module.tpl
+    {# templates/module.tpl #}
     {% for interface in module.interfaces %}
-    {{module.name}}
+    {{module}}.{{interface}}
     {% endfor %}
 
-Now you can simple call your script
+This will write for each interface in the module the text ``<module>.<interface>``. The rules file will define what shall be generated and where.
+
+.. code-block:: yaml
+
+    # qface-rules.yaml
+
+    project:
+      module:
+        documents:
+          - {{module}}.csv: module.tpl
+
+The first entry defined a scope (e.g. project). Then for each module we geenrated documents. We use the module.tpl document from the templates folder and generate a CSV document based on the module name.
+
+Now you can simple call your rules document
 
 .. code-block:: bash
 
-    python3 generator.py
+    qface --rules qface-rules.yaml --target output interfaces
 
-And a "org.example.txt" file named after the module should be generated.
+And a "org.example.csv" file named after the module should be generated.
 
 .. rubric:: See Also
 
@@ -125,15 +121,14 @@ And a "org.example.txt" file named after the module should be generated.
 * :doc:`domain`
 * :doc:`api`
 
-Bundled Generators
-------------------
+Generators
+----------
 
-QFace has some generators which are bundled with the QFace library. They live in their own repositories. These generators are documented in their respective repositories.
+QFace has several generator maintained by the qface team. They are maintained and documented in their own repositories.
 
-.. rubric:: See Also
+* https://github.com/pelagicore/qface-qtcpp
+* https://github.com/pelagicore/qface-qtqml
 
-* :doc:`qtcpp`
-* :doc:`qtqml`
 
 
 

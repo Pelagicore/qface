@@ -5,56 +5,48 @@ Usage
 Concept
 =======
 
-QFace requires one or more IDL files as input file and a generator to produce output files. The IDL files are named QFace interface documents.
+QFace requires one or more IDL files as input file and a custom generator to produce output files. The IDL files are named QFace interface documents.
 
 .. figure:: qface_concept.jpg
 
-To use QFace you need to write your own generator. A generator is a small python script which reads the QFace document and writes code using template files.
+To use QFace you need to write your own generator. A generator is a small rules document which reads the QFace document and writes code using template files.
 
-.. code-block:: python
+.. code-block:: yaml
 
-    # gen.py
-    from qface.generator import FileSystem, Generator
+    # rules-qface.yaml
+    project:
+        interface:
+            - {{interface}}.h: interface.h
+            - {{interface}}.h: interface.cpp
+            - Makefile: Makefile
 
-    def generate(input, output):
-        # parse the interface files
-        system = FileSystem.parse(input)
-        # setup the generator
-        generator = Generator(search_path='templates')
-        # create a context object
-        ctx = {'output': output, 'system': system}
-        # apply the context on the template and write the output to file
-        generator.write('{{output}}/modules.csv', 'modules.csv', ctx)
 
-    # call the generation function
-    generate('sample.qface', 'out')
-
+You then call the script using the qface executable.
 
 .. code-block:: sh
 
-    python3 gen.py
+    qface --rules rules-qface.yaml --target output echo.qface
 
 
 Code Generation Principle
 =========================
 
-The code generation is driven by a small script which iterates over the domain model and writes files using the Python Jinja template language. Refer to http://jinja.pocoo.org and particularly the template designer documentation at http://jinja.pocoo.org/docs/dev/templates/.
+The code generation is driven by a rules document which applies the domain model and writes files using the Python Jinja template language.
 
-.. code-block:: python
+.. note:: Refer to http://jinja.pocoo.org and particularly the template designer documentation at http://jinja.pocoo.org/docs/dev/templates/.
 
-    from qface.generator import FileSystem, Generator
+.. code-block:: yaml
 
-    def generate(input, output):
-        system = FileSystem.parse(input)
-        generator = Generator(searchpath='templates')
-        ctx = {'output': output, 'system': system}
-        generator.write('{{output}}/modules.csv', 'modules.csv', ctx)
+    project:
+        system:
+            - project_report.csv: report.tpl
 
 
-This script reads the input directory and returns a system object from the domain model. This is used as the root object for the code generation inside the template language.
+The qface executable reads the input qface files and converts them into a domain model. The domain model is then passed into the rules document. Inside the rules document you specify scopes and matches. If a ``system`` is specified as the match the ``system`` is passed into the given template documents.
 
 .. code-block:: jinja
 
+    {# templates/report.tpl #}
     {% for module in system.modules %}
         {%- for interface in module.interfaces -%}
         INTERFACE, {{module}}.{{interface}}
@@ -67,4 +59,30 @@ This script reads the input directory and returns a system object from the domai
         {% endfor -%}
     {% endfor %}
 
-The template iterates over the domain objects and generates text which is written into the output file. Using the generator write method ``generator.write(path, template, context)`` the output file path can be specified.
+The template iterates over the domain objects and generates text which is written into the output file in the given target folder.
+
+You call the yaml document by calling the qface executable and provide the rules document as also the output document. The domain model is created based on the given input files.
+
+.. code-block:: sh
+
+    qface --rules rules-qface.yaml --target output echo.qface
+
+
+To know more about the different options just ask the help of qface.
+
+.. code-block:: sh
+
+    qface --help
+
+    Usage: qface [OPTIONS] [SOURCE]...
+
+    Options:
+      --rules PATH
+      --target DIRECTORY
+      --reload / --no-reload      Auto reload script on changes
+      --scaffold / --no-scaffold  Add extrac scaffolding code
+      --watch DIRECTORY
+      --feature TEXT
+      --run TEXT                  run script after generation
+      --force / --no-force        forces overwriting of files
+      --help                      Show this message and exit.

@@ -2,7 +2,7 @@
 QFace
 =====
 
-* see https://github.com/pelagicore/qface
+.. note:: Repository is hosted at https://github.com/pelagicore/qface
 
 QFace is a flexible API generator inspired by the Qt API idioms. It uses a common IDL format (called QFace interface document) to define an API. QFace is optimized to write a custom generator based on the common IDL format.
 

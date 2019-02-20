@@ -2,8 +2,102 @@
 Extending
 *********
 
-QFace is easy to use and easy to extend. Your generator is just a small python
-script using the qface library.
+QFace is easy to use and easy to extend with your own generator. The standard way is to write a rules document to control the code generation. The more complicated path is to write your generator using just a small python script which uses qface as library.
+
+Rules Extensions
+================
+
+The rules extension uses a YAML based document to control the code generation. The document is structured roughly like this:
+
+.. code-block:: yml
+
+    <scope>:
+        when: <feature-list>
+        context: <context map update>
+        path: <target path prefix>
+        source: <source prefix>
+        <qualifier>:
+            when: <feature-list>
+            context: <context map update>
+            path: <target path prefix>
+            source: <source prefix>
+            documents:
+                - <target>: <source>
+            preserved:
+                - <target>: <source>
+
+
+.. rubric:: `scope` entry
+
+Scope is a logical distribution of generator. For example if you write a client/server generator you may want to have a ``client`` and ``server`` scope. This enables you also to switch a scope off using the ``when`` condition.
+
+.. rubric:: `qualifier` entry
+
+The qualifier defines the domain model type this code generation section shall be applied to. Valid qualifiers are ``system``, ``module``, ``interface``, ``struct`` and ``enum``.
+
+
+.. rubric:: `when` entry
+
+The  `when` entry defines a condition when this part of the code generation is enabled. For example you may have some code generation parts, which create a scaffold project. By passing in the scaffold flag or by  enabling the scaffold feature this part would then also be evaluated. By default when is true.
+
+.. rubric:: `context` entry
+
+The contexct map allows you to extend the cotnext given to the template. Each context key will then accessible in the template.
+
+.. rubric:: `path` entry
+
+The path is the path appended to the target directory. So the full export path for a template is ``<target>/<path>/<template>``.
+
+.. rubric:: `source` entry
+
+The source prefixed to the template name. For example to not to repeat the ``server`` folder for the next templates you can set the ``source`` to ``server``.
+
+
+.. rubric:: `documents` entry
+
+The documents section is a list of target, source templates. The source defines the template document used to produce the target document. The target document can have a fully qualified template syntax, for example ``{{interface}}.h``, where the interface name is looked up using the given context. When generating existing documents will be overriden.
+
+.. rubric:: `preserve` entry
+
+Very similar to the documents section. The only difference is that existing documents will be preserved. You can overrule this using the ``--force`` command line option.
+
+Preserved is useful when generated document shall be edited by the user and a new run of the generator shall not overwrite (preserve) the edited document.
+
+.. rubric:: Example
+
+Below is a more complex rules document from the qtcpp generator using one scope called ``project``.
+
+.. code-block:: yaml
+
+    project:
+        system:
+            documents:
+                - '{{project}}.pro': 'project.pro'
+                - '.qmake.conf': 'qmake.conf'
+                - 'CMakeLists.txt': 'CMakeLists.txt'
+        module:
+            path: '{{module|identifier}}'
+            documents:
+                - 'CMakeLists.txt': 'plugin/CMakeLists.txt'
+                - 'qmldir': 'plugin/qmldir'
+                - 'generated/generated.pri': 'plugin/generated/generated.pri'
+                - 'generated/{{module|identifier}}_gen.h': 'plugin/generated/module.h'
+                - 'generated/{{module|identifier}}_gen.cpp': 'plugin/generated/module.cpp'
+                - 'docs/plugin.qdocconf': 'plugin/docs/plugin.qdocconf'
+                - 'docs/plugin-project.qdocconf': 'plugin/docs/plugin-project.qdocconf'
+                - 'docs/docs.pri': 'plugin/docs/docs.pri'
+            preserve:
+                - '{{module|identifier}}.pro': 'plugin/plugin.pro'
+                - 'plugin.cpp': 'plugin/plugin.cpp'
+                - 'plugin.h': 'plugin/plugin.h'
+        interface:
+            preserve:
+                - '{{interface|lower}}.h': 'plugin/interface.h'
+                - '{{interface|lower}}.cpp': 'plugin/interface.cpp'
+
+
+Script Extensions
+=================
 
 The script iterates over the domain model and writes files using a template
 language.

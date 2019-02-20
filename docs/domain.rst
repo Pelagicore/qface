@@ -16,12 +16,11 @@ The IDL is converted into an in memory domain model (see qface/idl/domain.py)
                 - Property
                 - Operation
                 - Signal
+            - Struct
             - Enum
             - Flag
-            - Struct
 
-
-The domain model is the base for the code generation. You traverse the domain tree and trigger your own code generation.
+The domain model is the base for the code generation. You traverse the domain tree and trigger your own code generation. Below you see a python example to traverse the model. Normally you do not need todo this, as the rules generator does the traversing for you.
 
 .. code-block:: python
 
@@ -29,7 +28,7 @@ The domain model is the base for the code generation. You traverse the domain tr
 
     system = FileSystem.parse('./interfaces')
 
-    for module in sytem.modules:
+    for module in system.modules:
         print(module.name)
 
         for interfaces in module.interfaces:
@@ -39,22 +38,23 @@ The domain model is the base for the code generation. You traverse the domain tr
             print(struct.name)
 
 
-Debug
------
+The rules generator calls the template directive for each domain element found and it is up to the template to place the code in the right place.
 
-At any time you can place a debug breakpoint:
+.. code-block:: yml
 
-.. code-block:: python
-
-    import ipdb; ipd.set_trace()
-
-
-See https://pypi.python.org/pypi/ipdb
-
-
-To see the object members just use:
-
-.. code-block:: python
-
-    dir(module) # list all members of module
-    help(module) # prints the documentation
+    project:
+        system:
+            documents:
+                - '{{system}}.txt': 'system.txt'
+        module:
+            documents:
+                - '{{module}}.txt': 'module.txt'
+        interface:
+            documents:
+                - '{{interface}}.txt': 'interface.txt'
+        struct:
+            documents:
+                - '{{struct}}.txt': 'struct.txt'
+        enum:
+            documents:
+                - '{{enum}}.txt': 'enum.txt'

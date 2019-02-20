@@ -35,8 +35,20 @@ The code generation is driven by a rules document which applies the domain model
 
 .. note:: Refer to http://jinja.pocoo.org and particularly the template designer documentation at http://jinja.pocoo.org/docs/dev/templates/.
 
+The initial folder structure should have a rules file and in the templates folder the required templates.
+
+.. code-block:: text
+
+  qface-rules.yml
+  templates/report.tpl
+
+
+The rules document provides the rules for code-generation.
+
+
 .. code-block:: yaml
 
+    # qface-rules.yml
     project:
         system:
             - project_report.csv: report.tpl
@@ -67,6 +79,14 @@ You call the yaml document by calling the qface executable and provide the rules
 
     qface --rules rules-qface.yaml --target output echo.qface
 
+The output would then look like this.
+
+.. code-block:: text
+
+  output/project_report.csv
+
+
+.. rubric:: More ...
 
 To know more about the different options just ask the help of qface.
 

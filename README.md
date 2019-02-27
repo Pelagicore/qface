@@ -108,8 +108,8 @@ system = FileSystem.parse('echo.qface')
 generator = Generator(searchpath='.')
 
 # iterate over the domain model
-for module in system:
-    for interface in module:
+for module in system.modules:
+    for interface in module.interfaces:
         # prepare a context object
         ctx = { 'interface': interface }
         # use header.h template with ctx to write to a file

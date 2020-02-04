@@ -11,7 +11,6 @@ import os
 import yaml
 import logging
 import logging.config
-from livereload import Server, shell
 
 
 here = Path(__file__).abspath().dirname()
@@ -51,100 +50,6 @@ def test(debug):
 def test_ci():
     """run the tests for CI integration"""
     sh('python3 -m pytest --cov=qface -v -l tests/')
-
-
-class RunTestChangeHandler(FileSystemEventHandler):
-    def __init__(self, clickContext):
-        super().__init__()
-        self.clickContext = clickContext
-
-    def on_any_event(self, event):
-        if event.is_directory:
-            return
-        if Path(event.src_path).ext == '.py':
-            sh('python3 -m pytest')
-
-
-@cli.command()
-@click.pass_context
-def test_monitor(ctx):
-    """run the tests and re-run on changes"""
-    sh('python3 -m pytest')
-    while True:
-        event_handler = RunTestChangeHandler(ctx)
-        observer = Observer()
-        observer.schedule(event_handler, './tests', recursive=True)
-        observer.schedule(event_handler, './qface', recursive=True)
-        observer.start()
-        try:
-            while True:
-                time.sleep(1)
-        except KeyboardInterrupt:
-            observer.stop()
-        observer.join()
-
-
-class RunScriptChangeHandler(FileSystemEventHandler):
-    def __init__(self, script):
-        super().__init__()
-        self.script = script
-        self.is_running = False
-
-    def on_modified(self, event):
-        if event.src_path.endswith('.cache'):
-            return
-        self.run()
-
-    def run(self):
-        if self.is_running:
-            return
-        self.is_running = True
-        sh(self.script, cwd=Path.getcwd())
-        self.is_running = False
-
-
-@cli.command()
-@click.argument('script', nargs=1, type=click.Path(exists=True))
-@click.argument('input', nargs=-1, type=click.Path(exists=True))
-@click.argument('output', nargs=1, type=click.Path(exists=True))
-def reload(script, input, output):
-    """
-    reloads the generator script when the script files
-    or the input files changes
-    """
-    script = Path(script).expand().abspath()
-    output = Path(output).expand().abspath()
-    input = input if isinstance(input, (list, tuple)) else [input]
-    output.makedirs_p()
-    _script_reload(script, input, output)
-
-
-def _script_reload(script, input, output):
-    """run the named generator and monitor the input and generator folder"""
-    input = [Path(entry).expand().abspath() for entry in input]
-    output = Path(output).expand().abspath()
-    cmd = 'python3 {0} {1} {2}'.format(script, ' '.join(input), output)
-    event_handler = RunScriptChangeHandler(cmd)
-    event_handler.run()  # run always once
-    observer = Observer()
-    path = script.dirname().expand().abspath()
-    click.secho('watch: {0}'.format(path), fg='blue')
-    observer.schedule(event_handler, path, recursive=True)
-    for entry in input:
-        entry = entry.dirname().expand().abspath()
-        click.secho('watch: {0}'.format(entry), fg='blue')
-        observer.schedule(event_handler, entry, recursive=True)
-    path = Path(__file__).parent / 'qface'
-    click.secho('watch: {0}'.format(path), fg='blue')
-    observer.schedule(event_handler, path, recursive=True)
-    observer.start()
-
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
 
 
 @click.option('--editable/--no-editable', default=False, help='install editable package')

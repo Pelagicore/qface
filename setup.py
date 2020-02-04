@@ -44,15 +44,15 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'click',
+        'click==6.7',
         'antlr4-python3-runtime==4.7.1',
-        'jinja2',
-        'path.py',
-        'pyyaml',
-        'typing',
-        'watchdog',
-        'six',
-        'coloredlogs',
+        'jinja2==2.10',
+        'path.py==11.0.1',
+        'pyyaml==5.1',
+        'typing==3.6.4',
+        'watchdog==0.8.3',
+        'six==1.11.0',
+        'coloredlogs==10.0',
     ],
     extras_require={
         'dev': [

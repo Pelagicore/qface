@@ -47,7 +47,7 @@ def test(debug):
 
 
 @cli.command()
-def test_ci():
+def test-ci():
     """run the tests for CI integration"""
     sh('python3 -m pytest --cov=qface -v -l tests/')
 

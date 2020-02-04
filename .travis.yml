@@ -2,4 +2,4 @@ language: python
 python:
   - "3.6"
 install: "pip install -r requirements.txt"
-script: ./cli.py test-ci
+script: ./cli.py test_ci

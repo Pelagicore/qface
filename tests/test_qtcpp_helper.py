@@ -98,12 +98,12 @@ def test_return_type():
     # check for model of primitive
     prop = interface._propertyMap['model001']
     answer = qtcpp.Filters.returnType(prop)
-    assert answer == 'VariantModel *'
+    assert answer == 'QAbstractItemModel *'
 
     # check for model of structs
     prop = interface._propertyMap['model002']
     answer = qtcpp.Filters.returnType(prop)
-    assert answer == 'VariantModel *'
+    assert answer == 'QAbstractItemModel *'
 
 
 def test_default_value():
@@ -139,7 +139,7 @@ def test_default_value():
     # check for flag
     prop = interface._propertyMap['state']
     answer = qtcpp.Filters.defaultValue(prop)
-    assert answer == '0'
+    assert answer == 'ApplicationState::ApplicationStateEnum::Suspended'
 
     # check for list of primitive
     prop = interface._propertyMap['list001']
@@ -154,12 +154,12 @@ def test_default_value():
     # check for model of primitive
     prop = interface._propertyMap['model001']
     answer = qtcpp.Filters.defaultValue(prop)
-    assert answer == 'new VariantModel(this)'
+    assert answer == 'nullptr'
 
     # check for model of structs
     prop = interface._propertyMap['model002']
     answer = qtcpp.Filters.defaultValue(prop)
-    assert answer == 'new VariantModel(this)'
+    assert answer == 'nullptr'
 
 
 def test_parameter_type():
@@ -206,12 +206,12 @@ def test_parameter_type():
     # check for model of primitive
     prop = interface._propertyMap['model001']
     answer = qtcpp.Filters.parameterType(prop)
-    assert answer == 'VariantModel *{0}'.format(prop.name)
+    assert answer == 'QAbstractItemModel *{0}'.format(prop.name)
 
     # check for model of structs
     prop = interface._propertyMap['model002']
     answer = qtcpp.Filters.parameterType(prop)
-    assert answer == 'VariantModel *{0}'.format(prop.name)
+    assert answer == 'QAbstractItemModel *{0}'.format(prop.name)
 
 
 def test_namespace():

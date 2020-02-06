@@ -74,9 +74,9 @@ class Filters(object):
             return '{0} {1}'.format(symbol.type, symbol)
         elif symbol.type.is_list:
             nested = Filters.returnType(symbol.type.nested)
-            return 'const QVariantList& {1}'.format(nested, symbol)
+            return 'const QVariantList &{1}'.format(nested, symbol)
         elif symbol.type.is_model:
-            return 'QAbstractItemModel* {0}'.format(symbol)
+            return 'QAbstractItemModel *{0}'.format(symbol)
         elif symbol.type.is_complex:
             if symbol.type.is_interface:
                 return '{0}Base *{1}'.format(symbol.type, symbol)
@@ -109,7 +109,7 @@ class Filters(object):
             nested = Filters.returnType(symbol.type.nested)
             return 'QVariantList'.format(nested)
         elif symbol.type.is_model:
-            return 'QAbstractItemModel* '
+            return 'QAbstractItemModel *'
         elif symbol.type.is_complex:
             if symbol.type.is_interface:
                 return '{0}Base *'.format(symbol.type)

@@ -23,8 +23,6 @@ from .idl.domain import System
 from .idl.listener import DomainListener
 from .filters import get_filters
 
-from jinja2.debug import make_traceback as _make_traceback
-
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:

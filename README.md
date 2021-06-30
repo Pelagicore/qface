@@ -1,6 +1,7 @@
 # Qt Interface Builder (QFace)
 
-[![Build Status](https://travis-ci.org/Pelagicore/qface.svg?branch=develop)](https://travis-ci.org/Pelagicore/qface)
+[![Build Status](https://github.com/Pelagicore/qface/workflows/Python%20package/badge.svg)](https://github.com/Pelagicore/qface/actions/workflows/python-package.yml)
+[![Weekly Build Status](https://github.com/Pelagicore/qface/workflows/Weekly%20Check/badge.svg)](https://github.com/Pelagicore/qface/actions/workflows/weekly.yml)
 [![Documentation Status](https://readthedocs.org/projects/qface/badge/?version=latest)](http://qface.readthedocs.io/en/latest/?badge=latest)
 [![Chat at https://gitter.im/qmlbook/qface](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/qmlbook/qface?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 

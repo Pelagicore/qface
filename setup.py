@@ -29,6 +29,7 @@ setup(
     version=__version__,
     description=__summary__,
     long_description=long_description,
+    long_description_content_type="text/markdown",
     url=__uri__,
     author=__author__,
     author_email=__author_email__,

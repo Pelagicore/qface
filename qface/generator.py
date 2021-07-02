@@ -62,7 +62,7 @@ class ReportingErrorListener(ErrorListener.ErrorListener):
         self.document = document
 
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
-        msg = '{0}:{1}:{2} {2}'.format(self.document, line, column, msg)
+        msg = '{0}:{1}:{2} {3}'.format(self.document, line, column, msg)
         click.secho(msg, fg='red')
         raise ValueError(msg)
 
@@ -301,6 +301,9 @@ class FileSystem(object):
             click.secho('{0}: error: file not found'.format(document), fg='red', err=True)
             error = True
         except ValueError as e:
+            # The error is already printed in the ErrorHandler in this case
+            error = True
+        except Exception as e:
             click.secho('Error parsing document {0}'.format(document), fg='red', err=True)
             error = True
         if error and FileSystem.strict:
@@ -332,6 +335,7 @@ class FileSystem(object):
         lexer = TLexer(stream)
         stream = CommonTokenStream(lexer)
         parser = TParser(stream)
+        parser.removeErrorListeners()
         parser.addErrorListener(ReportingErrorListener(document))
         tree = parser.documentSymbol()
         walker = ParseTreeWalker()

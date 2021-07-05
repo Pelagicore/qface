@@ -143,7 +143,7 @@ class Generator(object):
     def get_template(self, name):
         """Retrieves a single template file from the template loader"""
         source = name
-        if name and name[0] is '/':
+        if name and name[0] == '/':
             source = name[1:]
         elif self.source is not None:
             source = '/'.join((self.source, name))

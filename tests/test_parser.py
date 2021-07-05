@@ -111,8 +111,8 @@ def test_enum_counter():
     enum = system.lookup('com.pelagicore.test.State')
     assert type(enum) is domain.Enum
     assert enum
-    assert enum._memberMap['Null'].value is 0
-    assert enum._memberMap['Failure'].value is 3
+    assert enum._memberMap['Null'].value == 0
+    assert enum._memberMap['Failure'].value == 3
 
 
 def test_flag_counter():
@@ -120,9 +120,9 @@ def test_flag_counter():
     flag = system.lookup('com.pelagicore.test.Phase')
     assert type(flag) is domain.Enum
     assert flag
-    assert flag._memberMap['PhaseOne'].value is 1
-    assert flag._memberMap['PhaseTwo'].value is 2
-    assert flag._memberMap['PhaseThree'].value is 4
+    assert flag._memberMap['PhaseOne'].value == 1
+    assert flag._memberMap['PhaseTwo'].value == 2
+    assert flag._memberMap['PhaseThree'].value == 4
 
 
 def test_flag():

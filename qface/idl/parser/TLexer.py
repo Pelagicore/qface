@@ -230,7 +230,9 @@ class TLexer(Lexer):
 
     def __init__(self, input=None, output:TextIO = sys.stdout):
         super().__init__(input, output)
-        self.checkVersion("4.7.1")
+        # Disable the version check for now as although there is a mismatch the Lexer seems to work fine.
+        # Rely on the weekly CI to make sure this keeps working also with later antlr versions.
+        # self.checkVersion("4.7.1")
         self._interp = LexerATNSimulator(self, self.atn, self.decisionsToDFA, PredictionContextCache())
         self._actions = None
         self._predicates = None

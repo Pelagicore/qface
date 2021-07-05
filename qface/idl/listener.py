@@ -24,7 +24,7 @@ contextMap = {}
 
 
 def escape_decode(s):
-    """removes \-escapes from str"""
+    """removes \\-escapes from str"""
     return codecs.decode(bytes(s, 'utf-8'), 'unicode_escape')        
 
 class QFaceListener(TListener):
@@ -99,7 +99,7 @@ class DomainListener(QFaceListener):
                 type.nested = TypeSymbol("", type)
                 self.parse_type(ctxSymbol, type.nested)
         if not type.module.checkType(type):
-            log.warn('Unknown type: {0}. Missing import?'.format(type.name))
+            log.warning('Unknown type: {0}. Missing import?'.format(type.name))
 
     def parse_annotations(self, ctx, symbol):
         assert ctx and symbol

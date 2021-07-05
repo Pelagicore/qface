@@ -15,7 +15,7 @@ import logging.config
 
 here = Path(__file__).abspath().dirname()
 
-logging.config.dictConfig(yaml.load((here / 'log.yaml').open()))
+logging.config.dictConfig(yaml.load((here / 'log.yaml').open(), Loader=yaml.FullLoader))
 logger = logging.getLogger(__name__)
 
 
@@ -84,11 +84,11 @@ def pack():
     sh('unzip -l dist/*.whl')
 
 
-@cli.command()
-def docs_serve():
-    server = Server()
-    server.watch('docs/*.rst', shell('make html', cwd='docs'))
-    server.serve(root='docs/_build/html', open_url=True)
+#@cli.command()
+#def docs_serve():
+#    server = Server()
+#    server.watch('docs/*.rst', shell('make html', cwd='docs'))
+#    server.serve(root='docs/_build/html', open_url=True)
 
 
 @cli.command()

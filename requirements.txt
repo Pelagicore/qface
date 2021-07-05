@@ -1,13 +1,13 @@
 antlr4-python3-runtime>=4.7.1
 argh>=0.26.2
-click>==6.7
+click>=6.7
 coloredlogs>=10.0
 humanfriendly>=4.15.1
-Jinja2>=2.11.3
+Jinja2>=2.10.3
 MarkupSafe>=1.0
 path.py>=11.0.1
 pathtools>=0.1.2
-PyYAML>=5.4
+PyYAML>=5.1
 six>=1.11.0
 typing>=3.6.4
 watchdog>=0.8.3

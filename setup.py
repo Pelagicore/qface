@@ -47,9 +47,9 @@ setup(
     install_requires=[
         'click>=6.7',
         'antlr4-python3-runtime>=4.7.1',
-        'jinja2>=2.11.3',
+        'jinja2>=2.10.3',
         'path.py>=11.0.1',
-        'pyyaml>=5.4',
+        'pyyaml>=5.1',
         'typing>=3.6.4',
         'watchdog>=0.8.3',
         'six>=1.11.0',

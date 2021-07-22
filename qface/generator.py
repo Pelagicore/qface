@@ -41,15 +41,6 @@ def merge(a, b):
     return a
 
 
-def template_error_handler(traceback):
-    exc_type, exc_obj, exc_tb = traceback.exc_info
-    error = exc_obj
-    if isinstance(exc_type, TemplateError):
-        error = exc_obj.message
-    message = '{0}:{1}: error: {2}'.format(exc_tb.tb_frame.f_code.co_filename, exc_tb.tb_lineno, error)
-    click.secho(message, fg='red', err=True)
-
-
 class TestableUndefined(StrictUndefined):
     """Return an error for all undefined values, but allow testing them in if statements"""
     def __bool__(self):
@@ -91,7 +82,6 @@ class Generator(object):
             trim_blocks=True,
             lstrip_blocks=True,
         )
-        self.env.exception_handler = template_error_handler
         self.env.filters.update(get_filters())
         self._destination = Path()
         self._path = Path()
@@ -185,7 +175,11 @@ class Generator(object):
             click.secho(message, fg='red', err=True)
             error = True
         except TemplateError as exc:
-            # Just return with an error, the generic template_error_handler takes care of printing it
+            exc_tb = sys.exc_info()[2]
+            while exc_tb.tb_next != None:
+                exc_tb = exc_tb.tb_next
+            message = '{0}:{1}: error: {2}'.format(exc_tb.tb_frame.f_code.co_filename, exc_tb.tb_lineno, exc.message)
+            click.secho(message, fg='red', err=True)
             error = True
 
         if error and Generator.strict:

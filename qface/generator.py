@@ -344,7 +344,11 @@ class FileSystem(object):
         if not Path(document).exists():
             return
         meta = FileSystem.load_yaml(document)
-        click.secho('merge: {0}'.format(document.name), fg='blue')
+        if not meta:
+            click.secho('skipping empty: {0}'.format(document.name), fg='blue')
+            return
+        else:
+            click.secho('merge: {0}'.format(document.name), fg='blue')
         try:
             for identifier, data in meta.items():
                 symbol = system.lookup(identifier)

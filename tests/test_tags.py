@@ -69,6 +69,16 @@ def test_merge_annotation():
     assert interface.attribute('extra', 'extraA') is True
 
 @patch('sys.stderr', new_callable=StringIO)
+def test_merge_empty_annotation(mock_stderr):
+    system = loadTuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    assert interface
+    FileSystem.merge_annotations(system, inputPath / 'empty_tuner_annotations.yaml')
+
+    assert interface.attribute('extra', 'extraA') is None
+    assert not mock_stderr.getvalue().__contains__("Error parsing annotation")
+
+@patch('sys.stderr', new_callable=StringIO)
 def test_merge_broken_annotation(mock_stderr):
     system = loadTuner()
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')

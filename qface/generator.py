@@ -345,10 +345,15 @@ class FileSystem(object):
             return
         meta = FileSystem.load_yaml(document)
         click.secho('merge: {0}'.format(document.name), fg='blue')
-        for identifier, data in meta.items():
-            symbol = system.lookup(identifier)
-            if symbol:
-                merge(symbol.tags, data)
+        try:
+            for identifier, data in meta.items():
+                symbol = system.lookup(identifier)
+                if symbol:
+                    merge(symbol.tags, data)
+        except Exception as e:
+            click.secho('Error parsing annotation {0}: {1}'.format(document, e), fg='red', err=True)
+            if FileSystem.strict:
+                sys.exit(-1)
 
     @staticmethod
     def parse(input, identifier: str = None, use_cache=False, clear_cache=True, pattern="*.qface", profile=EProfile.FULL):
@@ -391,6 +396,8 @@ class FileSystem(object):
         if not document.exists():
             if required:
                 click.secho('yaml document does not exists: {0}'.format(document), fg='red', err=True)
+                if FileSystem.strict:
+                    sys.exit(-1)
             return {}
         try:
             return yaml.load(document.text(), Loader=Loader)
@@ -399,4 +406,6 @@ class FileSystem(object):
             if hasattr(exc, 'problem_mark'):
                 error = '{0}:{1}'.format(error, exc.problem_mark.line+1)
             click.secho('{0}: error: {1}'.format(error, str(exc)), fg='red', err=True)
+            if FileSystem.strict:
+                sys.exit(-1)
         return {}

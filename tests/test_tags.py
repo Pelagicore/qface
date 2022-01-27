@@ -1,4 +1,6 @@
 from qface.generator import FileSystem
+from unittest.mock import patch
+from io import StringIO
 import logging
 import logging.config
 from path import Path
@@ -57,5 +59,31 @@ def test_flag():
     assert interface.attribute('config', 'c') == 'C'  # use value from IDL
     assert interface.tags['data'] == [1, 2, 3]  # array annotatiom
 
+def test_merge_annotation():
+    system = loadTuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    assert interface
+    assert interface.attribute('config', 'private') is True
+    assert interface.attribute('extra', 'extraA') is None
+    FileSystem.merge_annotations(system, inputPath / 'tuner_annotations.yaml')
+    assert interface.attribute('extra', 'extraA') is True
 
+@patch('sys.stderr', new_callable=StringIO)
+def test_merge_broken_annotation(mock_stderr):
+    system = loadTuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    assert interface
+    FileSystem.merge_annotations(system, inputPath / 'broken_tuner_annotations.yaml')
 
+    assert interface.attribute('extra', 'extraA') is None
+    assert mock_stderr.getvalue().__contains__("tests/in/broken_tuner_annotations.yaml:2: error: mapping values are not allowed")
+
+@patch('sys.stderr', new_callable=StringIO)
+def test_merge_invalid_annotation(mock_stderr):
+    system = loadTuner()
+    interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')
+    assert interface
+    FileSystem.merge_annotations(system, inputPath / 'invalid_tuner_annotations.yaml')
+
+    assert interface.attribute('extra', 'extraA') is None
+    assert mock_stderr.getvalue() == "Error parsing annotation tests/in/invalid_tuner_annotations.yaml: not able to lookup symbol: Tunerrrrrrrr\n"

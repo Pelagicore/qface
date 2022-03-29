@@ -2,7 +2,10 @@
 Provides helper functionality specificially for Qt C++/QML code generators
 """
 import qface.idl.domain as domain
-from jinja2 import environmentfilter
+try:
+    from jinja2 import pass_environment
+except ImportError:
+    from jinja2 import environmentfilter as pass_environment
 
 
 def upper_first(s):
@@ -182,7 +185,7 @@ class Filters(object):
         return s
 
     @staticmethod
-    @environmentfilter
+    @pass_environment
     def parameters(env, s, filter=None, spaces=True):
         if not filter:
             filter = Filters.parameterType
@@ -203,7 +206,7 @@ class Filters(object):
         return indent.join([filter(a) for a in args])
 
     @staticmethod
-    @environmentfilter
+    @pass_environment
     def signature(env, s, expand=False, filter=None):
         if not filter:
             filter = Filters.returnType

@@ -404,7 +404,11 @@ class FileSystem(object):
                     sys.exit(-1)
             return {}
         try:
-            return yaml.load(document.text(), Loader=Loader)
+            # Silence the deprecation warning in newer path.py
+            # but keep supporting older versions
+            if not hasattr(Path, 'read_text'):
+                document.read_text = document.text
+            return yaml.load(document.read_text(), Loader=Loader)
         except yaml.YAMLError as exc:
             error = document
             if hasattr(exc, 'problem_mark'):

@@ -42,7 +42,11 @@ jobs:
         #flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        python -m pytest -v -s -l -W error::DeprecationWarning
+        if [ ${{ matrix.dependencies }} == "latest" ]; then
+          python -m pytest -v -s -l -W error::DeprecationWarning
+        else
+          python -m pytest -v -s -l
+        fi
 
   upload:
     needs: [ build ]

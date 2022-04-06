@@ -37,4 +37,4 @@ jobs:
         fi
     - name: Test with pytest
       run: |
-        python -m pytest -v -s -l
+        python -m pytest -v -s -l -W error::DeprecationWarning

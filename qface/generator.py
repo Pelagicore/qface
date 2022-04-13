@@ -15,9 +15,15 @@ import click
 import sys
 import os
 
-from .idl.parser.TLexer import TLexer
-from .idl.parser.TParser import TParser
-from .idl.parser.TListener import TListener
+import antlr4.atn.ATNDeserializer
+if (antlr4.atn.ATNDeserializer.SERIALIZED_VERSION == 3):
+    from .idl.parser.TLexer import TLexer
+    from .idl.parser.TParser import TParser
+    from .idl.parser.TListener import TListener
+elif (antlr4.atn.ATNDeserializer.SERIALIZED_VERSION == 4):
+    from .idl.parser.T4Lexer import T4Lexer as TLexer
+    from .idl.parser.T4Parser import T4Parser as TParser
+    from .idl.parser.T4Listener import T4Listener as TListener
 from .idl.profile import EProfile
 from .idl.domain import System
 from .idl.listener import DomainListener

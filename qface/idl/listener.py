@@ -1,8 +1,14 @@
 # Copyright (c) Pelagicore AB 2016
 import logging
 
-from .parser.TListener import TListener
-from .parser.TParser import TParser
+import antlr4.atn.ATNDeserializer
+if (antlr4.atn.ATNDeserializer.SERIALIZED_VERSION == 3):
+    from .parser.TListener import TListener
+    from .parser.TParser import TParser
+elif (antlr4.atn.ATNDeserializer.SERIALIZED_VERSION == 4):
+    from .parser.T4Listener import T4Listener as TListener
+    from .parser.T4Parser import T4Parser as TParser
+
 from .domain import *
 from antlr4 import ParserRuleContext
 import yaml

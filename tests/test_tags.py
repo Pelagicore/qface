@@ -41,6 +41,9 @@ def test_tag():
     assert 'default' in enum.tags
     assert enum.attribute('default', 'value') == 'FM'
 
+    # lookup system
+    system = system.lookup('system')
+    assert 'global_option' in system.tags
 
 def test_meta_tags():
     system = loadTuner()

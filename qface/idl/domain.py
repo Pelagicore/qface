@@ -35,6 +35,7 @@ class System(object):
     """The root entity which consist of modules"""
     def __init__(self):
         log.debug('System()')
+        self._tags = dict()
         self._moduleMap = OrderedDict()  # type: dict[str, Module]
 
     def __unicode__(self):
@@ -42,6 +43,30 @@ class System(object):
 
     def __repr__(self):
         return '<System>'
+
+    @property
+    def tags(self):
+        return self._tags
+
+    def add_tag(self, tag):
+        """ add a tag to the tag list """
+        if tag not in self._tags:
+            self._tags[tag] = dict()
+
+    def add_attribute(self, tag, name, value):
+        """ add an attribute (nam, value pair) to the named tag """
+        self.add_tag(tag)
+        d = self._tags[tag]
+        d[name] = value
+
+    def tag(self, name):
+        """ return tag by name """
+        return self._tags[name]
+
+    def attribute(self, tag, name):
+        """ return attribute by tag and attribute name """
+        if tag in self._tags and name in self._tags[tag]:
+            return self._tags[tag][name]
 
     @property
     def modules(self):
@@ -53,6 +78,8 @@ class System(object):
         # <module>
         if name in self._moduleMap:
             return self._moduleMap[name]
+        if name == 'system':
+            return self;
         # <module>.<Symbol>
         (module_name, type_name, fragment_name) = self.split_typename(name)
         if not module_name in self._moduleMap:

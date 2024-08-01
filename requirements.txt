@@ -6,6 +6,6 @@ Jinja2>=2.10.3
 MarkupSafe>=1.0
 PyYAML>=5.1
 six>=1.11.0
-watchdog>=0.8.3
+watchdog>=1.0
 pytest>=5.3.5
 pytest-cov>=2.8.1

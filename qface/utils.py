@@ -19,6 +19,6 @@ def load_filters(path):
     ctx = {
         'filters': {}
     }
-    exec(path.text(), ctx)
+    exec(path.read_text(), ctx)
     return ctx['filters']
 

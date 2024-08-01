@@ -1,4 +1,5 @@
 from qface.generator import FileSystem, Generator
+from qface.utils import load_filters
 from unittest.mock import patch
 from io import StringIO
 import logging
@@ -43,6 +44,10 @@ def test_parse_document():
     system = FileSystem.parse(inputPath / 'com.pelagicore.ivi.tuner.qface')
     assert system.lookup('com.pelagicore.ivi.tuner')
 
+def test_extra_filters():
+    system = FileSystem.parse(inputPath / 'com.pelagicore.ivi.tuner.qface')
+    load_filters(Path('tests/templates/filters.py'))
+    assert system.lookup('com.pelagicore.ivi.tuner')
 
 def test_parse_document_list():
     src = [inputPath / 'com.pelagicore.ivi.tuner.qface',

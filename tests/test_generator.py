@@ -4,7 +4,8 @@ from io import StringIO
 import logging
 import logging.config
 import tempfile
-from path import Path
+from pathlib import Path
+import shutil
 
 # logging.config.fileConfig('logging.ini')
 logging.basicConfig()
@@ -62,8 +63,8 @@ def test_parse_document_mixed():
 def test_destination_prefix():
     system = FileSystem.parse(inputPath)
     out = Path('tests/out')
-    out.rmtree_p()
-    out.makedirs_p()
+    shutil.rmtree(out, ignore_errors=True)
+    out.mkdir(parents=True, exist_ok=True)
     generator = Generator(search_path='tests/templates')
     for module in system.modules:
         dst_template = '{{out}}/{{module|lower}}.txt'
@@ -71,7 +72,7 @@ def test_destination_prefix():
         generator.write(dst_template, 'module.txt', ctx)
         path = generator.apply(dst_template, ctx)
         assert Path(path).exists() == True
-    out.rmtree_p()
+    shutil.rmtree(out, ignore_errors=True)
 
 @patch('sys.stderr', new_callable=StringIO)
 def test_error_template_syntax_error(mock_stderr):

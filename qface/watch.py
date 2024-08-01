@@ -1,7 +1,7 @@
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 import click
-from path import Path
+from pathlib import Path
 import time
 from subprocess import call
 

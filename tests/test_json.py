@@ -1,6 +1,6 @@
 from qface.generator import FileSystem
 import logging
-from path import Path
+from pathlib import Path
 import json
 
 # logging.config.fileConfig('logging.ini')

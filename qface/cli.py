@@ -1,6 +1,6 @@
 import sys
 import click
-from path import Path
+from pathlib import Path
 from qface.generator import FileSystem, RuleGenerator
 from qface.watch import monitor
 

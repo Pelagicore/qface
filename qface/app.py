@@ -4,7 +4,7 @@
 import sys
 import click
 import logging
-from path import Path
+from pathlib import Path
 from qface.generator import FileSystem, RuleGenerator
 from qface.watch import monitor
 from qface.utils import load_filters

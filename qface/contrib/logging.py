@@ -2,7 +2,7 @@ import yaml
 import logging
 import logging.config
 import coloredlogs
-from path import Path
+from pathlib import Path
 import os
 
 

@@ -4,7 +4,7 @@
 from jinja2 import Environment, Template, Undefined, StrictUndefined
 from jinja2 import FileSystemLoader, PackageLoader, ChoiceLoader
 from jinja2 import TemplateSyntaxError, TemplateNotFound, TemplateError
-from path import Path
+from pathlib import Path
 from antlr4 import InputStream, FileStream, CommonTokenStream, ParseTreeWalker
 from antlr4.error import DiagnosticErrorListener, ErrorListener
 import shelve
@@ -195,7 +195,7 @@ class Generator(object):
         force = self.force or force
         path = self.resolved_path / Path(self.apply(file_path, context))
         if path.parent:
-            path.parent.makedirs_p()
+            path.parent.mkdir(parents=True, exist_ok=True)
         logger.info('write {0}'.format(path))
         data = self.render(template, context)
         if self._has_different_content(data, path) or force:
@@ -324,7 +324,7 @@ class FileSystem(object):
         logger.debug('parse document: {0}'.format(document))
         stream = FileStream(str(document), encoding='utf-8')
         system = FileSystem._parse_stream(stream, system, document, profile)
-        FileSystem.merge_annotations(system, document.stripext() + '.yaml')
+        FileSystem.merge_annotations(system, os.path.splitext(document)[0] + '.yaml')
         return system
 
     @staticmethod
@@ -351,10 +351,10 @@ class FileSystem(object):
             return
         meta = FileSystem.load_yaml(document)
         if not meta:
-            click.secho('skipping empty: {0}'.format(document.name), fg='blue')
+            click.secho('skipping empty: {0}'.format(Path(document).name), fg='blue')
             return
         else:
-            click.secho('merge: {0}'.format(document.name), fg='blue')
+            click.secho('merge: {0}'.format(Path(document).name), fg='blue')
         try:
             for identifier, data in meta.items():
                 symbol = system.lookup(identifier)
@@ -393,7 +393,7 @@ class FileSystem(object):
             if path.is_file():
                 FileSystem.parse_document(path, system)
             else:
-                for document in path.walkfiles(pattern):
+                for document in path.rglob(pattern):
                     FileSystem.parse_document(document, system)
 
         if use_cache:

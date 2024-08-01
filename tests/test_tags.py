@@ -3,7 +3,7 @@ from unittest.mock import patch
 from io import StringIO
 import logging
 import logging.config
-from path import Path
+from pathlib import Path
 
 
 # logging.config.fileConfig('logging.ini')

@@ -158,7 +158,7 @@ The `RuleGenerator` allows you to extract the documentation rules into an extern
 .. code-block:: python
 
     from qface.generator import FileSystem, RuleGenerator
-    from path import Path
+    from pathlib import Path
 
     here = Path(__file__).dirname()
 

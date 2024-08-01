@@ -5,7 +5,7 @@ import click
 from subprocess import call
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
-from path import Path
+from pathlib import Path
 import time
 import os
 import yaml
@@ -13,13 +13,13 @@ import logging
 import logging.config
 
 
-here = Path(__file__).absolute().dirname()
+here = Path(__file__).absolute().parent
 
 logging.config.dictConfig(yaml.load((here / 'log.yaml').open(), Loader=yaml.FullLoader))
 logger = logging.getLogger(__name__)
 
 
-os.environ['PYTHONPATH'] = Path.cwd()
+os.environ['PYTHONPATH'] = str(Path.cwd())
 
 
 def sh(cmd, all=False, **kwargs):

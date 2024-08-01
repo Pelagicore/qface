@@ -2,7 +2,7 @@ from qface.generator import FileSystem
 from qface.helper import doc
 import logging
 import logging.config
-from path import Path
+from pathlib import Path
 
 
 # logging.config.fileConfig('logging.ini')

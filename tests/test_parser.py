@@ -1,7 +1,7 @@
 import logging
 import logging.config
 import pytest
-from path import Path
+from pathlib import Path
 
 from qface.generator import FileSystem
 import qface.idl.domain as domain

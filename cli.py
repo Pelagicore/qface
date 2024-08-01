@@ -13,13 +13,13 @@ import logging
 import logging.config
 
 
-here = Path(__file__).abspath().dirname()
+here = Path(__file__).absolute().dirname()
 
 logging.config.dictConfig(yaml.load((here / 'log.yaml').open(), Loader=yaml.FullLoader))
 logger = logging.getLogger(__name__)
 
 
-os.environ['PYTHONPATH'] = Path.getcwd()
+os.environ['PYTHONPATH'] = Path.cwd()
 
 
 def sh(cmd, all=False, **kwargs):
@@ -35,7 +35,7 @@ def cli():
 @cli.command()
 def antlr():
     """generate a new parser based on the grammar using antlr"""
-    cwd = str(Path('qface/idl/parser').abspath())
+    cwd = str(Path('qface/idl/parser').absolute())
     sh('antlr4 -Dlanguage=Python3 -Werror -package qface.idl.parser -o . -listener -visitor T.g4', cwd=cwd)
 
 
@@ -56,7 +56,7 @@ def test_ci():
 @cli.command()
 def install(editable):
     """install the script onto the system using pip3"""
-    script_dir = str(Path(__file__).parent.abspath())
+    script_dir = str(Path(__file__).parent.absolute())
     click.secho(script_dir, fg='blue')
     if editable:
         sh('pip3 install --editable {0} --upgrade'.format(script_dir))

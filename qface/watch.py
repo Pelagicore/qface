@@ -25,7 +25,7 @@ class RunScriptChangeHandler(FileSystemEventHandler):
         if self.is_running:
             return
         self.is_running = True
-        call(self.args, cwd=Path.getcwd())
+        call(self.args, cwd=Path.cwd())
         self.is_running = False
 
 
@@ -34,11 +34,11 @@ def monitor(args, watch):
     reloads the script given by argv when src files changes
     """
     watch = watch if isinstance(watch, (list, tuple)) else [watch]
-    watch = [Path(entry).expand().abspath() for entry in watch]
+    watch = [Path(entry).expand().absolute() for entry in watch]
     event_handler = RunScriptChangeHandler(args)
     observer = Observer()
     for entry in watch:
-        if entry.isfile():
+        if entry.is_file():
             entry = entry.parent
         click.secho('watch recursive: {0}'.format(entry), fg='blue')
         observer.schedule(event_handler, entry, recursive=True)

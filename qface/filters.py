@@ -20,7 +20,7 @@ def load_filters(path):
         return {}
 
     extra_filters = {}
-    spec = importlib.util.spec_from_file_location('filters', path.abspath())
+    spec = importlib.util.spec_from_file_location('filters', path.absolute())
     filters_module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(filters_module)
     filters_module.get_filters(extra_filters)

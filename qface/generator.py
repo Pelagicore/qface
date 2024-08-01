@@ -389,8 +389,8 @@ class FileSystem(object):
                 system = cache[identifier]
         # if domain model not cached generate it
         for input in inputs:
-            path = Path.getcwd() / str(input)
-            if path.isfile():
+            path = Path.cwd() / str(input)
+            if path.is_file():
                 FileSystem.parse_document(path, system)
             else:
                 for document in path.walkfiles(pattern):

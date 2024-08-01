@@ -10,7 +10,7 @@ logging.basicConfig()
 log = logging.getLogger(__name__)
 
 inputPath = Path('tests/in')
-log.debug('input path folder: {0}'.format(inputPath.abspath()))
+log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def load_tuner():

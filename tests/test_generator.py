@@ -12,7 +12,7 @@ logging.basicConfig()
 log = logging.getLogger(__name__)
 
 inputPath = Path('tests/in')
-log.debug('input path folder: {0}'.format(inputPath.abspath()))
+log.debug('input path folder: {0}'.format(inputPath.absolute()))
 
 
 def loadSystem():
@@ -67,7 +67,7 @@ def test_destination_prefix():
     generator = Generator(search_path='tests/templates')
     for module in system.modules:
         dst_template = '{{out}}/{{module|lower}}.txt'
-        ctx = {'out': out.abspath(), 'module': module}
+        ctx = {'out': out.absolute(), 'module': module}
         generator.write(dst_template, 'module.txt', ctx)
         path = generator.apply(dst_template, ctx)
         assert Path(path).exists() == True

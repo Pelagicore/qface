@@ -36,13 +36,14 @@ def escape_decode(s):
 class QFaceListener(TListener):
     def __init__(self, system, profile=EProfile.FULL):
         super().__init__()
-        click.secho('qface uses language profile: {}'.format(profile), fg='blue')
+        if profile != EProfile.FULL:
+            log.secho('qface uses language profile: {}'.format(profile), fg='blue')
         self.lang_features = get_features(profile)
         self.system = system or System()  # type:System
 
     def check_support(self, feature, report=True):
         if feature not in self.lang_features and report:
-            click.secho('Unsuported language feature: {}'.format(EFeature.IMPORT), fg='red')
+            log.error('Unsuported language feature: {}'.format(EFeature.IMPORT), fg='red')
             return False
         return True
 

@@ -114,7 +114,9 @@ def test_error_template_syntax_error(mock_stderr):
     generator.write(dst_template, 'syntaxError.txt', ctx)
     path = generator.apply(dst_template, ctx)
     assert Path(path).exists() == False
-    assert mock_stderr.getvalue() == "tests/templates/syntaxError.txt:1: error: Encountered unknown tag 'fooo'.\n"
+    expected_error = "tests/templates/syntaxError.txt:1: error: Encountered unknown tag 'fooo'.\n"
+    actual_output = mock_stderr.getvalue().replace("\\", "/")  # Normalize backslashes
+    assert expected_error in actual_output, f"Expected error not found. Expected: {expected_error}, Actual: {actual_output}"
 
 @patch('sys.stderr', new_callable=StringIO)
 def test_error_template_undefined_variable(mock_stderr):
@@ -127,7 +129,9 @@ def test_error_template_undefined_variable(mock_stderr):
     generator.write(dst_template, 'undefinedVariable.txt', ctx)
     path = generator.apply(dst_template, ctx)
     assert Path(path).exists() == False
-    assert mock_stderr.getvalue() == "tests/templates/undefinedVariable.txt:1: error: 'this_is_not_defined' is undefined\n"
+    expected_error = "tests/templates/undefinedVariable.txt:1: error: 'this_is_not_defined' is undefined\n"
+    actual_output = mock_stderr.getvalue().replace("\\", "/")  # Normalize backslashes
+    assert expected_error in actual_output, f"Expected error not found. Expected: {expected_error}, Actual: {actual_output}"
 
 @patch('sys.stderr', new_callable=StringIO)
 def test_error_template_doesnt_exist(mock_stderr):

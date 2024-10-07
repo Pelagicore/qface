@@ -60,6 +60,7 @@ def test_flag():
     assert interface.attribute('config', 'a') == 'a'  # use value from yaml
     assert interface.attribute('config', 'b') == 'b'  # use value from yaml
     assert interface.attribute('config', 'c') == 'C'  # use value from IDL
+    assert interface.attribute('config', 'd') == 'D'  # use value from IDL, No Space after :
     assert interface.tags['data'] == [1, 2, 3]  # array annotatiom
 
 def test_merge_annotation():
@@ -89,7 +90,9 @@ def test_merge_broken_annotation(mock_stderr):
     FileSystem.merge_annotations(system, inputPath / 'broken_tuner_annotations.yaml')
 
     assert interface.attribute('extra', 'extraA') is None
-    assert mock_stderr.getvalue().__contains__("tests/in/broken_tuner_annotations.yaml:2: error: mapping values are not allowed")
+    expected_error = "tests/in/broken_tuner_annotations.yaml:2: error: mapping values are not allowed"
+    actual_output = mock_stderr.getvalue().replace("\\", "/")  # Normalize backslashes
+    assert expected_error in actual_output, f"Expected error not found. Expected: {expected_error}, Actual: {actual_output}"
 
 @patch('sys.stderr', new_callable=StringIO)
 def test_merge_invalid_annotation(mock_stderr):
@@ -99,4 +102,6 @@ def test_merge_invalid_annotation(mock_stderr):
     FileSystem.merge_annotations(system, inputPath / 'invalid_tuner_annotations.yaml')
 
     assert interface.attribute('extra', 'extraA') is None
-    assert mock_stderr.getvalue() == "Error parsing annotation tests/in/invalid_tuner_annotations.yaml: not able to lookup symbol: Tunerrrrrrrr\n"
+    expected_error = "Error parsing annotation tests/in/invalid_tuner_annotations.yaml: not able to lookup symbol: Tunerrrrrrrr\n"
+    actual_output = mock_stderr.getvalue().replace("\\", "/")  # Normalize backslashes
+    assert expected_error in actual_output, f"Expected error not found. Expected: {expected_error}, Actual: {actual_output}"

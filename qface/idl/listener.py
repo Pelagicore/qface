@@ -1,5 +1,6 @@
 # Copyright (c) Pelagicore AB 2016
 import logging
+import re
 
 import antlr4.atn.ATNDeserializer
 if (antlr4.atn.ATNDeserializer.SERIALIZED_VERSION == 3):
@@ -115,6 +116,7 @@ class DomainListener(QFaceListener):
             symbol.comment = comment
         if ctx.tagSymbol():
             lines = [tag.line.text[1:] for tag in ctx.tagSymbol()]
+            lines = [re.sub(r':\s*', ': ', line) for line in lines]
             try:
                 data = yaml.load('\n'.join(lines), Loader=Loader)
                 symbol._tags = data

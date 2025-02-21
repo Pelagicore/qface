@@ -130,6 +130,7 @@ class DomainListener(QFaceListener):
         if ctx.tagSymbol():
             lines = [tag.line.text[1:] for tag in ctx.tagSymbol()]
             try:
+                self.validate_yaml(lines)
                 data = yaml.load('\n'.join(lines), Loader=Loader)
                 self.validate_keys(data)
                 symbol._tags = data

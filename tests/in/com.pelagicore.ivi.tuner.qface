@@ -9,7 +9,7 @@ interface BaseTuner {
 /** Service Tuner */
 @service: true
 @interface: true
-@config: {private: true, b: B, c: C, d:D}
+@config: {private: true, b: B, c: {C: e}, d: "qrc:/path"}
 @data: [1,2,3]
 interface Tuner extends BaseTuner {
     /** property currentStation */

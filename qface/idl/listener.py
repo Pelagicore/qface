@@ -109,6 +109,19 @@ class DomainListener(QFaceListener):
         if not type.module.checkType(type):
             log.warning('Unknown type: {0}. Missing import?'.format(type.name))
 
+    def validate_keys(self, data, path=""):
+        """ Recursively check if any key contains `:` (which indicates a missing space issue) """
+        if isinstance(data, dict):
+            for key, value in data.items():
+                if ":" in key:
+                    error_msg = f"Invalid YAML: Missing space after ':' in key `{path}{key}`"
+                    click.secho(error_msg, fg='red', err=True)
+                    raise ValueError(error_msg)
+                self.validate_keys(value, path + key + ".")
+        elif isinstance(data, list):
+            for item in data:
+                self.validate_keys(item, path)
+
     def parse_annotations(self, ctx, symbol):
         assert ctx and symbol
         if ctx.comment:
@@ -116,12 +129,13 @@ class DomainListener(QFaceListener):
             symbol.comment = comment
         if ctx.tagSymbol():
             lines = [tag.line.text[1:] for tag in ctx.tagSymbol()]
-            lines = [re.sub(r':\s*', ': ', line) for line in lines]
             try:
                 data = yaml.load('\n'.join(lines), Loader=Loader)
+                self.validate_keys(data)
                 symbol._tags = data
-            except yaml.YAMLError as exc:
-                click.secho(str(exc), fg='red')
+            except (yaml.YAMLError, ValueError) as exc:
+                click.secho(f"YAML Parsing Error: while parsing {lines}, error: {str(exc)}", fg='red', err=True)
+                raise
 
     def parse_value(self, ctx, symbol):
         self.check_support(EFeature.DEFAULT_VALUES)

@@ -110,11 +110,10 @@ class DomainListener(QFaceListener):
             log.warning('Unknown type: {0}. Missing import?'.format(type.name))
 
     def validate_keys(self, data, path=""):
-        """ Recursively check if any key contains `:` (which indicates a missing space issue) """
         if isinstance(data, dict):
             for key, value in data.items():
                 if ":" in key:
-                    error_msg = f"Invalid YAML: Missing space after ':' in key `{path}{key}`"
+                    error_msg = f"Invalid YAML: Missing space after ':' in key '{path}{key}'"
                     click.secho(error_msg, fg='red', err=True)
                     raise ValueError(error_msg)
                 self.validate_keys(value, path + key + ".")

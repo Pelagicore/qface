@@ -131,6 +131,6 @@ def test_broken_annotation_2(mock_stderr):
     path = inputPath / 'com.pelagicore.four.qface'
     system = FileSystem.parse_document(path)
     assert system is None
-    expected_error = "YAML Parsing Error: while parsing [\'config: { qml_type:{key: value} }\']"
+    expected_error = "Invalid YAML: Missing space after ':' in key 'config.qml_type.key:value'"
     actual_output = mock_stderr.getvalue().replace("\\", "/")  # Normalize backslashes
     assert expected_error in actual_output, f"Expected error not found. Expected: {expected_error}, Actual: {actual_output}"

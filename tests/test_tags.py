@@ -59,8 +59,10 @@ def test_flag():
     assert interface.attribute('config', 'private') is True
     assert interface.attribute('config', 'a') == 'a'  # use value from yaml
     assert interface.attribute('config', 'b') == 'b'  # use value from yaml
-    assert interface.attribute('config', 'c') == 'C'  # use value from IDL
-    assert interface.attribute('config', 'd') == 'D'  # use value from IDL, No Space after :
+    nestedVal = interface.attribute('config', 'c')
+    assert nestedVal == {'C': 'e'}
+    assert nestedVal['C'] == 'e'
+    assert interface.attribute('config', 'd') == 'qrc:/path'  # use value from IDL, Value containing :
     assert interface.tags['data'] == [1, 2, 3]  # array annotatiom
 
 def test_merge_annotation():
@@ -103,5 +105,32 @@ def test_merge_invalid_annotation(mock_stderr):
 
     assert interface.attribute('extra', 'extraA') is None
     expected_error = "Error parsing annotation tests/in/invalid_tuner_annotations.yaml: not able to lookup symbol: Tunerrrrrrrr\n"
+    actual_output = mock_stderr.getvalue().replace("\\", "/")  # Normalize backslashes
+    assert expected_error in actual_output, f"Expected error not found. Expected: {expected_error}, Actual: {actual_output}"
+
+@patch('sys.stderr', new_callable=StringIO)
+def test_broken_annotation(mock_stderr):
+    path = inputPath / 'com.pelagicore.two.qface'
+    system = FileSystem.parse_document(path)
+    assert system is None
+    expected_error = "Invalid YAML: Missing space after ':' in key 'config.qml_type:\"UiAddressBook\"'"
+    actual_output = mock_stderr.getvalue().replace("\\", "/")  # Normalize backslashes
+    assert expected_error in actual_output, f"Expected error not found. Expected: {expected_error}, Actual: {actual_output}"
+
+@patch('sys.stderr', new_callable=StringIO)
+def test_broken_annotation_1(mock_stderr):
+    path = inputPath / 'com.pelagicore.three.qface'
+    system = FileSystem.parse_document(path)
+    assert system is None
+    expected_error = "YAML Parsing Error: while parsing [\'config:{ qml_type: \"UiAddressBook\" }\']"
+    actual_output = mock_stderr.getvalue().replace("\\", "/")  # Normalize backslashes
+    assert expected_error in actual_output, f"Expected error not found. Expected: {expected_error}, Actual: {actual_output}"
+
+@patch('sys.stderr', new_callable=StringIO)
+def test_broken_annotation_2(mock_stderr):
+    path = inputPath / 'com.pelagicore.four.qface'
+    system = FileSystem.parse_document(path)
+    assert system is None
+    expected_error = "Invalid YAML: Missing space after ':' in key 'config.qml_type.key:value'"
     actual_output = mock_stderr.getvalue().replace("\\", "/")  # Normalize backslashes
     assert expected_error in actual_output, f"Expected error not found. Expected: {expected_error}, Actual: {actual_output}"

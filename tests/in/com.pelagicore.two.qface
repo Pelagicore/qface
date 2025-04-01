@@ -1,0 +1,6 @@
+module com.pelagicore.two 1.0;
+
+@config: { qml_type:"UiAddressBook" }
+interface TwoService {
+    StringStruct message;
+}

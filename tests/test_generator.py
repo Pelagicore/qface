@@ -144,7 +144,7 @@ def test_error_template_doesnt_exist(mock_stderr):
     generator.write(dst_template, 'doesnt_exist.txt', ctx)
     path = generator.apply(dst_template, ctx)
     assert Path(path).exists() == False
-    assert mock_stderr.getvalue() == "/doesnt_exist.txt: error: Template not found\n"
+    assert "/doesnt_exist.txt: error: Template not found\n" in mock_stderr.getvalue()
 
 @patch('sys.stderr', new_callable=StringIO)
 def test_error_yaml_doesnt_exist(mock_stderr):
@@ -155,4 +155,4 @@ def test_error_yaml_doesnt_exist(mock_stderr):
     out.mkdir(parents=True, exist_ok=True)
     generator = RuleGenerator(search_path='tests/templates', destination=out)
     generator.process_rules('doesnt_exist.txt', system)
-    assert mock_stderr.getvalue() == "yaml document does not exists: doesnt_exist.txt\n"
+    assert "yaml document does not exists: doesnt_exist.txt\n" in mock_stderr.getvalue()

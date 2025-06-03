@@ -15,23 +15,7 @@ jobs:
     uses: ./.github/workflows/build-test.yml
 
   upload:
+    uses: ./.github/workflows/python-package.yml
     needs: [ build ]
-    runs-on: ubuntu-20.04
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.7
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install setuptools wheel twine
-        pip install -r requirements_minimal.txt;
-    - name: Upload to PyPI
-      run: |
-        python3 setup.py sdist bdist_wheel --build-number $GITHUB_RUN_NUMBER
-        python3 -m twine upload --skip-existing dist/*
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+    with:
+      use_testpypi: false

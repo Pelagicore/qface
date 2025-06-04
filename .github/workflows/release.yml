@@ -17,5 +17,6 @@ jobs:
   upload:
     uses: ./.github/workflows/python-package.yml
     needs: [ build ]
+    secrets: inherit
     with:
       use_testpypi: false

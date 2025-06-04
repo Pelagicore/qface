@@ -19,5 +19,6 @@ jobs:
     uses: ./.github/workflows/python-package.yml
     needs: [ build ]
     if: ${{ github.event_name == 'push' }}
+    secrets: inherit
     with:
       use_testpypi: true

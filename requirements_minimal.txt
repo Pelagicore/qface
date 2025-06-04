@@ -7,5 +7,6 @@ MarkupSafe==1.1
 PyYAML==5.1
 six==1.11.0
 watchdog==1.0
-pytest==6.2.5
+pytest==6.2.5; python_version < '3.14'
+pytest==8; python_version >= '3.14'
 pytest-cov==2.8.1

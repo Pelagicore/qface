@@ -30,9 +30,9 @@ from .idl.listener import DomainListener
 from .filters import get_filters
 
 try:
-    from yaml import CLoader as Loader, CDumper as Dumper
+    from yaml import CSafeLoader as Loader, CDumper as Dumper
 except ImportError:
-    from yaml import Loader, Dumper
+    from yaml import SafeLoader as Loader, Dumper
 
 logger = logging.getLogger(__name__)
 

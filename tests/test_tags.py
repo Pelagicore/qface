@@ -85,6 +85,28 @@ def test_merge_empty_annotation(mock_stderr):
     assert not mock_stderr.getvalue().__contains__("Error parsing annotation")
 
 @patch('sys.stderr', new_callable=StringIO)
+def test_merge_unsafe_annotation(mock_stderr):
+    # Regression test for #122: annotation YAML must be parsed with a safe loader,
+    # so that tags such as !!python/object/apply cannot instantiate arbitrary
+    # Python objects (which would allow code execution from a crafted file).
+    import yaml
+    from qface.generator import Loader
+
+    # The loader used by load_yaml() must reject Python object instantiation.
+    raised = False
+    try:
+        yaml.load("x: !!python/object/apply:os.getenv ['PATH']", Loader=Loader)
+    except yaml.YAMLError:
+        raised = True
+    assert raised, "unsafe YAML tag accepted: the annotation loader is not safe"
+
+    # The real annotation loading path rejects such a file and loads nothing.
+    result = FileSystem.load_yaml(inputPath / 'unsafe_tuner_annotations.yaml')
+    assert result == {}
+    assert 'error' in mock_stderr.getvalue().lower()
+
+
+@patch('sys.stderr', new_callable=StringIO)
 def test_merge_broken_annotation(mock_stderr):
     system = loadTuner()
     interface = system.lookup('com.pelagicore.ivi.tuner.Tuner')

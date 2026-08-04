@@ -2,7 +2,7 @@
 # Copyright (c) Pelagicore AB 2016
 
 from jinja2 import Environment, Template, Undefined, StrictUndefined
-from jinja2 import FileSystemLoader, PackageLoader, ChoiceLoader
+from jinja2 import FileSystemLoader, ChoiceLoader
 from jinja2 import TemplateSyntaxError, TemplateNotFound, TemplateError
 from pathlib import Path
 from antlr4 import InputStream, FileStream, CommonTokenStream, ParseTreeWalker
@@ -81,9 +81,11 @@ class Generator(object):
     def __init__(self, search_path, context={}, force=False):
         if not isinstance(search_path, (list, tuple)):
             search_path = [search_path]
+        # PackageLoader needs pkg_resources, which is gone on Python 3.12+; use FileSystemLoader.
+        builtin_templates = str(Path(__file__).parent / 'templates')
         loader = ChoiceLoader([
             FileSystemLoader(search_path),
-            PackageLoader('qface')
+            FileSystemLoader(builtin_templates)
         ])
         self.env = Environment(
             loader=loader,

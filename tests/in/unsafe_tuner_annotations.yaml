@@ -1,0 +1,5 @@
+# Malicious annotation file used by test_load_yaml_rejects_unsafe_tags (#122).
+# A safe YAML loader must refuse to construct this tag instead of executing it.
+Tuner:
+    config:
+        exploit: !!python/object/apply:os.getenv ['QFACE_UNSAFE_YAML_MARKER']
